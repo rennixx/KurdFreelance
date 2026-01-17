@@ -7,7 +7,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { toast } from "sonner";
-import { Eye, EyeOff, Loader2, CheckCircle2, XCircle } from "lucide-react";
+import { Eye, EyeSlash, CircleNotch, CheckCircle, XCircle } from "@phosphor-icons/react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -113,7 +113,7 @@ function ResetPasswordContent() {
     return (
       <Card>
         <CardContent className="flex flex-col items-center justify-center py-12">
-          <Loader2 className="h-8 w-8 animate-spin text-muted-foreground mb-4" />
+          <CircleNotch className="h-8 w-8 animate-spin text-muted-foreground mb-4" />
           <p className="text-muted-foreground">Validating reset link...</p>
         </CardContent>
       </Card>
@@ -149,7 +149,7 @@ function ResetPasswordContent() {
       <Card>
         <CardHeader className="space-y-1 text-center">
           <div className="mx-auto w-12 h-12 bg-green-500/10 rounded-full flex items-center justify-center mb-4">
-            <CheckCircle2 className="h-6 w-6 text-green-500" />
+            <CheckCircle className="h-6 w-6 text-green-500" />
           </div>
           <CardTitle className="text-2xl font-bold">Password Updated!</CardTitle>
           <CardDescription>
@@ -196,7 +196,7 @@ function ResetPasswordContent() {
                 onClick={() => setShowPassword(!showPassword)}
               >
                 {showPassword ? (
-                  <EyeOff className="h-4 w-4 text-muted-foreground" />
+                  <EyeSlash className="h-4 w-4 text-muted-foreground" />
                 ) : (
                   <Eye className="h-4 w-4 text-muted-foreground" />
                 )}
@@ -229,7 +229,7 @@ function ResetPasswordContent() {
           </div>
 
           <Button type="submit" className="w-full" disabled={isLoading}>
-            {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+            {isLoading && <CircleNotch className="mr-2 h-4 w-4 animate-spin" />}
             Reset Password
           </Button>
         </form>
@@ -253,7 +253,7 @@ export default function ResetPasswordPage() {
     <Suspense fallback={
       <Card>
         <CardContent className="flex items-center justify-center py-12">
-          <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+          <CircleNotch className="h-8 w-8 animate-spin text-muted-foreground" />
         </CardContent>
       </Card>
     }>

@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { Loader2, ArrowRight, ArrowLeft, Check } from "lucide-react";
+import { CircleNotch, ArrowRight, ArrowLeft, Check } from "@phosphor-icons/react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -433,7 +433,7 @@ export function OnboardingContent({ user }: OnboardingContentProps) {
               </Button>
             ) : (
               <Button onClick={handleSubmit} disabled={isLoading}>
-                {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                {isLoading && <CircleNotch className="mr-2 h-4 w-4 animate-spin" />}
                 Complete Setup
               </Button>
             )}

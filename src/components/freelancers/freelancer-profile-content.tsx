@@ -27,22 +27,23 @@ import {
   MapPin,
   Clock,
   Calendar,
-  CheckCircle2,
-  MessageSquare,
+  CheckCircle,
+  ChatCircle,
   Briefcase,
   GraduationCap,
-  Award,
+  Trophy,
   Globe,
-  ChevronLeft,
+  CaretLeft,
   Heart,
-  Share2,
+  ShareNetwork,
   Flag,
-  ExternalLink,
+  ArrowSquareOut,
   Play,
-  DollarSign,
+  CurrencyDollar,
   Users,
-  TrendingUp,
-} from "lucide-react";
+  TrendUp,
+  CertificateIcon,
+} from "@phosphor-icons/react";
 import { toast } from "sonner";
 import { createClient } from "@/lib/supabase/client";
 import { useAuthStore } from "@/stores";
@@ -380,7 +381,7 @@ export function FreelancerProfileContent({ freelancerId }: FreelancerProfileCont
           className="mb-6"
           onClick={() => router.back()}
         >
-          <ChevronLeft className="h-4 w-4 mr-2" />
+          <CaretLeft className="h-4 w-4 mr-2" />
           Back
         </Button>
 
@@ -400,7 +401,7 @@ export function FreelancerProfileContent({ freelancerId }: FreelancerProfileCont
                     </Avatar>
                     {freelancer.user.is_verified && (
                       <div className="absolute bottom-2 right-2 bg-green-500 rounded-full p-1">
-                        <CheckCircle2 className="h-5 w-5 text-white" />
+                        <CheckCircle className="h-5 w-5 text-white" />
                       </div>
                     )}
                   </div>
@@ -427,7 +428,7 @@ export function FreelancerProfileContent({ freelancerId }: FreelancerProfileCont
                           <Heart className={`h-5 w-5 ${isSaved ? "fill-current" : ""}`} />
                         </Button>
                         <Button variant="ghost" size="icon" onClick={handleShare}>
-                          <Share2 className="h-5 w-5" />
+                          <ShareNetwork className="h-5 w-5" />
                         </Button>
                         <Button variant="ghost" size="icon">
                           <Flag className="h-5 w-5" />
@@ -569,7 +570,7 @@ export function FreelancerProfileContent({ freelancerId }: FreelancerProfileCont
                 <Card>
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2">
-                      <Award className="h-5 w-5" />
+                      <CertificateIcon className="h-5 w-5" />
                       Certifications
                     </CardTitle>
                   </CardHeader>
@@ -669,7 +670,7 @@ export function FreelancerProfileContent({ freelancerId }: FreelancerProfileCont
                               target="_blank"
                               rel="noopener noreferrer"
                             >
-                              <ExternalLink className="h-4 w-4 mr-2" />
+                              <ArrowSquareOut className="h-4 w-4 mr-2" />
                               View Project
                             </a>
                           </Button>
@@ -818,7 +819,7 @@ export function FreelancerProfileContent({ freelancerId }: FreelancerProfileCont
                   <Dialog open={contactDialogOpen} onOpenChange={setContactDialogOpen}>
                     <DialogTrigger asChild>
                       <Button variant="outline" className="w-full">
-                        <MessageSquare className="h-4 w-4 mr-2" />
+                        <ChatCircle className="h-4 w-4 mr-2" />
                         Contact Me
                       </Button>
                     </DialogTrigger>
@@ -860,7 +861,7 @@ export function FreelancerProfileContent({ freelancerId }: FreelancerProfileCont
                   </div>
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2 text-gray-600">
-                      <DollarSign className="h-4 w-4" />
+                      <CurrencyDollar className="h-4 w-4" />
                       <span>Total Earned</span>
                     </div>
                     <span className="font-semibold">
@@ -869,7 +870,7 @@ export function FreelancerProfileContent({ freelancerId }: FreelancerProfileCont
                   </div>
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2 text-gray-600">
-                      <TrendingUp className="h-4 w-4" />
+                      <TrendUp className="h-4 w-4" />
                       <span>Success Rate</span>
                     </div>
                     <span className="font-semibold">98%</span>

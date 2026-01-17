@@ -3,13 +3,13 @@
 import { useState, useMemo } from "react";
 import Link from "next/link";
 import {
-  Search,
-  Filter,
+  MagnifyingGlass,
+  Funnel,
   MapPin,
   Star,
-  ChevronDown,
+  CaretDown,
   Users,
-} from "lucide-react";
+} from "@phosphor-icons/react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -149,7 +149,7 @@ export function FreelancersContent({ freelancers }: FreelancersContentProps) {
       {/* Search and Filters */}
       <div className="flex flex-col lg:flex-row gap-4">
         <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <MagnifyingGlass className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
             placeholder="Search by name, skill, or keyword..."
             className="pl-10"

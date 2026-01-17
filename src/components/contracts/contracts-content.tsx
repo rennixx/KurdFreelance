@@ -28,25 +28,25 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Textarea } from "@/components/ui/textarea";
 import {
-  Search,
-  Filter,
-  MoreVertical,
+  MagnifyingGlass,
+  Funnel,
+  DotsThreeVertical,
   FileText,
-  DollarSign,
+  CurrencyDollar,
   Calendar,
   Clock,
-  CheckCircle2,
-  AlertCircle,
+  CheckCircle,
+  Warning,
   XCircle,
-  MessageSquare,
+  ChatCircle,
   Download,
   Eye,
   Play,
   Pause,
   CheckSquare,
   Star,
-  ExternalLink,
-} from "lucide-react";
+  ArrowSquareOut,
+} from "@phosphor-icons/react";
 import { toast } from "sonner";
 import { useAuthStore } from "@/stores";
 
@@ -250,9 +250,9 @@ const statusConfig: Record<Contract["status"], { label: string; color: string; i
   pending: { label: "Pending", color: "bg-yellow-100 text-yellow-700", icon: <Clock className="h-4 w-4" /> },
   active: { label: "Active", color: "bg-green-100 text-green-700", icon: <Play className="h-4 w-4" /> },
   paused: { label: "Paused", color: "bg-orange-100 text-orange-700", icon: <Pause className="h-4 w-4" /> },
-  completed: { label: "Completed", color: "bg-blue-100 text-blue-700", icon: <CheckCircle2 className="h-4 w-4" /> },
+  completed: { label: "Completed", color: "bg-blue-100 text-blue-700", icon: <CheckCircle className="h-4 w-4" /> },
   cancelled: { label: "Cancelled", color: "bg-gray-100 text-gray-700", icon: <XCircle className="h-4 w-4" /> },
-  disputed: { label: "Disputed", color: "bg-red-100 text-red-700", icon: <AlertCircle className="h-4 w-4" /> },
+  disputed: { label: "Disputed", color: "bg-red-100 text-red-700", icon: <Warning className="h-4 w-4" /> },
 };
 
 const milestoneStatusConfig: Record<Milestone["status"], { label: string; color: string }> = {
@@ -377,7 +377,7 @@ export function ContractsContent() {
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" size="icon">
-                    <MoreVertical className="h-4 w-4" />
+                    <DotsThreeVertical className="h-4 w-4" />
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
@@ -386,7 +386,7 @@ export function ContractsContent() {
                     View Details
                   </DropdownMenuItem>
                   <DropdownMenuItem>
-                    <MessageSquare className="h-4 w-4 mr-2" />
+                    <ChatCircle className="h-4 w-4 mr-2" />
                     Message
                   </DropdownMenuItem>
                   <DropdownMenuItem>
@@ -413,7 +413,7 @@ export function ContractsContent() {
 
           <div className="flex flex-wrap gap-4 text-sm text-gray-500 mb-4">
             <span className="flex items-center gap-1">
-              <DollarSign className="h-4 w-4" />
+              <CurrencyDollar className="h-4 w-4" />
               ${contract.total_amount.toLocaleString()}
             </span>
             <span className="flex items-center gap-1">
@@ -466,7 +466,7 @@ export function ContractsContent() {
         </div>
         <div className="flex items-center gap-2">
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+            <MagnifyingGlass className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
             <Input
               placeholder="Search contracts..."
               className="pl-9 w-64"
@@ -475,7 +475,7 @@ export function ContractsContent() {
             />
           </div>
           <Button variant="outline" size="icon">
-            <Filter className="h-4 w-4" />
+            <Funnel className="h-4 w-4" />
           </Button>
         </div>
       </div>
@@ -512,7 +512,7 @@ export function ContractsContent() {
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
               <div className="p-2 bg-blue-100 rounded-lg">
-                <CheckCircle2 className="h-5 w-5 text-blue-600" />
+                <CheckCircle className="h-5 w-5 text-blue-600" />
               </div>
               <div>
                 <p className="text-2xl font-bold">{completedContracts.length}</p>
@@ -525,7 +525,7 @@ export function ContractsContent() {
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
               <div className="p-2 bg-emerald-100 rounded-lg">
-                <DollarSign className="h-5 w-5 text-emerald-600" />
+                <CurrencyDollar className="h-5 w-5 text-emerald-600" />
               </div>
               <div>
                 <p className="text-2xl font-bold">
@@ -598,7 +598,7 @@ export function ContractsContent() {
           {completedContracts.length === 0 ? (
             <Card>
               <CardContent className="p-12 text-center">
-                <CheckCircle2 className="h-12 w-12 text-gray-300 mx-auto mb-4" />
+                <CheckCircle className="h-12 w-12 text-gray-300 mx-auto mb-4" />
                 <h3 className="text-lg font-medium mb-2">No completed contracts</h3>
                 <p className="text-gray-500">
                   Your completed contracts will appear here
@@ -700,7 +700,7 @@ export function ContractsContent() {
                               <p className="text-sm text-gray-600 mb-2">{milestone.description}</p>
                               <div className="flex items-center gap-4 text-sm text-gray-500">
                                 <span className="flex items-center gap-1">
-                                  <DollarSign className="h-4 w-4" />
+                                  <CurrencyDollar className="h-4 w-4" />
                                   ${milestone.amount.toLocaleString()}
                                 </span>
                                 <span className="flex items-center gap-1">
@@ -756,7 +756,7 @@ export function ContractsContent() {
                 </Button>
                 <Button asChild>
                   <Link href={`/messages?contract=${selectedContract.id}`}>
-                    <MessageSquare className="h-4 w-4 mr-2" />
+                    <ChatCircle className="h-4 w-4 mr-2" />
                     Open Chat
                   </Link>
                 </Button>

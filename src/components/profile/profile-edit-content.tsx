@@ -29,19 +29,19 @@ import {
 } from "@/components/ui/form";
 import { FileUpload } from "@/components/ui/file-upload";
 import {
-  Save,
+  FloppyDisk,
   X,
   Plus,
-  Trash2,
+  Trash,
   ArrowLeft,
-  Loader2,
+  CircleNotch,
   User,
   Briefcase,
   GraduationCap,
-  Award,
+  Trophy,
   Globe,
-  ImagePlus,
-} from "lucide-react";
+  ImageSquare,
+} from "@phosphor-icons/react";
 import { toast } from "sonner";
 import { useAuthStore } from "@/stores";
 import { profileSchema, type ProfileFormData } from "@/lib/validations";
@@ -873,7 +873,7 @@ export function ProfileEditContent() {
             <Button type="submit" disabled={isLoading} className="bg-green-600 hover:bg-green-700">
               {isLoading ? (
                 <>
-                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  <CircleNotch className="h-4 w-4 mr-2 animate-spin" />
                   Saving...
                 </>
               ) : (

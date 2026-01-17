@@ -8,7 +8,7 @@ import {
   Palette,
   PenNib,
   VideoCamera,
-  TrendingUp,
+  TrendUp,
   Database,
   MusicNote,
   Camera,
@@ -25,7 +25,7 @@ const categories = [
   { name: "Design", icon: Palette, count: "1,234 jobs" },
   { name: "Writing", icon: PenNib, count: "987 jobs" },
   { name: "Video & Animation", icon: VideoCamera, count: "654 jobs" },
-  { name: "Marketing", icon: TrendingUp, count: "543 jobs" },
+  { name: "Marketing", icon: TrendUp, count: "543 jobs" },
   { name: "Data", icon: Database, count: "321 jobs" },
   { name: "Music & Audio", icon: MusicNote, count: "234 jobs" },
   { name: "Photography", icon: Camera, count: "198 jobs" },
@@ -100,7 +100,7 @@ const recentJobs = [
 const stats = [
   { label: "Freelancers", value: "5,000+", icon: Users },
   { label: "Jobs Posted", value: "10,000+", icon: Briefcase },
-  { label: "Total Earned", value: "$2M+", icon: TrendingUp },
+  { label: "Total Earned", value: "$2M+", icon: TrendUp },
   { label: "Success Rate", value: "98%", icon: Shield },
 ];
 

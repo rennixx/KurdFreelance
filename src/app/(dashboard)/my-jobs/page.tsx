@@ -4,7 +4,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Plus, Briefcase, Clock, Users, DollarSign } from "lucide-react";
+import { Plus, Briefcase, Clock, Users, CurrencyDollar } from "@phosphor-icons/react/dist/ssr";
 import { formatDistanceToNow } from "date-fns";
 
 export default async function MyJobsPage() {
@@ -94,7 +94,7 @@ export default async function MyJobsPage() {
                 </p>
                 <div className="flex flex-wrap items-center gap-4 text-sm">
                   <div className="flex items-center gap-1 text-gray-600">
-                    <DollarSign className="h-4 w-4" />
+                    <CurrencyDollar className="h-4 w-4" />
                     {job.budget_type === "fixed" ? (
                       <span>${job.budget_min} - ${job.budget_max}</span>
                     ) : (

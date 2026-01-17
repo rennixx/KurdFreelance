@@ -4,13 +4,13 @@ import { useState } from "react";
 import Link from "next/link";
 import {
   Clock,
-  DollarSign,
+  CurrencyDollar,
   FileText,
-  CheckCircle2,
+  CheckCircle,
   XCircle,
-  AlertCircle,
+  Warning,
   Eye,
-} from "lucide-react";
+} from "@phosphor-icons/react";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -70,12 +70,12 @@ const statusConfig = {
   shortlisted: {
     label: "Shortlisted",
     variant: "default" as const,
-    icon: AlertCircle,
+    icon: Warning,
   },
   accepted: {
     label: "Accepted",
     variant: "default" as const,
-    icon: CheckCircle2,
+    icon: CheckCircle,
   },
   rejected: {
     label: "Rejected",
@@ -255,7 +255,7 @@ export function ProposalsContent({ proposals, userRole }: ProposalsContentProps)
 
                           <div className="flex items-center gap-4 pt-2">
                             <div className="flex items-center gap-1 text-sm">
-                              <DollarSign className="h-4 w-4 text-muted-foreground" />
+                              <CurrencyDollar className="h-4 w-4 text-muted-foreground" />
                               <span>Job Budget: {formatBudget(proposal.job)}</span>
                             </div>
                             {proposal.proposed_rate && (

@@ -4,15 +4,15 @@ import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import {
-  Search,
-  Send,
-  MessageSquare,
-  MoreVertical,
+  MagnifyingGlass,
+  PaperPlaneRight,
+  ChatCircle,
+  DotsThreeVertical,
   Phone,
-  Video,
+  VideoCamera,
   Paperclip,
-  Smile,
-} from "lucide-react";
+  Smiley,
+} from "@phosphor-icons/react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -178,7 +178,7 @@ export function MessagesContent({
         <Card className="w-full md:w-96 flex flex-col">
           <CardHeader className="pb-3">
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <MagnifyingGlass className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
                 placeholder="Search conversations..."
                 className="pl-10"
@@ -191,7 +191,7 @@ export function MessagesContent({
             <CardContent className="p-0">
               {filteredConversations.length === 0 ? (
                 <div className="flex flex-col items-center justify-center py-12 px-4 text-center">
-                  <MessageSquare className="h-12 w-12 text-muted-foreground/50 mb-4" />
+                  <ChatCircle className="h-12 w-12 text-muted-foreground/50 mb-4" />
                   <p className="text-muted-foreground">
                     {searchQuery
                       ? "No conversations found"
@@ -277,7 +277,7 @@ export function MessagesContent({
                     </div>
                   </div>
                   <Button variant="ghost" size="icon">
-                    <MoreVertical className="h-5 w-5" />
+                    <DotsThreeVertical className="h-5 w-5" />
                   </Button>
                 </div>
               </CardHeader>
@@ -341,14 +341,14 @@ export function MessagesContent({
                     onClick={sendMessage}
                     disabled={!newMessage.trim() || isLoading}
                   >
-                    <Send className="h-5 w-5" />
+                    <PaperPlaneRight className="h-5 w-5" />
                   </Button>
                 </div>
               </div>
             </>
           ) : (
             <div className="flex-1 flex flex-col items-center justify-center text-center p-8">
-              <MessageSquare className="h-16 w-16 text-muted-foreground/50 mb-4" />
+              <ChatCircle className="h-16 w-16 text-muted-foreground/50 mb-4" />
               <h3 className="text-xl font-semibold mb-2">
                 Select a conversation
               </h3>

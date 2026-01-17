@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { toast } from "sonner";
-import { Loader2, X, Plus } from "lucide-react";
+import { CircleNotch, X, Plus } from "@phosphor-icons/react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -403,7 +403,7 @@ export function PostJobForm({ userId }: PostJobFormProps) {
           Cancel
         </Button>
         <Button type="submit" disabled={isLoading}>
-          {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+          {isLoading && <CircleNotch className="mr-2 h-4 w-4 animate-spin" />}
           Post Job
         </Button>
       </div>

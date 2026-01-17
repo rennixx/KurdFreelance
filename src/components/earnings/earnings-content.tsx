@@ -35,24 +35,24 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import {
-  DollarSign,
-  TrendingUp,
-  TrendingDown,
+  CurrencyDollar,
+  TrendUp,
+  TrendDown,
   Wallet,
   CreditCard,
-  Building2,
+  Buildings,
   Download,
   Calendar,
   ArrowUpRight,
   ArrowDownRight,
   Clock,
-  CheckCircle2,
-  AlertCircle,
-  Filter,
+  CheckCircle,
+  WarningCircle,
+  Funnel,
   Plus,
   Eye,
-  ExternalLink,
-} from "lucide-react";
+  ArrowSquareOut,
+} from "@phosphor-icons/react";
 import { toast } from "sonner";
 import { useAuthStore } from "@/stores";
 
@@ -189,9 +189,9 @@ const transactionTypeConfig = {
 };
 
 const transactionStatusConfig = {
-  completed: { label: "Completed", color: "bg-green-100 text-green-700", icon: CheckCircle2 },
+  completed: { label: "Completed", color: "bg-green-100 text-green-700", icon: CheckCircle },
   pending: { label: "Pending", color: "bg-yellow-100 text-yellow-700", icon: Clock },
-  failed: { label: "Failed", color: "bg-red-100 text-red-700", icon: AlertCircle },
+  failed: { label: "Failed", color: "bg-red-100 text-red-700", icon: WarningCircle },
 };
 
 export function EarningsContent() {
@@ -308,7 +308,7 @@ export function EarningsContent() {
                 <div className="space-y-2">
                   <Label>Amount</Label>
                   <div className="relative">
-                    <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                    <CurrencyDollar className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
                     <Input
                       type="number"
                       placeholder="0.00"
@@ -335,7 +335,7 @@ export function EarningsContent() {
                       {paymentMethods.map((method) => (
                         <SelectItem key={method.id} value={method.id}>
                           <div className="flex items-center gap-2">
-                            {method.type === "bank" && <Building2 className="h-4 w-4" />}
+                            {method.type === "bank" && <Buildings className="h-4 w-4" />}
                             {method.type === "fastpay" && <CreditCard className="h-4 w-4" />}
                             <span>{method.name}</span>
                             {method.is_default && (
@@ -399,7 +399,7 @@ export function EarningsContent() {
           <CardContent className="p-6">
             <div className="flex items-center justify-between mb-4">
               <div className="p-2 bg-blue-100 rounded-lg">
-                <TrendingUp className="h-6 w-6 text-blue-600" />
+                <TrendUp className="h-6 w-6 text-blue-600" />
               </div>
               {monthChange !== 0 && (
                 <Badge
@@ -419,7 +419,7 @@ export function EarningsContent() {
           <CardContent className="p-6">
             <div className="flex items-center justify-between mb-4">
               <div className="p-2 bg-purple-100 rounded-lg">
-                <DollarSign className="h-6 w-6 text-purple-600" />
+                <CurrencyDollar className="h-6 w-6 text-purple-600" />
               </div>
             </div>
             <p className="text-sm text-gray-500 mb-1">Total Earned</p>
@@ -665,7 +665,7 @@ export function EarningsContent() {
                 >
                   <div className="flex items-center gap-3">
                     <div className="p-2 bg-gray-100 rounded-lg">
-                      {method.type === "bank" && <Building2 className="h-5 w-5" />}
+                      {method.type === "bank" && <Buildings className="h-5 w-5" />}
                       {method.type === "fastpay" && <CreditCard className="h-5 w-5" />}
                       {method.type === "wise" && <CreditCard className="h-5 w-5" />}
                       {method.type === "paypal" && <CreditCard className="h-5 w-5" />}

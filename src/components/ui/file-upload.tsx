@@ -9,14 +9,14 @@ import {
   Upload,
   X,
   File,
-  FileImage,
+  Image as ImageIcon,
   FileText,
-  FileVideo,
-  FileAudio,
-  CheckCircle2,
-  AlertCircle,
-  Loader2,
-} from "lucide-react";
+  VideoCamera,
+  SpeakerHigh,
+  CheckCircle,
+  WarningCircle,
+  CircleNotch,
+} from "@phosphor-icons/react";
 import { toast } from "sonner";
 import { createClient } from "@/lib/supabase/client";
 
@@ -45,9 +45,9 @@ interface UploadedFile {
 }
 
 const getFileIcon = (type: string) => {
-  if (type.startsWith("image/")) return FileImage;
-  if (type.startsWith("video/")) return FileVideo;
-  if (type.startsWith("audio/")) return FileAudio;
+  if (type.startsWith("image/")) return ImageIcon;
+  if (type.startsWith("video/")) return VideoCamera;
+  if (type.startsWith("audio/")) return SpeakerHigh;
   if (type.includes("pdf") || type.includes("document")) return FileText;
   return File;
 };
@@ -270,7 +270,7 @@ export function FileUpload({
               className="object-cover rounded-full"
             />
           ) : files.length > 0 && files[0].status === "uploading" ? (
-            <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+            <CircleNotch className="h-8 w-8 animate-spin text-gray-400" />
           ) : defaultImageUrl ? (
             <Image
               src={defaultImageUrl}
@@ -328,11 +328,11 @@ export function FileUpload({
                 className="flex items-center gap-2 p-2 bg-gray-50 rounded text-sm"
               >
                 {file.status === "uploading" ? (
-                  <Loader2 className="h-4 w-4 animate-spin" />
+                  <CircleNotch className="h-4 w-4 animate-spin" />
                 ) : file.status === "complete" ? (
-                  <CheckCircle2 className="h-4 w-4 text-green-500" />
+                  <CheckCircle className="h-4 w-4 text-green-500" />
                 ) : file.status === "error" ? (
-                  <AlertCircle className="h-4 w-4 text-red-500" />
+                  <WarningCircle className="h-4 w-4 text-red-500" />
                 ) : (
                   <File className="h-4 w-4" />
                 )}
@@ -418,13 +418,13 @@ export function FileUpload({
                 </div>
                 <div className="flex items-center gap-2">
                   {file.status === "uploading" && (
-                    <Loader2 className="h-5 w-5 animate-spin text-gray-400" />
+                    <CircleNotch className="h-5 w-5 animate-spin text-gray-400" />
                   )}
                   {file.status === "complete" && (
-                    <CheckCircle2 className="h-5 w-5 text-green-500" />
+                    <CheckCircle className="h-5 w-5 text-green-500" />
                   )}
                   {file.status === "error" && (
-                    <AlertCircle className="h-5 w-5 text-red-500" />
+                    <WarningCircle className="h-5 w-5 text-red-500" />
                   )}
                   <Button
                     variant="ghost"
@@ -455,7 +455,7 @@ export function FileUpload({
               >
                 <File className="h-5 w-5 text-gray-500" />
                 <span className="flex-1 truncate text-sm">{file.name}</span>
-                <CheckCircle2 className="h-4 w-4 text-green-500" />
+                <CheckCircle className="h-4 w-4 text-green-500" />
               </div>
             ))}
           </div>

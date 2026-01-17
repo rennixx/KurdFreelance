@@ -24,32 +24,32 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import {
-  LayoutDashboard,
+  SquaresFour,
   Users,
   Briefcase,
   FileText,
-  DollarSign,
-  Settings,
+  CurrencyDollar,
+  Gear,
   Bell,
-  Search,
-  Menu,
-  LogOut,
-  ChevronDown,
-  TrendingUp,
-  TrendingDown,
+  MagnifyingGlass,
+  List,
+  SignOut,
+  CaretDown,
+  TrendUp,
+  TrendDown,
   UserCheck,
-  UserX,
-  AlertTriangle,
-  CheckCircle2,
+  UserMinus,
+  Warning,
+  CheckCircle,
   Clock,
   Eye,
-  Ban,
-  MoreVertical,
+  Prohibit,
+  DotsThreeVertical,
   Flag,
-  MessageSquare,
+  ChatCircle,
   Shield,
-  Activity,
-} from "lucide-react";
+  Pulse,
+} from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 
 interface Stats {
@@ -185,7 +185,7 @@ const navItems = [
   { href: "/admin/users", label: "Users", icon: Users },
   { href: "/admin/jobs", label: "Jobs", icon: Briefcase },
   { href: "/admin/contracts", label: "Contracts", icon: FileText },
-  { href: "/admin/payments", label: "Payments", icon: DollarSign },
+  { href: "/admin/payments", label: "Payments", icon: CurrencyDollar },
   { href: "/admin/reports", label: "Reports", icon: Flag },
   { href: "/admin/settings", label: "Settings", icon: Settings },
 ];
@@ -201,11 +201,11 @@ export function AdminDashboard() {
       case "job_posted":
         return <Briefcase className="h-4 w-4 text-blue-500" />;
       case "contract_completed":
-        return <CheckCircle2 className="h-4 w-4 text-green-500" />;
+        return <CheckCircle className="h-4 w-4 text-green-500" />;
       case "dispute_filed":
-        return <AlertTriangle className="h-4 w-4 text-red-500" />;
+        return <Warning className="h-4 w-4 text-red-500" />;
       case "payment_processed":
-        return <DollarSign className="h-4 w-4 text-green-500" />;
+        return <CurrencyDollar className="h-4 w-4 text-green-500" />;
     }
   };
 
@@ -302,7 +302,7 @@ export function AdminDashboard() {
                       <AvatarFallback>AD</AvatarFallback>
                     </Avatar>
                     <span>Admin</span>
-                    <ChevronDown className="h-4 w-4" />
+                    <CaretDown className="h-4 w-4" />
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
@@ -368,7 +368,7 @@ export function AdminDashboard() {
                     </p>
                   </div>
                   <div className="p-3 bg-emerald-100 rounded-lg">
-                    <DollarSign className="h-6 w-6 text-emerald-600" />
+                    <CurrencyDollar className="h-6 w-6 text-emerald-600" />
                   </div>
                 </div>
               </CardContent>
@@ -388,7 +388,7 @@ export function AdminDashboard() {
                     </p>
                   </div>
                   <div className="p-3 bg-yellow-100 rounded-lg">
-                    <AlertTriangle className="h-6 w-6 text-yellow-600" />
+                    <Warning className="h-6 w-6 text-yellow-600" />
                   </div>
                 </div>
               </CardContent>
@@ -426,7 +426,7 @@ export function AdminDashboard() {
             </div>
             <div className="bg-white p-4 rounded-lg border flex items-center gap-3">
               <div className="p-2 bg-emerald-100 rounded">
-                <DollarSign className="h-5 w-5 text-emerald-600" />
+                <CurrencyDollar className="h-5 w-5 text-emerald-600" />
               </div>
               <div>
                 <p className="text-lg font-semibold">${(mockStats.totalRevenue / 1000000).toFixed(2)}M</p>
@@ -479,7 +479,7 @@ export function AdminDashboard() {
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
                         <Button variant="ghost" size="icon">
-                          <MoreVertical className="h-4 w-4" />
+                          <DotsThreeVertical className="h-4 w-4" />
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
@@ -488,11 +488,11 @@ export function AdminDashboard() {
                           Review
                         </DropdownMenuItem>
                         <DropdownMenuItem>
-                          <CheckCircle2 className="h-4 w-4 mr-2" />
+                          <CheckCircle className="h-4 w-4 mr-2" />
                           Approve
                         </DropdownMenuItem>
                         <DropdownMenuItem className="text-red-600">
-                          <Ban className="h-4 w-4 mr-2" />
+                          <Prohibit className="h-4 w-4 mr-2" />
                           Reject
                         </DropdownMenuItem>
                       </DropdownMenuContent>
@@ -548,7 +548,7 @@ export function AdminDashboard() {
                   <Badge variant="secondary">{mockStats.pendingVerifications}</Badge>
                 </Button>
                 <Button variant="outline" className="h-auto py-4 flex flex-col items-center gap-2">
-                  <AlertTriangle className="h-6 w-6" />
+                  <Warning className="h-6 w-6" />
                   <span>Review Disputes</span>
                   <Badge variant="secondary">{mockStats.pendingDisputes}</Badge>
                 </Button>
@@ -558,7 +558,7 @@ export function AdminDashboard() {
                   <Badge variant="secondary">{mockStats.reportsToReview}</Badge>
                 </Button>
                 <Button variant="outline" className="h-auto py-4 flex flex-col items-center gap-2">
-                  <MessageSquare className="h-6 w-6" />
+                  <ChatCircle className="h-6 w-6" />
                   <span>Support Tickets</span>
                   <Badge variant="secondary">24</Badge>
                 </Button>

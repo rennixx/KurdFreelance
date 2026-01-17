@@ -4,7 +4,7 @@ import { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { toast } from "sonner";
-import { Loader2, Mail, ArrowLeft, RefreshCw } from "lucide-react";
+import { CircleNotch, Envelope, ArrowLeft, ArrowsClockwise } from "@phosphor-icons/react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -63,7 +63,7 @@ function VerifyEmailContent() {
     <Card>
       <CardHeader className="space-y-1 text-center">
         <div className="mx-auto w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mb-4">
-          <Mail className="h-6 w-6 text-primary" />
+          <Envelope className="h-6 w-6 text-primary" />
         </div>
         <CardTitle className="text-2xl font-bold">Verify your email</CardTitle>
         <CardDescription>
@@ -95,9 +95,9 @@ function VerifyEmailContent() {
             disabled={isLoading || countdown > 0}
           >
             {isLoading ? (
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              <CircleNotch className="mr-2 h-4 w-4 animate-spin" />
             ) : (
-              <RefreshCw className="mr-2 h-4 w-4" />
+              <ArrowsClockwise className="mr-2 h-4 w-4" />
             )}
             {countdown > 0
               ? `Resend in ${countdown}s`
@@ -131,7 +131,7 @@ export default function VerifyEmailPage() {
     <Suspense fallback={
       <Card>
         <CardContent className="flex items-center justify-center py-12">
-          <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+          <CircleNotch className="h-8 w-8 animate-spin text-muted-foreground" />
         </CardContent>
       </Card>
     }>

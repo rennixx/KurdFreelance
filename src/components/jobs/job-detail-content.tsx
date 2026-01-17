@@ -6,17 +6,17 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import {
   Clock,
-  DollarSign,
+  CurrencyDollar,
   Briefcase,
   MapPin,
   Calendar,
   User,
   Star,
-  MessageSquare,
+  ChatCircle,
   ArrowLeft,
-  Loader2,
-  CheckCircle2,
-} from "lucide-react";
+  CircleNotch,
+  CheckCircle,
+} from "@phosphor-icons/react";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -198,7 +198,7 @@ export function JobDetailContent({
               <div className="grid sm:grid-cols-3 gap-4">
                 <div className="flex items-center gap-3">
                   <div className="p-2 bg-primary/10 rounded-lg">
-                    <DollarSign className="h-5 w-5 text-primary" />
+                    <CurrencyDollar className="h-5 w-5 text-primary" />
                   </div>
                   <div>
                     <p className="text-sm text-muted-foreground">Budget</p>
@@ -280,7 +280,7 @@ export function JobDetailContent({
                 </p>
               ) : hasApplied ? (
                 <div className="space-y-4 text-center">
-                  <CheckCircle2 className="h-12 w-12 mx-auto text-green-500" />
+                  <CheckCircle className="h-12 w-12 mx-auto text-green-500" />
                   <p className="font-medium">You&apos;ve applied for this job</p>
                   <Button variant="outline" asChild className="w-full">
                     <Link href="/proposals">View My Proposals</Link>
@@ -361,7 +361,7 @@ export function JobDetailContent({
                         disabled={isSubmitting}
                       >
                         {isSubmitting && (
-                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                          <CircleNotch className="mr-2 h-4 w-4 animate-spin" />
                         )}
                         Submit Proposal
                       </Button>

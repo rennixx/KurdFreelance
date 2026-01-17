@@ -3,17 +3,17 @@
 import Link from "next/link";
 import { 
   Briefcase, 
-  MessageSquare, 
-  DollarSign, 
+  ChatCircle, 
+  CurrencyDollar, 
   Star, 
-  TrendingUp,
+  TrendUp,
   Clock,
-  CheckCircle2,
+  CheckCircle,
   ArrowRight,
   Bell,
   FileText,
   Users
-} from "lucide-react";
+} from "@phosphor-icons/react";
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -114,7 +114,7 @@ export function DashboardContent({ user, freelancerProfile }: DashboardContentPr
               <CardContent className="pt-6">
                 <div className="flex items-center gap-4">
                   <div className="p-2 bg-green-500/10 rounded-lg">
-                    <DollarSign className="h-6 w-6 text-green-500" />
+                    <CurrencyDollar className="h-6 w-6 text-green-500" />
                   </div>
                   <div>
                     <p className="text-sm text-muted-foreground">Total Earnings</p>
@@ -153,7 +153,7 @@ export function DashboardContent({ user, freelancerProfile }: DashboardContentPr
               <CardContent className="pt-6">
                 <div className="flex items-center gap-4">
                   <div className="p-2 bg-purple-500/10 rounded-lg">
-                    <CheckCircle2 className="h-6 w-6 text-purple-500" />
+                    <CheckCircle className="h-6 w-6 text-purple-500" />
                   </div>
                   <div>
                     <p className="text-sm text-muted-foreground">Completed</p>
@@ -195,7 +195,7 @@ export function DashboardContent({ user, freelancerProfile }: DashboardContentPr
               <CardContent className="pt-6">
                 <div className="flex items-center gap-4">
                   <div className="p-2 bg-yellow-500/10 rounded-lg">
-                    <DollarSign className="h-6 w-6 text-yellow-500" />
+                    <CurrencyDollar className="h-6 w-6 text-yellow-500" />
                   </div>
                   <div>
                     <p className="text-sm text-muted-foreground">Total Spent</p>
@@ -208,7 +208,7 @@ export function DashboardContent({ user, freelancerProfile }: DashboardContentPr
               <CardContent className="pt-6">
                 <div className="flex items-center gap-4">
                   <div className="p-2 bg-purple-500/10 rounded-lg">
-                    <CheckCircle2 className="h-6 w-6 text-purple-500" />
+                    <CheckCircle className="h-6 w-6 text-purple-500" />
                   </div>
                   <div>
                     <p className="text-sm text-muted-foreground">Completed</p>
@@ -287,7 +287,7 @@ export function DashboardContent({ user, freelancerProfile }: DashboardContentPr
                       className="flex items-center gap-4 p-4 rounded-lg border hover:bg-muted/50 transition-colors"
                     >
                       <div className="p-2 bg-primary/10 rounded-lg">
-                        <DollarSign className="h-5 w-5 text-primary" />
+                        <CurrencyDollar className="h-5 w-5 text-primary" />
                       </div>
                       <div className="flex-1">
                         <p className="font-medium">Earnings</p>
@@ -350,7 +350,7 @@ export function DashboardContent({ user, freelancerProfile }: DashboardContentPr
                       className="flex items-center gap-4 p-4 rounded-lg border hover:bg-muted/50 transition-colors"
                     >
                       <div className="p-2 bg-primary/10 rounded-lg">
-                        <CheckCircle2 className="h-5 w-5 text-primary" />
+                        <CheckCircle className="h-5 w-5 text-primary" />
                       </div>
                       <div className="flex-1">
                         <p className="font-medium">Contracts</p>
@@ -415,13 +415,13 @@ export function DashboardContent({ user, freelancerProfile }: DashboardContentPr
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <MessageSquare className="h-5 w-5" />
+                <ChatCircle className="h-5 w-5" />
                 Messages
               </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="flex flex-col items-center justify-center py-8 text-center">
-                <MessageSquare className="h-8 w-8 text-muted-foreground/50 mb-2" />
+                <ChatCircle className="h-8 w-8 text-muted-foreground/50 mb-2" />
                 <p className="text-sm text-muted-foreground">
                   No messages yet
                 </p>
@@ -452,7 +452,7 @@ export function DashboardContent({ user, freelancerProfile }: DashboardContentPr
                 <div className="space-y-2">
                   <div className={`flex items-center gap-2 text-sm ${profileChecks.basicInfo ? '' : 'text-muted-foreground'}`}>
                     {profileChecks.basicInfo ? (
-                      <CheckCircle2 className="h-4 w-4 text-green-500" />
+                      <CheckCircle className="h-4 w-4 text-green-500" />
                     ) : (
                       <div className="h-4 w-4 rounded-full border-2" />
                     )}
@@ -460,7 +460,7 @@ export function DashboardContent({ user, freelancerProfile }: DashboardContentPr
                   </div>
                   <div className={`flex items-center gap-2 text-sm ${profileChecks.profilePhoto ? '' : 'text-muted-foreground'}`}>
                     {profileChecks.profilePhoto ? (
-                      <CheckCircle2 className="h-4 w-4 text-green-500" />
+                      <CheckCircle className="h-4 w-4 text-green-500" />
                     ) : (
                       <div className="h-4 w-4 rounded-full border-2" />
                     )}
@@ -468,7 +468,7 @@ export function DashboardContent({ user, freelancerProfile }: DashboardContentPr
                   </div>
                   <div className={`flex items-center gap-2 text-sm ${profileChecks.skills ? '' : 'text-muted-foreground'}`}>
                     {profileChecks.skills ? (
-                      <CheckCircle2 className="h-4 w-4 text-green-500" />
+                      <CheckCircle className="h-4 w-4 text-green-500" />
                     ) : (
                       <div className="h-4 w-4 rounded-full border-2" />
                     )}
@@ -476,7 +476,7 @@ export function DashboardContent({ user, freelancerProfile }: DashboardContentPr
                   </div>
                   <div className={`flex items-center gap-2 text-sm ${profileChecks.portfolio ? '' : 'text-muted-foreground'}`}>
                     {profileChecks.portfolio ? (
-                      <CheckCircle2 className="h-4 w-4 text-green-500" />
+                      <CheckCircle className="h-4 w-4 text-green-500" />
                     ) : (
                       <div className="h-4 w-4 rounded-full border-2" />
                     )}

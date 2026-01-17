@@ -3,14 +3,14 @@
 import { useState, useMemo } from "react";
 import Link from "next/link";
 import {
-  Search,
-  Filter,
+  MagnifyingGlass,
+  Funnel,
   MapPin,
   Clock,
-  DollarSign,
+  CurrencyDollar,
   Briefcase,
-  ChevronDown,
-} from "lucide-react";
+  CaretDown,
+} from "@phosphor-icons/react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -174,7 +174,7 @@ export function JobsContent({ jobs }: JobsContentProps) {
       {/* Search and Filters */}
       <div className="flex flex-col lg:flex-row gap-4">
         <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <MagnifyingGlass className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
             placeholder="Search jobs by title, skill, or keyword..."
             className="pl-10"
@@ -199,9 +199,9 @@ export function JobsContent({ jobs }: JobsContentProps) {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline">
-                <Filter className="mr-2 h-4 w-4" />
+                <Funnel className="mr-2 h-4 w-4" />
                 Experience
-                <ChevronDown className="ml-2 h-4 w-4" />
+                <CaretDown className="ml-2 h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
@@ -226,9 +226,9 @@ export function JobsContent({ jobs }: JobsContentProps) {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline">
-                <DollarSign className="mr-2 h-4 w-4" />
+                <CurrencyDollar className="mr-2 h-4 w-4" />
                 Budget Type
-                <ChevronDown className="ml-2 h-4 w-4" />
+                <CaretDown className="ml-2 h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent>

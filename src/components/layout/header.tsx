@@ -16,15 +16,15 @@ import { Badge } from "@/components/ui/badge";
 import {
   Bell,
   Briefcase,
-  Menu,
-  MessageSquare,
-  Search,
+  List,
+  ChatCircle,
+  MagnifyingGlass,
   User,
-  LogOut,
-  Settings,
-  LayoutDashboard,
+  SignOut,
+  Gear,
+  SquaresFour,
   X,
-} from "lucide-react";
+} from "@phosphor-icons/react";
 import { useState } from "react";
 import { useAuthStore } from "@/stores";
 import { createClient } from "@/lib/supabase/client";
@@ -44,13 +44,13 @@ export function Header() {
   };
 
   const navLinks = [
-    { href: "/jobs", label: "Find Jobs", icon: Search },
+    { href: "/jobs", label: "Find Jobs", icon: MagnifyingGlass },
     { href: "/freelancers", label: "Find Talent", icon: User },
   ];
 
   const authNavLinks = [
-    { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-    { href: "/messages", label: "Messages", icon: MessageSquare },
+    { href: "/dashboard", label: "Dashboard", icon: SquaresFour },
+    { href: "/messages", label: "Messages", icon: ChatCircle },
     { href: "/proposals", label: "Proposals", icon: Briefcase },
   ];
 
@@ -142,7 +142,7 @@ export function Header() {
                   <DropdownMenuSeparator />
                   <DropdownMenuItem asChild>
                     <Link href="/dashboard">
-                      <LayoutDashboard className="mr-2 h-4 w-4" />
+                      <SquaresFour className="mr-2 h-4 w-4" />
                       Dashboard
                     </Link>
                   </DropdownMenuItem>
@@ -154,13 +154,13 @@ export function Header() {
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
                     <Link href="/settings">
-                      <Settings className="mr-2 h-4 w-4" />
+                      <Gear className="mr-2 h-4 w-4" />
                       Settings
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={handleLogout}>
-                    <LogOut className="mr-2 h-4 w-4" />
+                    <SignOut className="mr-2 h-4 w-4" />
                     Log out
                   </DropdownMenuItem>
                 </DropdownMenuContent>
@@ -187,7 +187,7 @@ export function Header() {
             {mobileMenuOpen ? (
               <X className="h-5 w-5" />
             ) : (
-              <Menu className="h-5 w-5" />
+              <List className="h-5 w-5" />
             )}
           </Button>
         </div>
