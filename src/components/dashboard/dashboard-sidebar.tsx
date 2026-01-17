@@ -6,39 +6,39 @@ import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { useAuthStore } from "@/stores";
 import {
-  LayoutDashboard,
+  SquaresFour,
   Briefcase,
   Users,
   FileText,
-  MessageSquare,
-  DollarSign,
-  Settings,
+  ChatCircle,
+  CurrencyDollar,
+  Gear,
   User,
-  Send,
+  PaperPlaneTilt,
   FolderOpen,
   Star,
-  HelpCircle,
-} from "lucide-react";
+  Question,
+} from "@phosphor-icons/react";
 
 const freelancerNavItems = [
-  { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
+  { href: "/dashboard", label: "Dashboard", icon: SquaresFour },
   { href: "/jobs", label: "Find Jobs", icon: Briefcase },
-  { href: "/proposals", label: "My Proposals", icon: Send, badge: "3" },
+  { href: "/proposals", label: "My Proposals", icon: PaperPlaneTilt, badge: "3" },
   { href: "/contracts", label: "Contracts", icon: FileText },
-  { href: "/messages", label: "Messages", icon: MessageSquare, badge: "5" },
-  { href: "/earnings", label: "Earnings", icon: DollarSign },
+  { href: "/messages", label: "Messages", icon: ChatCircle, badge: "5" },
+  { href: "/earnings", label: "Earnings", icon: CurrencyDollar },
   { href: "/profile/edit", label: "Edit Profile", icon: User },
-  { href: "/settings", label: "Settings", icon: Settings },
+  { href: "/settings", label: "Settings", icon: Gear },
 ];
 
 const clientNavItems = [
-  { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
+  { href: "/dashboard", label: "Dashboard", icon: SquaresFour },
   { href: "/my-jobs/post", label: "Post a Job", icon: Briefcase },
   { href: "/my-jobs", label: "My Jobs", icon: FolderOpen },
   { href: "/freelancers", label: "Find Talent", icon: Users },
   { href: "/contracts", label: "Contracts", icon: FileText },
-  { href: "/messages", label: "Messages", icon: MessageSquare, badge: "2" },
-  { href: "/settings", label: "Settings", icon: Settings },
+  { href: "/messages", label: "Messages", icon: ChatCircle, badge: "2" },
+  { href: "/settings", label: "Settings", icon: Gear },
 ];
 
 export function DashboardSidebar() {
@@ -98,7 +98,7 @@ export function DashboardSidebar() {
                 href="/help"
                 className="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors"
               >
-                <HelpCircle className="h-5 w-5 text-gray-400" />
+                <Question className="h-5 w-5 text-gray-400" />
                 Help & Support
               </Link>
             </div>

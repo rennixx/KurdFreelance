@@ -15,13 +15,13 @@ import {
 } from "@/components/ui/dropdown-menu";
 import {
   Bell,
-  LogOut,
-  Menu,
-  MessageSquare,
-  Search,
-  Settings,
+  SignOut,
+  List,
+  ChatCircle,
+  MagnifyingGlass,
+  Gear,
   User,
-} from "lucide-react";
+} from "@phosphor-icons/react";
 import { useAuthStore } from "@/stores";
 import { createClient } from "@/lib/supabase/client";
 import { useState } from "react";
@@ -57,7 +57,7 @@ export function DashboardHeader({ onMenuClick }: DashboardHeaderProps) {
         {/* Mobile menu button and logo */}
         <div className="flex items-center gap-4 lg:hidden">
           <Button variant="ghost" size="icon" onClick={onMenuClick}>
-            <Menu className="h-5 w-5" />
+            <List className="h-5 w-5" />
           </Button>
           <Link href="/dashboard" className="flex items-center space-x-2">
             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-green-600 text-white font-bold">
@@ -70,7 +70,7 @@ export function DashboardHeader({ onMenuClick }: DashboardHeaderProps) {
         {/* Search bar - Desktop */}
         <div className="hidden lg:flex flex-1 max-w-md">
           <div className="relative w-full">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+            <MagnifyingGlass className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
             <input
               type="text"
               placeholder="Search jobs, freelancers..."
@@ -88,7 +88,7 @@ export function DashboardHeader({ onMenuClick }: DashboardHeaderProps) {
             className="lg:hidden"
             onClick={() => setSearchOpen(!searchOpen)}
           >
-            <Search className="h-5 w-5" />
+            <MagnifyingGlass className="h-5 w-5" />
           </Button>
 
           {/* Notifications */}
@@ -111,7 +111,7 @@ export function DashboardHeader({ onMenuClick }: DashboardHeaderProps) {
           {/* Messages */}
           <Button variant="ghost" size="icon" className="relative" asChild>
             <Link href="/messages">
-              <MessageSquare className="h-5 w-5" />
+              <ChatCircle className="h-5 w-5" />
               <Badge className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 text-xs bg-green-600">
                 3
               </Badge>
@@ -146,13 +146,13 @@ export function DashboardHeader({ onMenuClick }: DashboardHeaderProps) {
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
                 <Link href="/settings" className="flex items-center">
-                  <Settings className="mr-2 h-4 w-4" />
+                  <Gear className="mr-2 h-4 w-4" />
                   Settings
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={handleLogout} className="text-red-600">
-                <LogOut className="mr-2 h-4 w-4" />
+                <SignOut className="mr-2 h-4 w-4" />
                 Logout
               </DropdownMenuItem>
             </DropdownMenuContent>
@@ -164,7 +164,7 @@ export function DashboardHeader({ onMenuClick }: DashboardHeaderProps) {
       {searchOpen && (
         <div className="lg:hidden px-4 pb-4">
           <div className="relative w-full">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+            <MagnifyingGlass className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
             <input
               type="text"
               placeholder="Search jobs, freelancers..."
