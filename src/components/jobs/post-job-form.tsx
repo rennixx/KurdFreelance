@@ -27,14 +27,14 @@ import { jobPostSchema } from "@/lib/validations";
 type JobFormData = z.infer<typeof jobPostSchema>;
 
 const categories = [
-  "Development",
-  "Design",
-  "Writing",
-  "Marketing",
-  "Video & Animation",
-  "Music & Audio",
-  "Data",
-  "Admin Support",
+  { id: 1, name: "Development" },
+  { id: 2, name: "Design" },
+  { id: 3, name: "Writing" },
+  { id: 4, name: "Marketing" },
+  { id: 5, name: "Video & Animation" },
+  { id: 6, name: "Music & Audio" },
+  { id: 7, name: "Data" },
+  { id: 8, name: "Admin Support" },
 ];
 
 const durations = [
@@ -106,11 +106,11 @@ export function PostJobForm({ userId }: PostJobFormProps) {
           client_id: userId,
           title: data.title,
           description: data.description,
-          category: data.category,
+          category: data.categoryId,
           budget_type: data.budgetType,
           budget_min: data.budgetMin,
           budget_max: data.budgetMax,
-          duration: data.duration,
+          duration: data.estimatedDuration,
           experience_level: data.experienceLevel,
           skills: skills,
           status: "open",
@@ -171,9 +171,9 @@ export function PostJobForm({ userId }: PostJobFormProps) {
 
           <div className="grid sm:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="category">Category</Label>
+              <Label htmlFor="categoryId">Category</Label>
               <Select
-                onValueChange={(value) => setValue("category", value)}
+                onValueChange={(value) => setValue("categoryId", parseInt(value))}
                 disabled={isLoading}
               >
                 <SelectTrigger>
@@ -181,23 +181,23 @@ export function PostJobForm({ userId }: PostJobFormProps) {
                 </SelectTrigger>
                 <SelectContent>
                   {categories.map((category) => (
-                    <SelectItem key={category} value={category.toLowerCase()}>
-                      {category}
+                    <SelectItem key={category.id} value={category.id.toString()}>
+                      {category.name}
                     </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
-              {errors.category && (
+              {errors.categoryId && (
                 <p className="text-sm text-destructive">
-                  {errors.category.message}
+                  {errors.categoryId.message}
                 </p>
               )}
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="duration">Expected Duration</Label>
+              <Label htmlFor="estimatedDuration">Expected Duration</Label>
               <Select
-                onValueChange={(value) => setValue("duration", value)}
+                onValueChange={(value) => setValue("estimatedDuration", value)}
                 disabled={isLoading}
               >
                 <SelectTrigger>

@@ -41,6 +41,8 @@ import {
   Trophy,
   Globe,
   ImageSquare,
+  Medal,
+  ImagesSquare,
 } from "@phosphor-icons/react";
 import { toast } from "sonner";
 import { useAuthStore } from "@/stores";
@@ -589,7 +591,7 @@ export function ProfileEditContent() {
                     onClick={() => removeLanguage(index)}
                     disabled={languages.length === 1}
                   >
-                    <Trash2 className="h-4 w-4 text-red-500" />
+                    <Trash className="h-4 w-4 text-red-500" />
                   </Button>
                 </div>
               ))}
@@ -619,7 +621,7 @@ export function ProfileEditContent() {
                       size="icon"
                       onClick={() => removeEducation(index)}
                     >
-                      <Trash2 className="h-4 w-4 text-red-500" />
+                      <Trash className="h-4 w-4 text-red-500" />
                     </Button>
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -665,7 +667,7 @@ export function ProfileEditContent() {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Award className="h-5 w-5" />
+                <Medal className="h-5 w-5" />
                 Certifications
               </CardTitle>
             </CardHeader>
@@ -680,7 +682,7 @@ export function ProfileEditContent() {
                       size="icon"
                       onClick={() => removeCertification(index)}
                     >
-                      <Trash2 className="h-4 w-4 text-red-500" />
+                      <Trash className="h-4 w-4 text-red-500" />
                     </Button>
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -726,7 +728,7 @@ export function ProfileEditContent() {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <ImagePlus className="h-5 w-5" />
+                <ImagesSquare className="h-5 w-5" />
                 Portfolio
               </CardTitle>
               <CardDescription>
@@ -744,7 +746,7 @@ export function ProfileEditContent() {
                       size="icon"
                       onClick={() => removePortfolioItem(index)}
                     >
-                      <Trash2 className="h-4 w-4 text-red-500" />
+                      <Trash className="h-4 w-4 text-red-500" />
                     </Button>
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -878,7 +880,7 @@ export function ProfileEditContent() {
                 </>
               ) : (
                 <>
-                  <Save className="h-4 w-4 mr-2" />
+                  <FloppyDisk className="h-4 w-4 mr-2" />
                   Save Profile
                 </>
               )}

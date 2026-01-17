@@ -181,13 +181,13 @@ const mockPendingItems: PendingItem[] = [
 ];
 
 const navItems = [
-  { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
+  { href: "/admin", label: "Dashboard", icon: SquaresFour },
   { href: "/admin/users", label: "Users", icon: Users },
   { href: "/admin/jobs", label: "Jobs", icon: Briefcase },
   { href: "/admin/contracts", label: "Contracts", icon: FileText },
   { href: "/admin/payments", label: "Payments", icon: CurrencyDollar },
   { href: "/admin/reports", label: "Reports", icon: Flag },
-  { href: "/admin/settings", label: "Settings", icon: Settings },
+  { href: "/admin/settings", label: "Settings", icon: Gear },
 ];
 
 export function AdminDashboard() {
@@ -242,7 +242,7 @@ export function AdminDashboard() {
             onClick={() => setSidebarOpen(!sidebarOpen)}
             className="text-white hover:bg-gray-800"
           >
-            <Menu className="h-5 w-5" />
+            <List className="h-5 w-5" />
           </Button>
         </div>
         <nav className="p-4 space-y-2">
@@ -267,7 +267,7 @@ export function AdminDashboard() {
             href="/dashboard"
             className="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-300 hover:bg-gray-800 transition-colors"
           >
-            <LogOut className="h-5 w-5" />
+            <SignOut className="h-5 w-5" />
             {sidebarOpen && <span>Back to Site</span>}
           </Link>
         </div>
@@ -288,7 +288,7 @@ export function AdminDashboard() {
             </div>
             <div className="flex items-center gap-4">
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                <MagnifyingGlass className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
                 <Input placeholder="Search..." className="pl-9 w-64" />
               </div>
               <Button variant="ghost" size="icon" className="relative">
@@ -327,7 +327,7 @@ export function AdminDashboard() {
                     <p className="text-sm text-gray-500">Total Users</p>
                     <p className="text-2xl font-bold">{mockStats.totalUsers.toLocaleString()}</p>
                     <p className="text-sm text-green-600 flex items-center gap-1 mt-1">
-                      <TrendingUp className="h-4 w-4" />
+                      <TrendUp className="h-4 w-4" />
                       +12.5% this month
                     </p>
                   </div>
@@ -345,7 +345,7 @@ export function AdminDashboard() {
                     <p className="text-sm text-gray-500">Active Jobs</p>
                     <p className="text-2xl font-bold">{mockStats.activeJobs.toLocaleString()}</p>
                     <p className="text-sm text-green-600 flex items-center gap-1 mt-1">
-                      <TrendingUp className="h-4 w-4" />
+                      <TrendUp className="h-4 w-4" />
                       +8.2% this month
                     </p>
                   </div>
@@ -363,7 +363,7 @@ export function AdminDashboard() {
                     <p className="text-sm text-gray-500">Monthly Revenue</p>
                     <p className="text-2xl font-bold">${(mockStats.monthlyRevenue / 1000).toFixed(0)}K</p>
                     <p className="text-sm text-green-600 flex items-center gap-1 mt-1">
-                      <TrendingUp className="h-4 w-4" />
+                      <TrendUp className="h-4 w-4" />
                       +15.3% this month
                     </p>
                   </div>
