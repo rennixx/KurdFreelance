@@ -147,7 +147,7 @@ export function Header() {
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
-                    <Link href="/profile">
+                    <Link href="/profile/edit">
                       <User className="mr-2 h-4 w-4" />
                       Profile
                     </Link>

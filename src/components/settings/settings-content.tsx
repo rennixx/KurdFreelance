@@ -1,12 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { toast } from "sonner";
-import { CircleNotch, User, Bell, Shield, CreditCard, Trash } from "@phosphor-icons/react";
+import { CircleNotch, User, Bell, Shield, CreditCard, Trash, Upload } from "@phosphor-icons/react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -29,6 +29,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { createClient } from "@/lib/supabase/client";
+import { useAuthStore } from "@/stores";
 
 const profileSchema = z.object({
   fullName: z.string().min(2, "Name must be at least 2 characters"),
@@ -76,6 +77,10 @@ interface SettingsContentProps {
 export function SettingsContent({ user }: SettingsContentProps) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
+  const [isUploadingPhoto, setIsUploadingPhoto] = useState(false);
+  const [avatarUrl, setAvatarUrl] = useState(user.avatar_url);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const { setUser } = useAuthStore();
   const isFreelancer = user.role === "freelancer";
 
   const {
@@ -148,6 +153,90 @@ export function SettingsContent({ user }: SettingsContentProps) {
     }
   };
 
+  const handlePhotoChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    // Validate file type
+    if (!file.type.startsWith("image/")) {
+      toast.error("Please upload an image file");
+      return;
+    }
+
+    // Validate file size (2MB)
+    if (file.size > 2 * 1024 * 1024) {
+      toast.error("File size must be less than 2MB");
+      return;
+    }
+
+    setIsUploadingPhoto(true);
+    const supabase = createClient();
+
+    try {
+      // Create unique filename
+      const fileExt = file.name.split(".").pop();
+      const fileName = `${user.id}-${Math.random()}.${fileExt}`;
+      const filePath = `avatars/${fileName}`;
+
+      // Upload to Supabase Storage
+      const { error: uploadError } = await supabase.storage
+        .from("avatars")
+        .upload(filePath, file, { upsert: true });
+
+      if (uploadError) throw uploadError;
+
+      // Get public URL
+      const { data: { publicUrl } } = supabase.storage
+        .from("avatars")
+        .getPublicUrl(filePath);
+
+      // Update user profile with new avatar URL
+      const { error: updateError } = await supabase
+        .from("users")
+        .update({ avatar_url: publicUrl })
+        .eq("id", user.id);
+
+      if (updateError) throw updateError;
+
+      // Update local state and auth store
+      setAvatarUrl(publicUrl);
+      setUser({ ...user, avatar_url: publicUrl });
+      
+      toast.success("Profile photo updated successfully!");
+      router.refresh();
+    } catch (error) {
+      console.error("Photo upload error:", error);
+      toast.error("Failed to upload photo");
+    } finally {
+      setIsUploadingPhoto(false);
+    }
+  };
+
+  const handleRemovePhoto = async () => {
+    setIsUploadingPhoto(true);
+    const supabase = createClient();
+
+    try {
+      const { error } = await supabase
+        .from("users")
+        .update({ avatar_url: null })
+        .eq("id", user.id);
+
+      if (error) throw error;
+
+      setAvatarUrl(null);
+      setUser({ ...user, avatar_url: null });
+      
+      toast.success("Profile photo removed");
+      router.refresh();
+    } catch (error) {
+      console.error("Remove photo error:", error);
+      toast.error("Failed to remove photo");
+    } finally {
+      setIsUploadingPhoto(false);
+    }
+  };
+
   const handleSignOut = async () => {
     const supabase = createClient();
     await supabase.auth.signOut();
@@ -193,7 +282,7 @@ export function SettingsContent({ user }: SettingsContentProps) {
                 {/* Avatar */}
                 <div className="flex items-center gap-4">
                   <Avatar className="h-20 w-20">
-                    <AvatarImage src={user.avatar_url} />
+                    <AvatarImage src={avatarUrl || undefined} />
                     <AvatarFallback className="text-xl">
                       {user.full_name
                         .split(" ")
@@ -201,11 +290,46 @@ export function SettingsContent({ user }: SettingsContentProps) {
                         .join("")}
                     </AvatarFallback>
                   </Avatar>
-                  <div>
-                    <Button type="button" variant="outline">
-                      Change Photo
-                    </Button>
-                    <p className="text-sm text-muted-foreground mt-1">
+                  <div className="space-y-2">
+                    <div className="flex gap-2">
+                      <input
+                        ref={fileInputRef}
+                        type="file"
+                        accept="image/*"
+                        onChange={handlePhotoChange}
+                        className="hidden"
+                      />
+                      <Button 
+                        type="button" 
+                        variant="outline"
+                        onClick={() => fileInputRef.current?.click()}
+                        disabled={isUploadingPhoto}
+                      >
+                        {isUploadingPhoto ? (
+                          <>
+                            <CircleNotch className="mr-2 h-4 w-4 animate-spin" />
+                            Uploading...
+                          </>
+                        ) : (
+                          <>
+                            <Upload className="mr-2 h-4 w-4" />
+                            Change Photo
+                          </>
+                        )}
+                      </Button>
+                      {avatarUrl && (
+                        <Button
+                          type="button"
+                          variant="outline"
+                          onClick={handleRemovePhoto}
+                          disabled={isUploadingPhoto}
+                        >
+                          <Trash className="mr-2 h-4 w-4" />
+                          Remove
+                        </Button>
+                      )}
+                    </div>
+                    <p className="text-sm text-muted-foreground">
                       JPG, GIF or PNG. Max size 2MB.
                     </p>
                   </div>
