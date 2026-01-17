@@ -33,8 +33,8 @@ const freelancerNavItems = [
 
 const clientNavItems = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-  { href: "/jobs/post", label: "Post a Job", icon: Briefcase },
-  { href: "/jobs", label: "My Jobs", icon: FolderOpen },
+  { href: "/my-jobs/post", label: "Post a Job", icon: Briefcase },
+  { href: "/my-jobs", label: "My Jobs", icon: FolderOpen },
   { href: "/freelancers", label: "Find Talent", icon: Users },
   { href: "/contracts", label: "Contracts", icon: FileText },
   { href: "/messages", label: "Messages", icon: MessageSquare, badge: "2" },
