@@ -309,11 +309,42 @@ export function ProfileEditContent() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Professional Title</FormLabel>
-                    <FormControl>
-                      <Input placeholder="e.g., Full Stack Developer" {...field} />
-                    </FormControl>
+                    <Select onValueChange={field.onChange} value={field.value}>
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select your professional title" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="Full Stack Developer">Full Stack Developer</SelectItem>
+                        <SelectItem value="Frontend Developer">Frontend Developer</SelectItem>
+                        <SelectItem value="Backend Developer">Backend Developer</SelectItem>
+                        <SelectItem value="Mobile Developer">Mobile Developer</SelectItem>
+                        <SelectItem value="UI/UX Designer">UI/UX Designer</SelectItem>
+                        <SelectItem value="Graphic Designer">Graphic Designer</SelectItem>
+                        <SelectItem value="Web Designer">Web Designer</SelectItem>
+                        <SelectItem value="DevOps Engineer">DevOps Engineer</SelectItem>
+                        <SelectItem value="Data Scientist">Data Scientist</SelectItem>
+                        <SelectItem value="Data Analyst">Data Analyst</SelectItem>
+                        <SelectItem value="Machine Learning Engineer">Machine Learning Engineer</SelectItem>
+                        <SelectItem value="Project Manager">Project Manager</SelectItem>
+                        <SelectItem value="Product Manager">Product Manager</SelectItem>
+                        <SelectItem value="Content Writer">Content Writer</SelectItem>
+                        <SelectItem value="Copywriter">Copywriter</SelectItem>
+                        <SelectItem value="SEO Specialist">SEO Specialist</SelectItem>
+                        <SelectItem value="Digital Marketing Specialist">Digital Marketing Specialist</SelectItem>
+                        <SelectItem value="Social Media Manager">Social Media Manager</SelectItem>
+                        <SelectItem value="Video Editor">Video Editor</SelectItem>
+                        <SelectItem value="Motion Graphics Designer">Motion Graphics Designer</SelectItem>
+                        <SelectItem value="Virtual Assistant">Virtual Assistant</SelectItem>
+                        <SelectItem value="Customer Support Specialist">Customer Support Specialist</SelectItem>
+                        <SelectItem value="Translator">Translator</SelectItem>
+                        <SelectItem value="Accountant">Accountant</SelectItem>
+                        <SelectItem value="Business Consultant">Business Consultant</SelectItem>
+                      </SelectContent>
+                    </Select>
                     <FormDescription>
-                      A short title that describes what you do
+                      Select the title that best describes what you do
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
