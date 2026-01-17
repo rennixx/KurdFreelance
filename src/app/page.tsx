@@ -1,11 +1,19 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import KurdistanShape from "@/components/landing/kurdistan-shape";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Input } from "@/components/ui/input";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import {
   Code,
   Palette,
@@ -25,104 +33,266 @@ import {
   TwitterLogo,
   LinkedinLogo,
   InstagramLogo,
+  UserPlus,
+  MagnifyingGlass,
+  Handshake,
+  Quotes,
+  Trophy,
+  EnvelopeSimple,
+  Check,
+  CurrencyDollar,
+  LockKey,
+  Globe,
+  Clock,
+  SpinnerGap,
 } from "@phosphor-icons/react";
 
-const categories = [
-  { name: "Development", icon: Code, count: "2,345 jobs" },
-  { name: "Design", icon: Palette, count: "1,234 jobs" },
-  { name: "Writing", icon: PenNib, count: "987 jobs" },
-  { name: "Video & Animation", icon: VideoCamera, count: "654 jobs" },
-  { name: "Marketing", icon: TrendUp, count: "543 jobs" },
-  { name: "Data", icon: Database, count: "321 jobs" },
-  { name: "Music & Audio", icon: MusicNote, count: "234 jobs" },
-  { name: "Photography", icon: Camera, count: "198 jobs" },
-];
+// Icon mapping for dynamic categories
+const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
+  Code,
+  Palette,
+  PenNib,
+  VideoCamera,
+  TrendUp,
+  Database,
+  MusicNote,
+  Camera,
+};
 
-const featuredFreelancers = [
-  {
-    name: "Azad K.",
-    title: "Full Stack Developer",
-    avatar: "",
-    rating: 4.9,
-    reviews: 47,
-    rate: "$25/hr",
-    skills: ["React", "Node.js", "TypeScript"],
-  },
-  {
-    name: "Hana M.",
-    title: "UI/UX Designer",
-    avatar: "",
-    rating: 5.0,
-    reviews: 32,
-    rate: "$30/hr",
-    skills: ["Figma", "UI Design", "Prototyping"],
-  },
-  {
-    name: "Saman R.",
-    title: "Content Writer",
-    avatar: "",
-    rating: 4.8,
-    reviews: 28,
-    rate: "$20/hr",
-    skills: ["SEO", "Blog Writing", "Copywriting"],
-  },
-  {
-    name: "Noor A.",
-    title: "Digital Marketer",
-    avatar: "",
-    rating: 4.9,
-    reviews: 51,
-    rate: "$22/hr",
-    skills: ["SEO", "Social Media", "Google Ads"],
-  },
-];
+// Types
+interface Stat {
+  freelancersCount: string;
+  jobsCount: string;
+  totalEarnings: string;
+  successRate: string;
+}
 
-const recentJobs = [
-  {
-    title: "Build WordPress E-commerce Site",
-    budget: "$500-800",
-    type: "Fixed",
-    skills: ["WordPress", "WooCommerce", "PHP"],
-    posted: "2 hours ago",
-    proposals: 3,
-  },
-  {
-    title: "Mobile App UI Design (iOS & Android)",
-    budget: "$30-50/hr",
-    type: "Hourly",
-    skills: ["Figma", "Mobile Design", "UI/UX"],
-    posted: "4 hours ago",
-    proposals: 7,
-  },
-  {
-    title: "Arabic to English Translation (Technical)",
-    budget: "$200-400",
-    type: "Fixed",
-    skills: ["Translation", "Arabic", "Technical Writing"],
-    posted: "5 hours ago",
-    proposals: 12,
-  },
-];
+interface Testimonial {
+  id: string;
+  content: string;
+  rating: number;
+  author: {
+    name: string;
+    avatar: string;
+    role: string;
+    title: string;
+    jobsCompleted: number;
+  };
+}
 
-const stats = [
-  { label: "Freelancers", value: "5,000+", icon: Users },
-  { label: "Jobs Posted", value: "10,000+", icon: Briefcase },
-  { label: "Total Earned", value: "$2M+", icon: TrendUp },
-  { label: "Success Rate", value: "98%", icon: Shield },
-];
+interface SuccessStory {
+  id: string;
+  title: string;
+  summary: string;
+  category: string;
+  image: string;
+  stats: {
+    duration?: string;
+    budget?: string;
+    result?: string;
+  };
+  freelancer: {
+    name: string;
+    avatar: string;
+    title: string;
+  };
+  client: {
+    name: string;
+    company: string;
+  };
+}
+
+interface FAQ {
+  id: string;
+  question: string;
+  answer: string;
+  category: string;
+}
+
+interface Partner {
+  id: string;
+  name: string;
+  logo_url: string;
+  website_url: string;
+  partner_type: string;
+}
+
+interface Category {
+  id: number;
+  name: string;
+  slug: string;
+  icon: string;
+  jobsCount: number;
+}
 
 export default function HomePage() {
+  // State for API data
+  const [stats, setStats] = useState<Stat | null>(null);
+  const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
+  // const [successStories, setSuccessStories] = useState<SuccessStory[]>([]);
+  const [faqs, setFaqs] = useState<FAQ[]>([]);
+  const [partners, setPartners] = useState<Partner[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Newsletter state
+  const [email, setEmail] = useState("");
+  const [isSubscribing, setIsSubscribing] = useState(false);
+  const [subscribeMessage, setSubscribeMessage] = useState("");
+
+  // Fetch all data on mount
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [
+          statsRes,
+          testimonialsRes,
+          // storiesRes,
+          faqsRes,
+          partnersRes,
+          categoriesRes,
+        ] = await Promise.all([
+          fetch("/api/landing/stats"),
+          fetch("/api/landing/testimonials"),
+          // fetch("/api/landing/success-stories"),
+          fetch("/api/landing/faqs"),
+          fetch("/api/landing/partners"),
+          fetch("/api/landing/categories"),
+        ]);
+
+        const [
+          statsData,
+          testimonialsData,
+          // storiesData,
+          faqsData,
+          partnersData,
+          categoriesData,
+        ] = await Promise.all([
+          statsRes.json(),
+          testimonialsRes.json(),
+          // storiesRes.json(),
+          faqsRes.json(),
+          partnersRes.json(),
+          categoriesRes.json(),
+        ]);
+
+        setStats(statsData);
+        setTestimonials(testimonialsData);
+        // setSuccessStories(storiesData);
+        setFaqs(faqsData);
+        setPartners(partnersData);
+        setCategories(categoriesData);
+      } catch (error) {
+        console.error("Error fetching landing page data:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  // Newsletter subscription handler
+  const handleSubscribe = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email) return;
+
+    setIsSubscribing(true);
+    setSubscribeMessage("");
+
+    try {
+      const res = await fetch("/api/landing/newsletter", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+      const data = await res.json();
+      setSubscribeMessage(data.message || "Thank you for subscribing!");
+      setEmail("");
+    } catch {
+      setSubscribeMessage("Something went wrong. Please try again.");
+    } finally {
+      setIsSubscribing(false);
+    }
+  };
+
+  // Stats config with icons
+  const statsConfig = [
+    { key: "freelancersCount", label: "Freelancers", icon: Users },
+    { key: "jobsCount", label: "Jobs Posted", icon: Briefcase },
+    { key: "totalEarnings", label: "Total Earned", icon: TrendUp },
+    { key: "successRate", label: "Success Rate", icon: Shield },
+  ];
+
+  // How it works steps
+  const howItWorksSteps = [
+    {
+      icon: UserPlus,
+      title: "Create Your Profile",
+      description:
+        "Sign up for free and build your professional profile. Showcase your skills, portfolio, and experience to attract clients.",
+      color: "text-blue-500",
+      bgColor: "bg-blue-500/10",
+    },
+    {
+      icon: MagnifyingGlass,
+      title: "Find Opportunities",
+      description:
+        "Browse jobs that match your skills or let clients find you. Our smart matching system connects you with the right projects.",
+      color: "text-purple-500",
+      bgColor: "bg-purple-500/10",
+    },
+    {
+      icon: Handshake,
+      title: "Work & Get Paid",
+      description:
+        "Collaborate with clients, deliver quality work, and receive secure payments through our escrow system. Simple and safe.",
+      color: "text-green-500",
+      bgColor: "bg-green-500/10",
+    },
+  ];
+
+  // Trust badges
+  const trustBadges = [
+    {
+      icon: Shield,
+      title: "Secure Escrow",
+      description: "Your payments are protected until work is approved",
+    },
+    {
+      icon: LockKey,
+      title: "Identity Verified",
+      description: "All freelancers go through our verification process",
+    },
+    {
+      icon: CurrencyDollar,
+      title: "Low Fees",
+      description: "Only 10-15% fees, lower than any competitor",
+    },
+    {
+      icon: Globe,
+      title: "Local Support",
+      description: "24/7 support in Kurdish, Arabic, and English",
+    },
+    {
+      icon: Clock,
+      title: "Fast Payments",
+      description: "Get paid within 24-48 hours of approval",
+    },
+    {
+      icon: CheckCircle,
+      title: "Quality Guarantee",
+      description: "Dispute resolution and quality assurance",
+    },
+  ];
+
   return (
     <div className="flex flex-col min-h-screen">
       {/* Floating Pill Header */}
       <header className="fixed top-4 left-0 right-0 z-50 flex justify-center px-4">
         <div className="w-full max-w-4xl bg-background/80 backdrop-blur-lg border rounded-full shadow-lg px-6 py-3 flex items-center justify-between">
           <Link href="/" className="flex items-center">
-            <img 
-              src="/logo.png" 
-              alt="KurdFreelance" 
-              className="h-8 w-auto"
-            />
+            <img src="/logo.png" alt="KurdFreelance" className="h-8 w-auto" />
           </Link>
           <div className="flex items-center gap-2">
             <Button variant="ghost" size="sm" asChild className="rounded-full">
@@ -139,10 +309,10 @@ export default function HomePage() {
       <section className="relative overflow-hidden bg-gradient-to-br from-primary/5 via-background to-primary/10 py-20 md:py-32">
         <div className="container relative z-10">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
-            {/* Left: Text Content */}
             <div className="text-center lg:text-left">
               <Badge variant="secondary" className="mb-4">
-                🎉 Now serving 5,000+ freelancers in Kurdistan
+                🎉 Now serving {stats?.freelancersCount || "5,000+"} freelancers
+                in Kurdistan
               </Badge>
               <h1 className="text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl">
                 Find Kurdistan&apos;s Best{" "}
@@ -188,14 +358,11 @@ export default function HomePage() {
                 </div>
               </div>
             </div>
-
-            {/* Right: Kurdistan Shape */}
             <div className="relative">
               <KurdistanShape />
             </div>
           </div>
         </div>
-        {/* Background decoration */}
         <div className="absolute inset-0 -z-10 overflow-hidden">
           <div className="absolute -top-1/2 -right-1/4 h-96 w-96 rounded-full bg-primary/10 blur-3xl" />
           <div className="absolute -bottom-1/2 -left-1/4 h-96 w-96 rounded-full bg-primary/10 blur-3xl" />
@@ -206,11 +373,15 @@ export default function HomePage() {
       <section className="border-y bg-muted/30 py-12">
         <div className="container">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            {stats.map((stat) => (
-              <div key={stat.label} className="text-center">
+            {statsConfig.map((stat) => (
+              <div key={stat.key} className="text-center">
                 <stat.icon className="h-8 w-8 mx-auto mb-2 text-primary" />
                 <div className="text-2xl md:text-3xl font-bold">
-                  {stat.value}
+                  {isLoading ? (
+                    <SpinnerGap className="h-6 w-6 mx-auto animate-spin" />
+                  ) : (
+                    stats?.[stat.key as keyof Stat] || "—"
+                  )}
                 </div>
                 <div className="text-sm text-muted-foreground">{stat.label}</div>
               </div>
@@ -219,151 +390,362 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Browse by Category */}
+      {/* Section 1: How It Works */}
       <section className="py-16 md:py-24">
         <div className="container">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold tracking-tight">
+            <Badge variant="outline" className="mb-4">
+              Simple Process
+            </Badge>
+            <h2 className="text-3xl md:text-4xl font-bold tracking-tight">
+              How It Works
+            </h2>
+            <p className="mt-4 text-lg text-muted-foreground max-w-2xl mx-auto">
+              Get started in minutes. Whether you&apos;re hiring or looking for
+              work, our platform makes it easy.
+            </p>
+          </div>
+          <div className="grid md:grid-cols-3 gap-8">
+            {howItWorksSteps.map((step, index) => (
+              <div
+                key={step.title}
+                className="relative text-center p-6 rounded-2xl border bg-card hover:shadow-lg transition-shadow"
+              >
+                <div className="absolute -top-4 left-1/2 -translate-x-1/2">
+                  <span className="inline-flex items-center justify-center h-8 w-8 rounded-full bg-primary text-primary-foreground font-bold text-sm">
+                    {index + 1}
+                  </span>
+                </div>
+                <div
+                  className={`mt-4 mb-4 inline-flex items-center justify-center h-16 w-16 rounded-2xl ${step.bgColor}`}
+                >
+                  <step.icon className={`h-8 w-8 ${step.color}`} />
+                </div>
+                <h3 className="text-xl font-semibold mb-2">{step.title}</h3>
+                <p className="text-muted-foreground">{step.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Section 2: Trust Badges */}
+      <section className="py-16 md:py-24 bg-muted/30">
+        <div className="container">
+          <div className="text-center mb-12">
+            <Badge variant="outline" className="mb-4">
+              Why Choose Us
+            </Badge>
+            <h2 className="text-3xl md:text-4xl font-bold tracking-tight">
+              Built for Trust & Security
+            </h2>
+            <p className="mt-4 text-lg text-muted-foreground max-w-2xl mx-auto">
+              We prioritize your safety and satisfaction with industry-leading
+              protections.
+            </p>
+          </div>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {trustBadges.map((badge) => (
+              <div
+                key={badge.title}
+                className="flex items-start gap-4 p-6 rounded-xl border bg-card"
+              >
+                <div className="flex-shrink-0 h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center">
+                  <badge.icon className="h-6 w-6 text-primary" />
+                </div>
+                <div>
+                  <h3 className="font-semibold mb-1">{badge.title}</h3>
+                  <p className="text-sm text-muted-foreground">
+                    {badge.description}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Section 3: Browse Categories */}
+      <section className="py-16 md:py-24">
+        <div className="container">
+          <div className="text-center mb-12">
+            <Badge variant="outline" className="mb-4">
+              Explore
+            </Badge>
+            <h2 className="text-3xl md:text-4xl font-bold tracking-tight">
               Browse by Category
             </h2>
-            <p className="mt-2 text-muted-foreground">
+            <p className="mt-4 text-lg text-muted-foreground">
               Find the perfect freelancer for any project
             </p>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {categories.map((category) => (
-              <Link
-                key={category.name}
-                href={`/jobs?category=${category.name.toLowerCase()}`}
-              >
-                <Card className="hover:border-primary hover:shadow-md transition-all cursor-pointer group category-card">
-                  <CardContent className="p-6 text-center">
-                    <category.icon className="h-10 w-10 mx-auto mb-3 text-muted-foreground group-hover:text-primary transition-colors" />
-                    <h3 className="font-semibold">{category.name}</h3>
-                    <p className="text-sm text-muted-foreground mt-1">
-                      {category.count}
-                    </p>
-                  </CardContent>
-                </Card>
-              </Link>
-            ))}
+            {isLoading
+              ? Array(8)
+                  .fill(0)
+                  .map((_, i) => (
+                    <Card key={i} className="animate-pulse">
+                      <CardContent className="p-6 text-center">
+                        <div className="h-10 w-10 mx-auto mb-3 rounded bg-muted" />
+                        <div className="h-4 w-20 mx-auto mb-2 rounded bg-muted" />
+                        <div className="h-3 w-16 mx-auto rounded bg-muted" />
+                      </CardContent>
+                    </Card>
+                  ))
+              : categories.map((category) => {
+                  const IconComponent =
+                    iconMap[category.icon] || Code;
+                  return (
+                    <Link
+                      key={category.id}
+                      href={`/jobs?category=${category.slug}`}
+                    >
+                      <Card className="hover:border-primary hover:shadow-md transition-all cursor-pointer group">
+                        <CardContent className="p-6 text-center">
+                          <IconComponent className="h-10 w-10 mx-auto mb-3 text-muted-foreground group-hover:text-primary transition-colors" />
+                          <h3 className="font-semibold">{category.name}</h3>
+                          <p className="text-sm text-muted-foreground mt-1">
+                            {category.jobsCount} jobs
+                          </p>
+                        </CardContent>
+                      </Card>
+                    </Link>
+                  );
+                })}
           </div>
         </div>
       </section>
 
-      {/* Featured Freelancers */}
+      {/* Section 4: Testimonials */}
       <section className="py-16 md:py-24 bg-muted/30">
         <div className="container">
-          <div className="flex items-center justify-between mb-12">
-            <div>
-              <h2 className="text-3xl font-bold tracking-tight">
-                Featured Freelancers
-              </h2>
-              <p className="mt-2 text-muted-foreground">
-                Top-rated professionals ready to work
-              </p>
-            </div>
-            <Button variant="outline" asChild>
-              <Link href="/freelancers">
-                View All
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </Link>
-            </Button>
+          <div className="text-center mb-12">
+            <Badge variant="outline" className="mb-4">
+              <Quotes className="h-3 w-3 mr-1" />
+              Testimonials
+            </Badge>
+            <h2 className="text-3xl md:text-4xl font-bold tracking-tight">
+              What Our Community Says
+            </h2>
+            <p className="mt-4 text-lg text-muted-foreground max-w-2xl mx-auto">
+              Hear from freelancers and clients who have transformed their
+              businesses with KurdFreelance.
+            </p>
           </div>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {featuredFreelancers.map((freelancer) => (
-              <Card key={freelancer.name} className="hover:shadow-md transition-shadow">
-                <CardContent className="p-6">
-                  <div className="text-center mb-4">
-                    <Avatar className="h-20 w-20 mx-auto mb-3">
-                      <AvatarImage src={freelancer.avatar} />
-                      <AvatarFallback className="text-lg">
-                        {freelancer.name
-                          .split(" ")
-                          .map((n) => n[0])
-                          .join("")}
-                      </AvatarFallback>
-                    </Avatar>
-                    <h3 className="font-semibold">{freelancer.name}</h3>
-                    <p className="text-sm text-muted-foreground">
-                      {freelancer.title}
-                    </p>
-                  </div>
-                  <div className="flex items-center justify-center gap-1 mb-3">
-                    <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                    <span className="font-medium">{freelancer.rating}</span>
-                    <span className="text-muted-foreground text-sm">
-                      ({freelancer.reviews} reviews)
-                    </span>
-                  </div>
-                  <div className="flex flex-wrap gap-1 justify-center mb-4">
-                    {freelancer.skills.map((skill) => (
-                      <Badge key={skill} variant="secondary" className="text-xs">
-                        {skill}
-                      </Badge>
-                    ))}
-                  </div>
-                  <div className="text-center">
-                    <span className="text-lg font-semibold text-primary">
-                      {freelancer.rate}
-                    </span>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {isLoading
+              ? Array(6)
+                  .fill(0)
+                  .map((_, i) => (
+                    <Card key={i} className="animate-pulse">
+                      <CardContent className="p-6">
+                        <div className="h-24 rounded bg-muted mb-4" />
+                        <div className="flex items-center gap-3">
+                          <div className="h-12 w-12 rounded-full bg-muted" />
+                          <div>
+                            <div className="h-4 w-24 rounded bg-muted mb-2" />
+                            <div className="h-3 w-32 rounded bg-muted" />
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))
+              : testimonials.map((testimonial) => (
+                  <Card
+                    key={testimonial.id}
+                    className="hover:shadow-lg transition-shadow"
+                  >
+                    <CardContent className="p-6">
+                      <div className="flex gap-1 mb-3">
+                        {Array(testimonial.rating)
+                          .fill(0)
+                          .map((_, i) => (
+                            <Star
+                              key={i}
+                              className="h-4 w-4 fill-yellow-400 text-yellow-400"
+                            />
+                          ))}
+                      </div>
+                      <p className="text-muted-foreground mb-4 line-clamp-4">
+                        &ldquo;{testimonial.content}&rdquo;
+                      </p>
+                      <div className="flex items-center gap-3">
+                        <Avatar>
+                          <AvatarImage src={testimonial.author.avatar} />
+                          <AvatarFallback>
+                            {testimonial.author.name
+                              .split(" ")
+                              .map((n) => n[0])
+                              .join("")}
+                          </AvatarFallback>
+                        </Avatar>
+                        <div>
+                          <p className="font-semibold">
+                            {testimonial.author.name}
+                          </p>
+                          <p className="text-sm text-muted-foreground">
+                            {testimonial.author.title}
+                            {testimonial.author.jobsCompleted > 0 && (
+                              <span className="ml-1">
+                                • {testimonial.author.jobsCompleted} jobs
+                              </span>
+                            )}
+                          </p>
+                        </div>
+                        <Badge
+                          variant="outline"
+                          className="ml-auto capitalize text-xs"
+                        >
+                          {testimonial.author.role}
+                        </Badge>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
           </div>
         </div>
       </section>
 
-      {/* Recent Jobs */}
-      <section className="py-16 md:py-24">
+      {/* Section 5: Success Stories - Disabled for now */}
+      {/* TODO: Re-enable when success_stories table is created */}
+
+      {/* Section 6: FAQ */}
+      <section className="py-16 md:py-24 bg-muted/30">
         <div className="container">
-          <div className="flex items-center justify-between mb-12">
-            <div>
-              <h2 className="text-3xl font-bold tracking-tight">Recent Jobs</h2>
-              <p className="mt-2 text-muted-foreground">
-                New opportunities posted by clients
+          <div className="max-w-3xl mx-auto">
+            <div className="text-center mb-12">
+              <Badge variant="outline" className="mb-4">
+                FAQ
+              </Badge>
+              <h2 className="text-3xl md:text-4xl font-bold tracking-tight">
+                Frequently Asked Questions
+              </h2>
+              <p className="mt-4 text-lg text-muted-foreground">
+                Everything you need to know about KurdFreelance.
               </p>
             </div>
-            <Button variant="outline" asChild>
-              <Link href="/jobs">
-                Browse All Jobs
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </Link>
-            </Button>
+            {isLoading ? (
+              <div className="space-y-4">
+                {Array(5)
+                  .fill(0)
+                  .map((_, i) => (
+                    <div key={i} className="animate-pulse">
+                      <div className="h-14 rounded-lg bg-muted" />
+                    </div>
+                  ))}
+              </div>
+            ) : (
+              <Accordion type="single" collapsible className="w-full">
+                {faqs.map((faq) => (
+                  <AccordionItem key={faq.id} value={faq.id}>
+                    <AccordionTrigger className="text-left">
+                      {faq.question}
+                    </AccordionTrigger>
+                    <AccordionContent className="text-muted-foreground">
+                      {faq.answer}
+                    </AccordionContent>
+                  </AccordionItem>
+                ))}
+              </Accordion>
+            )}
+            <div className="mt-8 text-center">
+              <p className="text-muted-foreground mb-4">
+                Still have questions?
+              </p>
+              <Button variant="outline" asChild>
+                <Link href="/contact">Contact Support</Link>
+              </Button>
+            </div>
           </div>
-          <div className="space-y-4">
-            {recentJobs.map((job, index) => (
-              <Card key={index} className="hover:shadow-md transition-shadow">
-                <CardContent className="p-6">
-                  <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                    <div className="flex-1">
-                      <h3 className="font-semibold text-lg mb-2">
-                        <Link href="#" className="hover:text-primary">
-                          {job.title}
-                        </Link>
-                      </h3>
-                      <div className="flex flex-wrap gap-2 mb-3">
-                        {job.skills.map((skill) => (
-                          <Badge key={skill} variant="outline">
-                            {skill}
-                          </Badge>
-                        ))}
-                      </div>
-                      <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                        <span>Posted {job.posted}</span>
-                        <span>•</span>
-                        <span>{job.proposals} proposals</span>
-                      </div>
-                    </div>
-                    <div className="text-right">
-                      <div className="text-lg font-semibold">{job.budget}</div>
-                      <Badge variant="secondary">{job.type} Price</Badge>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+        </div>
+      </section>
+
+      {/* Section 7: Newsletter */}
+      <section className="py-16 md:py-24">
+        <div className="container">
+          <div className="max-w-2xl mx-auto text-center">
+            <div className="inline-flex items-center justify-center h-16 w-16 rounded-2xl bg-primary/10 mb-6">
+              <EnvelopeSimple className="h-8 w-8 text-primary" />
+            </div>
+            <h2 className="text-3xl md:text-4xl font-bold tracking-tight mb-4">
+              Stay Updated
+            </h2>
+            <p className="text-lg text-muted-foreground mb-8">
+              Get the latest jobs, freelancer tips, and platform updates
+              delivered to your inbox. No spam, unsubscribe anytime.
+            </p>
+            <form
+              onSubmit={handleSubscribe}
+              className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto"
+            >
+              <Input
+                type="email"
+                placeholder="Enter your email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="flex-1"
+                required
+              />
+              <Button type="submit" disabled={isSubscribing}>
+                {isSubscribing ? (
+                  <SpinnerGap className="h-4 w-4 animate-spin" />
+                ) : (
+                  <>
+                    Subscribe
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </>
+                )}
+              </Button>
+            </form>
+            {subscribeMessage && (
+              <p className="mt-4 text-sm flex items-center justify-center gap-2 text-green-600">
+                <Check className="h-4 w-4" />
+                {subscribeMessage}
+              </p>
+            )}
+          </div>
+        </div>
+      </section>
+
+      {/* Partners Section - Infinite Scroll with RNA Wave */}
+      <section className="py-12 border-y bg-background overflow-hidden">
+        <div className="relative">
+          {/* Gradient overlays for smooth fade effect */}
+          <div className="absolute left-0 top-0 bottom-0 w-24 bg-gradient-to-r from-background to-transparent z-10 pointer-events-none" />
+          <div className="absolute right-0 top-0 bottom-0 w-24 bg-gradient-to-l from-background to-transparent z-10 pointer-events-none" />
+          
+          {/* Scrolling track */}
+          <div className="flex overflow-hidden">
+            {/* Scrolling container - duplicated 4x for seamless loop */}
+            <div className="flex shrink-0 animate-marquee items-center">
+              {[...Array(4)].map((_, setIndex) => (
+                <div key={setIndex} className="flex shrink-0 items-center">
+                  {partners.map((partner, partnerIndex) => (
+                    <a
+                      key={`${setIndex}-${partner.id}`}
+                      href={partner.website_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="animate-rna-wave flex items-center justify-center h-16 px-10 transition-all duration-300 hover:!opacity-100 hover:!scale-110"
+                      title={partner.name}
+                      style={{ animationDelay: `${partnerIndex * 0.2}s` }}
+                    >
+                      {partner.logo_url ? (
+                        <img
+                          src={partner.logo_url}
+                          alt={partner.name}
+                          className="h-12 w-auto max-w-[180px] object-contain"
+                        />
+                      ) : (
+                        <span className="text-lg font-semibold tracking-tight whitespace-nowrap text-muted-foreground hover:text-foreground transition-colors">
+                          {partner.name}
+                        </span>
+                      )}
+                    </a>
+                  ))}
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </section>
@@ -403,9 +785,9 @@ export default function HomePage() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-8">
             <div className="col-span-2 md:col-span-1">
               <Link href="/" className="flex items-center mb-4">
-                <img 
-                  src="/logo.png" 
-                  alt="KurdFreelance" 
+                <img
+                  src="/logo.png"
+                  alt="KurdFreelance"
                   className="h-8 w-auto"
                 />
               </Link>
@@ -413,51 +795,141 @@ export default function HomePage() {
                 Connecting Kurdish talent with global opportunities.
               </p>
             </div>
-            
+
             <div>
               <h3 className="font-semibold mb-3">For Clients</h3>
               <ul className="space-y-2 text-sm text-muted-foreground">
-                <li><Link href="/how-it-works" className="hover:text-foreground transition-colors">How It Works</Link></li>
-                <li><Link href="/freelancers" className="hover:text-foreground transition-colors">Find Talent</Link></li>
-                <li><Link href="/register" className="hover:text-foreground transition-colors">Post a Job</Link></li>
+                <li>
+                  <Link
+                    href="/how-it-works"
+                    className="hover:text-foreground transition-colors"
+                  >
+                    How It Works
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/freelancers"
+                    className="hover:text-foreground transition-colors"
+                  >
+                    Find Talent
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/register"
+                    className="hover:text-foreground transition-colors"
+                  >
+                    Post a Job
+                  </Link>
+                </li>
               </ul>
             </div>
-            
+
             <div>
               <h3 className="font-semibold mb-3">For Freelancers</h3>
               <ul className="space-y-2 text-sm text-muted-foreground">
-                <li><Link href="/how-it-works" className="hover:text-foreground transition-colors">How It Works</Link></li>
-                <li><Link href="/jobs" className="hover:text-foreground transition-colors">Browse Jobs</Link></li>
-                <li><Link href="/register" className="hover:text-foreground transition-colors">Create Profile</Link></li>
+                <li>
+                  <Link
+                    href="/how-it-works"
+                    className="hover:text-foreground transition-colors"
+                  >
+                    How It Works
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/jobs"
+                    className="hover:text-foreground transition-colors"
+                  >
+                    Browse Jobs
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/register"
+                    className="hover:text-foreground transition-colors"
+                  >
+                    Create Profile
+                  </Link>
+                </li>
               </ul>
             </div>
-            
+
             <div>
               <h3 className="font-semibold mb-3">Company</h3>
               <ul className="space-y-2 text-sm text-muted-foreground">
-                <li><Link href="/about" className="hover:text-foreground transition-colors">About Us</Link></li>
-                <li><Link href="/contact" className="hover:text-foreground transition-colors">Contact</Link></li>
-                <li><Link href="/privacy" className="hover:text-foreground transition-colors">Privacy Policy</Link></li>
-                <li><Link href="/terms" className="hover:text-foreground transition-colors">Terms of Service</Link></li>
+                <li>
+                  <Link
+                    href="/about"
+                    className="hover:text-foreground transition-colors"
+                  >
+                    About Us
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/contact"
+                    className="hover:text-foreground transition-colors"
+                  >
+                    Contact
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/privacy"
+                    className="hover:text-foreground transition-colors"
+                  >
+                    Privacy Policy
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/terms"
+                    className="hover:text-foreground transition-colors"
+                  >
+                    Terms of Service
+                  </Link>
+                </li>
               </ul>
             </div>
           </div>
-          
+
           <div className="border-t pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-sm text-muted-foreground">
               © {new Date().getFullYear()} KurdFreelance. All rights reserved.
             </p>
             <div className="flex gap-4">
-              <Link href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-foreground transition-colors">
+              <Link
+                href="https://facebook.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-muted-foreground hover:text-foreground transition-colors"
+              >
                 <FacebookLogo className="h-5 w-5" />
               </Link>
-              <Link href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-foreground transition-colors">
+              <Link
+                href="https://twitter.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-muted-foreground hover:text-foreground transition-colors"
+              >
                 <TwitterLogo className="h-5 w-5" />
               </Link>
-              <Link href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-foreground transition-colors">
+              <Link
+                href="https://linkedin.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-muted-foreground hover:text-foreground transition-colors"
+              >
                 <LinkedinLogo className="h-5 w-5" />
               </Link>
-              <Link href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-foreground transition-colors">
+              <Link
+                href="https://instagram.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-muted-foreground hover:text-foreground transition-colors"
+              >
                 <InstagramLogo className="h-5 w-5" />
               </Link>
             </div>

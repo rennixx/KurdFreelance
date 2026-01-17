@@ -1,5 +1,5 @@
-import { create } from "zustand";
-import { persist } from "zustand/middleware";
+import { create, type StateCreator } from "zustand";
+import { persist, type PersistOptions } from "zustand/middleware";
 import type { Tables } from "@/lib/supabase/types";
 import {
   type UserRole,
@@ -32,9 +32,13 @@ interface AuthState {
 
 type PersistedAuthState = Pick<AuthState, "user" | "isAuthenticated">;
 
-// @ts-ignore - Zustand persist middleware type inference issue in v5
-export const useAuthStore = create<AuthState>()(
-  persist(
+type AuthPersist = (
+  config: StateCreator<AuthState>,
+  options: PersistOptions<AuthState, PersistedAuthState>
+) => StateCreator<AuthState>;
+
+export const useAuthStore = create<AuthState>(
+  (persist as AuthPersist)(
     (set, get) => ({
       user: null,
       freelancerProfile: null,

@@ -127,3 +127,53 @@
     max-width: 1280px;
   }
 }
+
+/* Infinite marquee animation for partners section */
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-25%);
+  }
+}
+
+.animate-marquee {
+  animation: marquee 20s linear infinite;
+}
+
+.animate-marquee:hover {
+  animation-play-state: paused;
+}
+
+/* RNA-like wave flow animation */
+@keyframes rna-wave {
+  0%, 100% {
+    transform: translateY(0) scale(1);
+    opacity: 0.5;
+  }
+  25% {
+    transform: translateY(-8px) scale(1.02);
+    opacity: 0.7;
+  }
+  50% {
+    transform: translateY(0) scale(1.05);
+    opacity: 1;
+  }
+  75% {
+    transform: translateY(8px) scale(1.02);
+    opacity: 0.7;
+  }
+}
+
+.animate-rna-wave {
+  animation: rna-wave 3s ease-in-out infinite;
+}
+
+/* Staggered delays for wave effect */
+.animate-rna-wave:nth-child(6n+1) { animation-delay: 0s; }
+.animate-rna-wave:nth-child(6n+2) { animation-delay: 0.2s; }
+.animate-rna-wave:nth-child(6n+3) { animation-delay: 0.4s; }
+.animate-rna-wave:nth-child(6n+4) { animation-delay: 0.6s; }
+.animate-rna-wave:nth-child(6n+5) { animation-delay: 0.8s; }
+.animate-rna-wave:nth-child(6n+6) { animation-delay: 1s; }
