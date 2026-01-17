@@ -51,8 +51,15 @@ export function DashboardSidebar() {
   return (
     <>
       {/* Desktop Sidebar */}
-      <aside className="hidden lg:flex lg:flex-col lg:w-64 lg:fixed lg:inset-y-0 lg:top-16 lg:border-r lg:bg-white">
-        <div className="flex-1 flex flex-col pt-5 pb-4 overflow-y-auto">
+      <aside className="hidden lg:flex lg:flex-col lg:w-64 lg:fixed lg:inset-y-0 lg:top-0 lg:border-r lg:bg-white">        {/* Logo */}
+        <div className="flex h-16 items-center px-6 border-b">
+          <Link href="/dashboard" className="flex items-center space-x-2">
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-green-600 text-white font-bold">
+              K
+            </div>
+            <span className="font-bold text-xl">KurdFreelance</span>
+          </Link>
+        </div>        <div className="flex-1 flex flex-col pt-5 pb-4 overflow-y-auto">
           <nav className="flex-1 px-4 space-y-1">
             {navItems.map((item) => {
               const isActive = pathname === item.href || 
