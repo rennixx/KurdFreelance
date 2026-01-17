@@ -22,9 +22,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { createClient } from "@/lib/supabase/client";
-import { jobPostingSchema } from "@/lib/validations";
+import { jobPostSchema } from "@/lib/validations";
 
-type JobFormData = z.infer<typeof jobPostingSchema>;
+type JobFormData = z.infer<typeof jobPostSchema>;
 
 const categories = [
   "Development",
@@ -69,7 +69,7 @@ export function PostJobForm({ userId }: PostJobFormProps) {
     setValue,
     formState: { errors },
   } = useForm<JobFormData>({
-    resolver: zodResolver(jobPostingSchema),
+    resolver: zodResolver(jobPostSchema),
     defaultValues: {
       budgetType: "fixed",
       experienceLevel: "intermediate",

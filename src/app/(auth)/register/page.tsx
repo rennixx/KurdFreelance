@@ -77,11 +77,11 @@ export default function RegisterPage() {
           id: authData.user.id,
           email: data.email,
           full_name: data.fullName,
-          role: userType,
+          user_type: userType,
         });
 
         if (profileError) {
-          console.error("Profile creation error:", profileError);
+          console.error("Profile creation error:", profileError.message || JSON.stringify(profileError));
           // User was created in auth, but profile failed
           // This should be handled by a database trigger ideally
         }
