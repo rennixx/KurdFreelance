@@ -73,6 +73,10 @@ export function PostJobForm({ userId }: PostJobFormProps) {
     defaultValues: {
       budgetType: "fixed",
       experienceLevel: "intermediate",
+      categoryId: undefined,
+      estimatedDuration: undefined,
+      budgetMin: 0,
+      budgetMax: 0,
     },
   });
 
@@ -91,8 +95,18 @@ export function PostJobForm({ userId }: PostJobFormProps) {
   };
 
   const onSubmit = async (data: JobFormData) => {
+    console.log("Form submitted with data:", data);
+    console.log("Form errors:", errors);
+    
+    // Validate skills
     if (skills.length === 0) {
       toast.error("Please add at least one skill");
+      return;
+    }
+
+    // Validate budget
+    if (data.budgetMin && data.budgetMax && data.budgetMin > data.budgetMax) {
+      toast.error("Minimum budget cannot be greater than maximum budget");
       return;
     }
 
@@ -100,6 +114,12 @@ export function PostJobForm({ userId }: PostJobFormProps) {
     const supabase = createClient();
 
     try {
+      console.log("Submitting job data:", {
+        ...data,
+        skills,
+        client_id: userId,
+      });
+
       const { data: job, error } = await supabase
         .from("jobs")
         .insert({
@@ -118,13 +138,18 @@ export function PostJobForm({ userId }: PostJobFormProps) {
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {
+        console.error("Supabase error:", error);
+        throw error;
+      }
 
+      console.log("Job created successfully:", job);
       toast.success("Job posted successfully!");
-      router.push(`/jobs/${job.id}`);
-    } catch (error) {
-      console.error(error);
-      toast.error("Failed to post job. Please try again.");
+      router.push(`/my-jobs`);
+      router.refresh();
+    } catch (error: any) {
+      console.error("Job post error:", error);
+      toast.error(error.message || "Failed to post job. Please try again.");
     } finally {
       setIsLoading(false);
     }
@@ -205,12 +230,17 @@ export function PostJobForm({ userId }: PostJobFormProps) {
                 </SelectTrigger>
                 <SelectContent>
                   {durations.map((duration) => (
-                    <SelectItem key={duration} value={duration.toLowerCase()}>
+                    <SelectItem key={duration} value={duration}>
                       {duration}
                     </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
+              {errors.estimatedDuration && (
+                <p className="text-sm text-destructive">
+                  {errors.estimatedDuration.message}
+                </p>
+              )}
             </div>
           </div>
         </CardContent>
@@ -407,6 +437,20 @@ export function PostJobForm({ userId }: PostJobFormProps) {
           Post Job
         </Button>
       </div>
+      
+      {/* Show validation errors for debugging */}
+      {Object.keys(errors).length > 0 && (
+        <div className="rounded-lg border border-destructive bg-destructive/10 p-4">
+          <p className="font-medium text-destructive mb-2">Please fix the following errors:</p>
+          <ul className="list-disc list-inside space-y-1 text-sm text-destructive">
+            {Object.entries(errors).map(([key, error]) => (
+              <li key={key}>
+                {key}: {error?.message?.toString()}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
     </form>
   );
 }

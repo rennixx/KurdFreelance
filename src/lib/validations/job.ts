@@ -11,17 +11,10 @@ export const jobPostSchema = z.object({
     .max(5000, "Description is too long"),
   categoryId: z.number().min(1, "Please select a category"),
   budgetType: z.enum(["fixed", "hourly"]),
-  budgetMin: z.number().min(10, "Minimum budget is $10").optional(),
-  budgetMax: z.number().optional(),
-  hourlyRateMin: z.number().min(5, "Minimum rate is $5/hour").optional(),
-  hourlyRateMax: z.number().optional(),
-  estimatedHours: z.number().optional(),
-  estimatedDuration: z.string().optional(),
+  budgetMin: z.number().min(10, "Minimum budget is $10"),
+  budgetMax: z.number().min(10, "Maximum budget is required"),
+  estimatedDuration: z.string().min(1, "Please select a duration"),
   experienceLevel: z.enum(["entry", "intermediate", "expert"]),
-  skills: z
-    .array(z.number())
-    .min(1, "Please select at least one skill")
-    .max(10, "Maximum 10 skills allowed"),
 });
 
 export const proposalSchema = z.object({
