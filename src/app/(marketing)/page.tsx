@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -18,7 +20,7 @@ import {
   Users,
   Briefcase,
   Shield,
-} from "@phosphor-icons/react/dist/ssr";
+} from "@phosphor-icons/react";
 
 const categories = [
   { name: "Development", icon: Code, count: "2,345 jobs" },
