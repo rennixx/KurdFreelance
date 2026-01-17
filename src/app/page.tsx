@@ -20,6 +20,10 @@ import {
   Users,
   Briefcase,
   Shield,
+  FacebookLogo,
+  TwitterLogo,
+  LinkedinLogo,
+  InstagramLogo,
 } from "@phosphor-icons/react";
 
 const categories = [
@@ -108,7 +112,28 @@ const stats = [
 
 export default function HomePage() {
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col min-h-screen">
+      {/* Floating Pill Header */}
+      <header className="fixed top-4 left-0 right-0 z-50 flex justify-center px-4">
+        <div className="w-full max-w-4xl bg-background/80 backdrop-blur-lg border rounded-full shadow-lg px-6 py-3 flex items-center justify-between">
+          <Link href="/" className="flex items-center">
+            <img 
+              src="/logo.png" 
+              alt="KurdFreelance" 
+              className="h-8 w-auto"
+            />
+          </Link>
+          <div className="flex items-center gap-2">
+            <Button variant="ghost" size="sm" asChild className="rounded-full">
+              <Link href="/login">Log In</Link>
+            </Button>
+            <Button size="sm" asChild className="rounded-full">
+              <Link href="/register">Sign Up</Link>
+            </Button>
+          </div>
+        </div>
+      </header>
+
       {/* Hero Section */}
       <section className="relative overflow-hidden bg-gradient-to-br from-primary/5 via-background to-primary/10 py-20 md:py-32">
         <div className="container relative z-10">
@@ -406,6 +431,74 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* Footer */}
+      <footer className="border-t bg-muted/50 mt-auto">
+        <div className="container py-12 md:py-16">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-8">
+            <div className="col-span-2 md:col-span-1">
+              <Link href="/" className="flex items-center mb-4">
+                <img 
+                  src="/logo.png" 
+                  alt="KurdFreelance" 
+                  className="h-8 w-auto"
+                />
+              </Link>
+              <p className="text-sm text-muted-foreground">
+                Connecting Kurdish talent with global opportunities.
+              </p>
+            </div>
+            
+            <div>
+              <h3 className="font-semibold mb-3">For Clients</h3>
+              <ul className="space-y-2 text-sm text-muted-foreground">
+                <li><Link href="/how-it-works" className="hover:text-foreground transition-colors">How It Works</Link></li>
+                <li><Link href="/freelancers" className="hover:text-foreground transition-colors">Find Talent</Link></li>
+                <li><Link href="/register" className="hover:text-foreground transition-colors">Post a Job</Link></li>
+              </ul>
+            </div>
+            
+            <div>
+              <h3 className="font-semibold mb-3">For Freelancers</h3>
+              <ul className="space-y-2 text-sm text-muted-foreground">
+                <li><Link href="/how-it-works" className="hover:text-foreground transition-colors">How It Works</Link></li>
+                <li><Link href="/jobs" className="hover:text-foreground transition-colors">Browse Jobs</Link></li>
+                <li><Link href="/register" className="hover:text-foreground transition-colors">Create Profile</Link></li>
+              </ul>
+            </div>
+            
+            <div>
+              <h3 className="font-semibold mb-3">Company</h3>
+              <ul className="space-y-2 text-sm text-muted-foreground">
+                <li><Link href="/about" className="hover:text-foreground transition-colors">About Us</Link></li>
+                <li><Link href="/contact" className="hover:text-foreground transition-colors">Contact</Link></li>
+                <li><Link href="/privacy" className="hover:text-foreground transition-colors">Privacy Policy</Link></li>
+                <li><Link href="/terms" className="hover:text-foreground transition-colors">Terms of Service</Link></li>
+              </ul>
+            </div>
+          </div>
+          
+          <div className="border-t pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+            <p className="text-sm text-muted-foreground">
+              © {new Date().getFullYear()} KurdFreelance. All rights reserved.
+            </p>
+            <div className="flex gap-4">
+              <Link href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-foreground transition-colors">
+                <FacebookLogo className="h-5 w-5" />
+              </Link>
+              <Link href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-foreground transition-colors">
+                <TwitterLogo className="h-5 w-5" />
+              </Link>
+              <Link href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-foreground transition-colors">
+                <LinkedinLogo className="h-5 w-5" />
+              </Link>
+              <Link href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-foreground transition-colors">
+                <InstagramLogo className="h-5 w-5" />
+              </Link>
+            </div>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }
