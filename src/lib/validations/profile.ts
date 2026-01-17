@@ -1,0 +1,42 @@
+import { z } from "zod";
+
+export const freelancerProfileSchema = z.object({
+  professionalTitle: z
+    .string()
+    .min(5, "Title must be at least 5 characters")
+    .max(100, "Title is too long"),
+  bio: z
+    .string()
+    .min(50, "Bio must be at least 50 characters")
+    .max(2000, "Bio is too long"),
+  hourlyRate: z
+    .number()
+    .min(5, "Minimum rate is $5/hour")
+    .max(500, "Maximum rate is $500/hour"),
+  availability: z.enum(["available", "limited", "unavailable"]),
+  hoursPerWeek: z.number().min(1).max(60),
+  experienceLevel: z.enum(["entry", "intermediate", "expert"]),
+  location: z.string().min(2, "Please enter your location"),
+});
+
+export const clientProfileSchema = z.object({
+  companyName: z.string().optional(),
+  companyDescription: z.string().max(1000).optional(),
+  companySize: z.enum(["solo", "2-10", "11-50", "51-200", "200+"]).optional(),
+  industry: z.string().optional(),
+  websiteUrl: z.string().url("Please enter a valid URL").optional().or(z.literal("")),
+});
+
+export const portfolioItemSchema = z.object({
+  title: z
+    .string()
+    .min(3, "Title must be at least 3 characters")
+    .max(100, "Title is too long"),
+  description: z.string().max(500, "Description is too long").optional(),
+  category: z.string().optional(),
+  projectUrl: z.string().url("Please enter a valid URL").optional().or(z.literal("")),
+});
+
+export type FreelancerProfileInput = z.infer<typeof freelancerProfileSchema>;
+export type ClientProfileInput = z.infer<typeof clientProfileSchema>;
+export type PortfolioItemInput = z.infer<typeof portfolioItemSchema>;
