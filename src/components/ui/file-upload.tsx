@@ -265,7 +265,7 @@ export function FileUpload({
               src={files[0].url}
               alt="Avatar"
               fill
-              className="object-cover"
+              className="object-cover rounded-full"
             />
           ) : files.length > 0 && files[0].status === "uploading" ? (
             <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
