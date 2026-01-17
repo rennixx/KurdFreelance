@@ -1,10 +1,12 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { useAuthStore } from "@/stores";
+import { type Permission } from "@/lib/permissions";
 import {
   SquaresFour,
   Briefcase,
@@ -20,33 +22,55 @@ import {
   Question,
 } from "@phosphor-icons/react";
 
-const freelancerNavItems = [
+interface NavItem {
+  href: string;
+  label: string;
+  icon: React.ComponentType<{ className?: string }>;
+  badge?: string;
+  requiredPermission?: Permission;
+}
+
+const freelancerNavItems: NavItem[] = [
   { href: "/dashboard", label: "Dashboard", icon: SquaresFour },
-  { href: "/jobs", label: "Find Jobs", icon: Briefcase },
-  { href: "/proposals", label: "My Proposals", icon: PaperPlaneTilt, badge: "3" },
-  { href: "/contracts", label: "Contracts", icon: FileText },
+  { href: "/jobs", label: "Find Jobs", icon: Briefcase, requiredPermission: "jobs:browse" },
+  { href: "/proposals", label: "My Proposals", icon: PaperPlaneTilt, badge: "3", requiredPermission: "proposals:view-own" },
+  { href: "/contracts", label: "Contracts", icon: FileText, requiredPermission: "contracts:view-own" },
   { href: "/messages", label: "Messages", icon: ChatCircle, badge: "5" },
-  { href: "/earnings", label: "Earnings", icon: CurrencyDollar },
-  { href: "/profile/edit", label: "Edit Profile", icon: User },
+  { href: "/earnings", label: "Earnings", icon: CurrencyDollar, requiredPermission: "profile:view-earnings" },
+  { href: "/profile/edit", label: "Edit Profile", icon: User, requiredPermission: "profile:edit-own" },
   { href: "/settings", label: "Settings", icon: Gear },
 ];
 
-const clientNavItems = [
+const clientNavItems: NavItem[] = [
   { href: "/dashboard", label: "Dashboard", icon: SquaresFour },
-  { href: "/my-jobs/post", label: "Post a Job", icon: Briefcase },
-  { href: "/my-jobs", label: "My Jobs", icon: FolderOpen },
-  { href: "/freelancers", label: "Find Talent", icon: Users },
-  { href: "/contracts", label: "Contracts", icon: FileText },
+  { href: "/my-jobs/post", label: "Post a Job", icon: Briefcase, requiredPermission: "jobs:post" },
+  { href: "/my-jobs", label: "My Jobs", icon: FolderOpen, requiredPermission: "jobs:edit-own" },
+  { href: "/freelancers", label: "Find Talent", icon: Users, requiredPermission: "freelancers:browse" },
+  { href: "/contracts", label: "Contracts", icon: FileText, requiredPermission: "contracts:view-own" },
   { href: "/messages", label: "Messages", icon: ChatCircle, badge: "2" },
   { href: "/settings", label: "Settings", icon: Gear },
 ];
 
 export function DashboardSidebar() {
   const pathname = usePathname();
-  const { freelancerProfile, clientProfile } = useAuthStore();
+  const { freelancerProfile, clientProfile, hasPermission } = useAuthStore();
+  const [mounted, setMounted] = useState(false);
+
+  // Wait for client-side hydration to complete before filtering
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // Determine which nav items to show based on user type
-  const navItems = freelancerProfile ? freelancerNavItems : clientNavItems;
+  const allNavItems = freelancerProfile ? freelancerNavItems : clientNavItems;
+  
+  // Only filter nav items based on permissions after hydration
+  const navItems = mounted 
+    ? allNavItems.filter((item) => {
+        if (!item.requiredPermission) return true;
+        return hasPermission(item.requiredPermission);
+      })
+    : allNavItems; // Show all items during SSR to match initial render
 
   return (
     <>

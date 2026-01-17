@@ -32,7 +32,7 @@ interface DashboardHeaderProps {
 
 export function DashboardHeader({ onMenuClick }: DashboardHeaderProps) {
   const router = useRouter();
-  const { user, logout } = useAuthStore();
+  const { user, logout, refreshUser } = useAuthStore();
   const [searchOpen, setSearchOpen] = useState(false);
 
   const handleLogout = async () => {
@@ -40,6 +40,19 @@ export function DashboardHeader({ onMenuClick }: DashboardHeaderProps) {
     await supabase.auth.signOut();
     logout();
     router.push("/");
+  };
+
+  const handleRefreshUser = async () => {
+    console.log("[HEADER] Refresh button clicked");
+    console.log("[HEADER] Current user before refresh:", user);
+    
+    try {
+      await refreshUser();
+      console.log("[HEADER] refreshUser completed, reloading page...");
+      window.location.reload(); // Reload to apply new permissions
+    } catch (error) {
+      console.error("[HEADER] Error refreshing user:", error);
+    }
   };
 
   const getInitials = (name: string) => {
@@ -133,6 +146,9 @@ export function DashboardHeader({ onMenuClick }: DashboardHeaderProps) {
                 <div className="flex flex-col space-y-1">
                   <p className="text-sm font-medium">{user?.full_name || "User"}</p>
                   <p className="text-xs text-gray-500">{user?.email}</p>
+                  <Badge variant="secondary" className="text-xs w-fit mt-1">
+                    {user?.role || "user"}
+                  </Badge>
                 </div>
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
@@ -149,6 +165,10 @@ export function DashboardHeader({ onMenuClick }: DashboardHeaderProps) {
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={handleRefreshUser} className="text-blue-600">
+                <Bell className="mr-2 h-4 w-4" />
+                Refresh Permissions
+              </DropdownMenuItem>
               <DropdownMenuItem onClick={handleLogout} className="text-red-600">
                 <SignOut className="mr-2 h-4 w-4" />
                 Logout

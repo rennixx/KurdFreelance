@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { 
   Briefcase, 
@@ -19,6 +20,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { usePermissions } from "@/hooks/use-permissions";
 
 interface User {
   id: string;
@@ -45,8 +47,14 @@ interface DashboardContentProps {
 }
 
 export function DashboardContent({ user, freelancerProfile }: DashboardContentProps) {
-  const isFreelancer = user.role === "freelancer";
-  const isClient = user.role === "client";
+  const { isFreelancer, isClient, hasPermission } = usePermissions();
+  const [mounted, setMounted] = useState(false);
+  
+  // Wait for client-side hydration
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+  
   const displayName = user.full_name || "User";
   const initials = displayName
     .split(" ")
@@ -81,21 +89,25 @@ export function DashboardContent({ user, freelancerProfile }: DashboardContentPr
           <div>
             <h1 className="text-2xl font-bold text-gray-900">Welcome back, {displayName.split(" ")[0]}!</h1>
             <p className="text-gray-500">
-              {isFreelancer
-                ? "Here's what's happening with your freelance work"
-                : "Here's an overview of your projects and hires"}
+              {mounted 
+                ? (isFreelancer
+                    ? "Here's what's happening with your freelance work"
+                    : "Here's an overview of your projects and hires")
+                : "Here's what's happening with your work"
+              }
             </p>
           </div>
         </div>
         <div className="flex gap-3">
-          {isFreelancer ? (
+          {mounted && hasPermission("jobs:browse") && isFreelancer && (
             <Button asChild className="bg-green-600 hover:bg-green-700">
               <Link href="/jobs">
                 <Briefcase className="mr-2 h-4 w-4" />
                 Find Jobs
               </Link>
             </Button>
-          ) : (
+          )}
+          {mounted && hasPermission("jobs:post") && isClient && (
             <Button asChild className="bg-green-600 hover:bg-green-700">
               <Link href="/my-jobs/post">
                 <FileText className="mr-2 h-4 w-4" />
@@ -106,9 +118,10 @@ export function DashboardContent({ user, freelancerProfile }: DashboardContentPr
         </div>
       </div>
 
-      {/* Stats Grid */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-        {isFreelancer ? (
+      {/* Stats Grid - Only render after hydration to avoid mismatch */}
+      {mounted && (
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+          {isFreelancer ? (
           <>
             <Card>
               <CardContent className="pt-6">
@@ -219,7 +232,8 @@ export function DashboardContent({ user, freelancerProfile }: DashboardContentPr
             </Card>
           </>
         )}
-      </div>
+        </div>
+      )}
 
       {/* Main Content Grid */}
       <div className="grid lg:grid-cols-3 gap-6">
@@ -235,7 +249,7 @@ export function DashboardContent({ user, freelancerProfile }: DashboardContentPr
             </CardHeader>
             <CardContent>
               <div className="grid sm:grid-cols-2 gap-4">
-                {isFreelancer ? (
+                {mounted && isFreelancer ? (
                   <>
                     <Link
                       href="/profile/edit"
@@ -377,12 +391,15 @@ export function DashboardContent({ user, freelancerProfile }: DashboardContentPr
                 <Clock className="h-12 w-12 text-muted-foreground/50 mb-4" />
                 <h3 className="font-medium mb-1">No recent activity</h3>
                 <p className="text-sm text-muted-foreground mb-4">
-                  {isFreelancer
-                    ? "Start by browsing jobs or updating your profile"
-                    : "Start by posting a job or browsing freelancers"}
+                  {mounted 
+                    ? (isFreelancer
+                        ? "Start by browsing jobs or updating your profile"
+                        : "Start by posting a job or browsing freelancers")
+                    : "Start by exploring the platform"
+                  }
                 </p>
                 <Button variant="outline" asChild>
-                  <Link href={isFreelancer ? "/jobs" : "/jobs/post"}>
+                  <Link href={mounted ? (isFreelancer ? "/jobs" : "/jobs/post") : "/dashboard"}>
                     Get Started
                   </Link>
                 </Button>
