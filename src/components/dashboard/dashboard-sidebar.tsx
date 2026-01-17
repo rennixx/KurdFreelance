@@ -53,7 +53,7 @@ const clientNavItems: NavItem[] = [
 
 export function DashboardSidebar() {
   const pathname = usePathname();
-  const { freelancerProfile, clientProfile, hasPermission } = useAuthStore();
+  const { freelancerProfile, clientProfile, hasPermission, getUserRole } = useAuthStore();
   const [mounted, setMounted] = useState(false);
 
   // Wait for client-side hydration to complete before filtering
@@ -61,16 +61,17 @@ export function DashboardSidebar() {
     setMounted(true);
   }, []);
 
-  // Determine which nav items to show based on user type
-  const allNavItems = freelancerProfile ? freelancerNavItems : clientNavItems;
+  // Determine which nav items to show based on user role (not profile existence)
+  const userRole = getUserRole();
+  const allNavItems = userRole === "freelancer" ? freelancerNavItems : clientNavItems;
   
-  // Only filter nav items based on permissions after hydration
-  const navItems = mounted 
+  // Only filter nav items based on permissions after hydration and when role is available
+  const navItems = mounted && userRole
     ? allNavItems.filter((item) => {
         if (!item.requiredPermission) return true;
         return hasPermission(item.requiredPermission);
       })
-    : allNavItems; // Show all items during SSR to match initial render
+    : allNavItems; // Show all items during SSR or when role not loaded yet
 
   return (
     <>
