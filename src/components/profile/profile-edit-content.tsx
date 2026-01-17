@@ -94,29 +94,6 @@ export function ProfileEditContent() {
   const [portfolioItems, setPortfolioItems] = useState<{ title: string; description: string; imageUrl: string; link: string }[]>([]);
   const [userId, setUserId] = useState<string | null>(null);
 
-  // Fetch current auth user on mount
-  useEffect(() => {
-    const fetchAuthUser = async () => {
-      const supabase = createClient();
-      const { data: { user: authUser } } = await supabase.auth.getUser();
-      if (authUser) {
-        setUserId(authUser.id);
-        // Also fetch profile if not in store
-        if (!storeUser) {
-          const { data: profile } = await supabase
-            .from("users")
-            .select("*")
-            .eq("id", authUser.id)
-            .maybeSingle();
-          if (profile) {
-            setUser(profile);
-          }
-        }
-      }
-    };
-    fetchAuthUser();
-  }, [storeUser, setUser]);
-
   const form = useForm<ProfileFormData>({
     resolver: zodResolver(profileSchema),
     defaultValues: {
@@ -134,19 +111,49 @@ export function ProfileEditContent() {
     },
   });
 
+  // Fetch current auth user on mount
   useEffect(() => {
-    // Load existing profile data
-    if (freelancerProfile) {
-      form.setValue("title", freelancerProfile.professional_title || "");
-      form.setValue("bio", freelancerProfile.bio || "");
-      form.setValue("hourly_rate", freelancerProfile.hourly_rate || 25);
-      // Load other fields from profile
-    }
-    if (storeUser) {
-      form.setValue("full_name", storeUser.full_name || "");
-      setAvatarUrl(storeUser.avatar_url || "");
-    }
-  }, [freelancerProfile, storeUser, form]);
+    const fetchAuthUser = async () => {
+      const supabase = createClient();
+      const { data: { user: authUser } } = await supabase.auth.getUser();
+      if (authUser) {
+        setUserId(authUser.id);
+        
+        // Always fetch fresh profile data from database
+        const { data: profile } = await supabase
+          .from("users")
+          .select("*")
+          .eq("id", authUser.id)
+          .maybeSingle();
+        
+        if (profile) {
+          setUser(profile);
+          // Set form values from fresh data
+          form.setValue("full_name", profile.full_name || "");
+          setAvatarUrl(profile.avatar_url || "");
+        }
+
+        // Fetch freelancer profile
+        const { data: freelancerData } = await supabase
+          .from("freelancer_profiles")
+          .select("*")
+          .eq("user_id", authUser.id)
+          .maybeSingle();
+
+        if (freelancerData) {
+          form.setValue("title", freelancerData.title || "");
+          form.setValue("bio", freelancerData.bio || "");
+          form.setValue("hourly_rate", freelancerData.hourly_rate || 25);
+          form.setValue("location", freelancerData.location || "");
+          form.setValue("website", freelancerData.portfolio_url || "");
+          form.setValue("linkedin", freelancerData.linkedin_url || "");
+          form.setValue("github", freelancerData.github_url || "");
+          setSelectedSkills(freelancerData.skills || []);
+        }
+      }
+    };
+    fetchAuthUser();
+  }, [form, setUser]);
 
   const addSkill = (skill: string) => {
     if (skill && !selectedSkills.includes(skill)) {
@@ -198,25 +205,58 @@ export function ProfileEditContent() {
   };
 
   const onSubmit = async (data: ProfileFormData) => {
+    if (!userId) {
+      toast.error("User not found. Please refresh the page.");
+      return;
+    }
+
     setIsLoading(true);
     try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1500));
-      
-      console.log("Profile data:", {
-        ...data,
-        avatar_url: avatarUrl,
-        skills: selectedSkills,
-        languages,
-        education,
-        certifications,
-        portfolio_items: portfolioItems,
-      });
+      const supabase = createClient();
+
+      // Update users table
+      const { error: userError } = await supabase
+        .from("users")
+        .update({
+          full_name: data.full_name,
+          avatar_url: avatarUrl || null,
+        })
+        .eq("id", userId);
+
+      if (userError) throw userError;
+
+      // Update freelancer_profiles table
+      const { error: profileError } = await supabase
+        .from("freelancer_profiles")
+        .upsert({
+          user_id: userId,
+          title: data.title,
+          bio: data.bio,
+          hourly_rate: data.hourly_rate,
+          skills: selectedSkills,
+          location: data.location,
+          portfolio_url: data.website,
+          linkedin_url: data.linkedin,
+          github_url: data.github,
+        }, { onConflict: 'user_id' });
+
+      if (profileError) throw profileError;
+
+      // Update the store with new user data
+      if (storeUser) {
+        setUser({
+          ...storeUser,
+          full_name: data.full_name,
+          avatar_url: avatarUrl || null,
+        });
+      }
 
       toast.success("Profile updated successfully!");
       router.push("/dashboard");
-    } catch (error) {
-      toast.error("Failed to update profile");
+      router.refresh();
+    } catch (error: any) {
+      console.error("Failed to update profile:", error);
+      toast.error(error.message || "Failed to update profile");
     } finally {
       setIsLoading(false);
     }
@@ -258,6 +298,7 @@ export function ProfileEditContent() {
                     accept="image/*"
                     maxSize={5}
                     variant="avatar"
+                    defaultImageUrl={avatarUrl}
                     onUploadComplete={(urls) => setAvatarUrl(urls[0])}
                   />
                 ) : (

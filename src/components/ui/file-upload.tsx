@@ -32,6 +32,7 @@ interface FileUploadProps {
   className?: string;
   variant?: "default" | "avatar" | "compact";
   existingFiles?: { url: string; name: string }[];
+  defaultImageUrl?: string; // For showing existing avatar
 }
 
 interface UploadedFile {
@@ -71,6 +72,7 @@ export function FileUpload({
   className,
   variant = "default",
   existingFiles = [],
+  defaultImageUrl,
 }: FileUploadProps) {
   const [files, setFiles] = useState<UploadedFile[]>([]);
   const [isDragging, setIsDragging] = useState(false);
@@ -269,6 +271,13 @@ export function FileUpload({
             />
           ) : files.length > 0 && files[0].status === "uploading" ? (
             <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+          ) : defaultImageUrl ? (
+            <Image
+              src={defaultImageUrl}
+              alt="Avatar"
+              fill
+              className="object-cover rounded-full"
+            />
           ) : (
             <div className="text-center">
               <Upload className="h-8 w-8 mx-auto text-gray-400" />
