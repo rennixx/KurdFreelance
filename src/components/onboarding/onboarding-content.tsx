@@ -79,27 +79,27 @@ export function OnboardingContent({ user }: OnboardingContentProps) {
         // Create freelancer profile
         const { error: profileError } = await supabase
           .from("freelancer_profiles")
-          .insert({
+          .upsert({
             user_id: user.id,
             title: formData.title,
             bio: formData.bio,
             hourly_rate: parseFloat(formData.hourlyRate) || 0,
             skills: formData.skills,
             location: formData.location,
-          });
+          }, { onConflict: 'user_id' });
 
         if (profileError) throw profileError;
       } else {
-        // Create client profile
+        // Create or update client profile
         const { error: profileError } = await supabase
           .from("client_profiles")
-          .insert({
+          .upsert({
             user_id: user.id,
             company_name: formData.companyName,
             company_description: formData.companyDescription,
             industry: formData.industry,
             location: formData.location,
-          });
+          }, { onConflict: 'user_id' });
 
         if (profileError) throw profileError;
       }

@@ -13,12 +13,29 @@ export default async function OnboardingPage() {
     redirect("/login");
   }
 
-  // Fetch user profile
-  const { data: profile } = await supabase
+  // Fetch user profile - use maybeSingle to handle RLS issues gracefully
+  let { data: profile } = await supabase
     .from("users")
     .select("*")
     .eq("id", user.id)
-    .single();
+    .maybeSingle();
+
+  // If no profile, create one
+  if (!profile) {
+    const { data: newProfile } = await supabase
+      .from("users")
+      .upsert({
+        id: user.id,
+        email: user.email!,
+        full_name: user.user_metadata?.full_name || user.email?.split("@")[0] || "User",
+        role: user.user_metadata?.role || "freelancer",
+        onboarding_completed: false,
+      }, { onConflict: 'id' })
+      .select()
+      .single();
+    
+    profile = newProfile;
+  }
 
   if (!profile) {
     redirect("/login");

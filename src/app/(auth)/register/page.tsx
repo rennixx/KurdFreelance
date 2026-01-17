@@ -77,7 +77,7 @@ export default function RegisterPage() {
           id: authData.user.id,
           email: data.email,
           full_name: data.fullName,
-          user_type: userType,
+          role: userType,
         });
 
         if (profileError) {

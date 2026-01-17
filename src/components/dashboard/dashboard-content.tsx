@@ -23,9 +23,9 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 interface User {
   id: string;
   email: string;
-  full_name: string;
+  full_name: string | null;
   role: "freelancer" | "client" | "admin";
-  avatar_url?: string;
+  avatar_url?: string | null;
 }
 
 interface DashboardContentProps {
@@ -35,24 +35,28 @@ interface DashboardContentProps {
 export function DashboardContent({ user }: DashboardContentProps) {
   const isFreelancer = user.role === "freelancer";
   const isClient = user.role === "client";
+  const displayName = user.full_name || "User";
+  const initials = displayName
+    .split(" ")
+    .map((n) => n[0])
+    .join("")
+    .toUpperCase()
+    .slice(0, 2);
 
   return (
-    <div className="container py-8">
+    <div className="space-y-8">
       {/* Welcome Section */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div className="flex items-center gap-4">
           <Avatar className="h-16 w-16">
-            <AvatarImage src={user.avatar_url} />
-            <AvatarFallback className="text-xl">
-              {user.full_name
-                .split(" ")
-                .map((n) => n[0])
-                .join("")}
+            <AvatarImage src={user.avatar_url || undefined} />
+            <AvatarFallback className="text-xl bg-green-100 text-green-700">
+              {initials}
             </AvatarFallback>
           </Avatar>
           <div>
-            <h1 className="text-2xl font-bold">Welcome back, {user.full_name.split(" ")[0]}!</h1>
-            <p className="text-muted-foreground">
+            <h1 className="text-2xl font-bold text-gray-900">Welcome back, {displayName.split(" ")[0]}!</h1>
+            <p className="text-gray-500">
               {isFreelancer
                 ? "Here's what's happening with your freelance work"
                 : "Here's an overview of your projects and hires"}
@@ -61,15 +65,15 @@ export function DashboardContent({ user }: DashboardContentProps) {
         </div>
         <div className="flex gap-3">
           {isFreelancer ? (
-            <Button asChild>
+            <Button asChild className="bg-green-600 hover:bg-green-700">
               <Link href="/jobs">
                 <Briefcase className="mr-2 h-4 w-4" />
                 Find Jobs
               </Link>
             </Button>
           ) : (
-            <Button asChild>
-              <Link href="/jobs/post">
+            <Button asChild className="bg-green-600 hover:bg-green-700">
+              <Link href="/my-jobs/post">
                 <FileText className="mr-2 h-4 w-4" />
                 Post a Job
               </Link>

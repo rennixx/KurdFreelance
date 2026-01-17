@@ -45,6 +45,7 @@ import {
 import { toast } from "sonner";
 import { useAuthStore } from "@/stores";
 import { profileSchema, type ProfileFormData } from "@/lib/validations";
+import { createClient } from "@/lib/supabase/client";
 
 const skills = [
   "JavaScript", "TypeScript", "React", "Next.js", "Node.js", "Python",
@@ -80,7 +81,7 @@ const languageProficiencies = [
 
 export function ProfileEditContent() {
   const router = useRouter();
-  const { user, freelancerProfile, clientProfile } = useAuthStore();
+  const { user: storeUser, freelancerProfile, clientProfile, setUser } = useAuthStore();
   const [isLoading, setIsLoading] = useState(false);
   const [avatarUrl, setAvatarUrl] = useState("");
   const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
@@ -91,6 +92,30 @@ export function ProfileEditContent() {
   const [education, setEducation] = useState<{ degree: string; institution: string; year: string }[]>([]);
   const [certifications, setCertifications] = useState<{ name: string; issuer: string; year: string }[]>([]);
   const [portfolioItems, setPortfolioItems] = useState<{ title: string; description: string; imageUrl: string; link: string }[]>([]);
+  const [userId, setUserId] = useState<string | null>(null);
+
+  // Fetch current auth user on mount
+  useEffect(() => {
+    const fetchAuthUser = async () => {
+      const supabase = createClient();
+      const { data: { user: authUser } } = await supabase.auth.getUser();
+      if (authUser) {
+        setUserId(authUser.id);
+        // Also fetch profile if not in store
+        if (!storeUser) {
+          const { data: profile } = await supabase
+            .from("users")
+            .select("*")
+            .eq("id", authUser.id)
+            .maybeSingle();
+          if (profile) {
+            setUser(profile);
+          }
+        }
+      }
+    };
+    fetchAuthUser();
+  }, [storeUser, setUser]);
 
   const form = useForm<ProfileFormData>({
     resolver: zodResolver(profileSchema),
@@ -117,11 +142,11 @@ export function ProfileEditContent() {
       form.setValue("hourly_rate", freelancerProfile.hourly_rate || 25);
       // Load other fields from profile
     }
-    if (user) {
-      form.setValue("full_name", user.full_name || "");
-      setAvatarUrl(user.avatar_url || "");
+    if (storeUser) {
+      form.setValue("full_name", storeUser.full_name || "");
+      setAvatarUrl(storeUser.avatar_url || "");
     }
-  }, [freelancerProfile, user, form]);
+  }, [freelancerProfile, storeUser, form]);
 
   const addSkill = (skill: string) => {
     if (skill && !selectedSkills.includes(skill)) {
@@ -226,14 +251,20 @@ export function ProfileEditContent() {
             <CardContent className="space-y-6">
               {/* Avatar Upload */}
               <div className="flex items-center gap-6">
-                <FileUpload
-                  bucket="avatars"
-                  path={user?.id}
-                  accept="image/*"
-                  maxSize={5}
-                  variant="avatar"
-                  onUploadComplete={(urls) => setAvatarUrl(urls[0])}
-                />
+                {userId ? (
+                  <FileUpload
+                    bucket="avatars"
+                    path={userId}
+                    accept="image/*"
+                    maxSize={5}
+                    variant="avatar"
+                    onUploadComplete={(urls) => setAvatarUrl(urls[0])}
+                  />
+                ) : (
+                  <div className="w-24 h-24 rounded-full bg-muted flex items-center justify-center">
+                    <User className="h-8 w-8 text-muted-foreground" />
+                  </div>
+                )}
                 <div>
                   <h3 className="font-medium">Profile Photo</h3>
                   <p className="text-sm text-gray-500">
@@ -673,18 +704,20 @@ export function ProfileEditContent() {
                       setPortfolioItems(updated);
                     }}
                   />
-                  <FileUpload
-                    bucket="portfolios"
-                    path={`${user?.id}/${index}`}
-                    accept="image/*"
-                    maxSize={10}
-                    variant="compact"
-                    onUploadComplete={(urls) => {
-                      const updated = [...portfolioItems];
-                      updated[index].imageUrl = urls[0];
-                      setPortfolioItems(updated);
-                    }}
-                  />
+                  {userId && (
+                    <FileUpload
+                      bucket="portfolios"
+                      path={`${userId}/${index}`}
+                      accept="image/*"
+                      maxSize={10}
+                      variant="compact"
+                      onUploadComplete={(urls) => {
+                        const updated = [...portfolioItems];
+                        updated[index].imageUrl = urls[0];
+                        setPortfolioItems(updated);
+                      }}
+                    />
+                  )}
                 </div>
               ))}
               <Button type="button" variant="outline" onClick={addPortfolioItem}>
