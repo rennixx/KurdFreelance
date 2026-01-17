@@ -28,11 +28,23 @@ interface User {
   avatar_url?: string | null;
 }
 
-interface DashboardContentProps {
-  user: User;
+interface FreelancerProfile {
+  id: string;
+  user_id: string;
+  title?: string | null;
+  bio?: string | null;
+  hourly_rate?: number | null;
+  skills?: string[] | null;
+  location?: string | null;
+  portfolio_url?: string | null;
 }
 
-export function DashboardContent({ user }: DashboardContentProps) {
+interface DashboardContentProps {
+  user: User;
+  freelancerProfile?: FreelancerProfile | null;
+}
+
+export function DashboardContent({ user, freelancerProfile }: DashboardContentProps) {
   const isFreelancer = user.role === "freelancer";
   const isClient = user.role === "client";
   const displayName = user.full_name || "User";
@@ -42,6 +54,18 @@ export function DashboardContent({ user }: DashboardContentProps) {
     .join("")
     .toUpperCase()
     .slice(0, 2);
+
+  // Calculate profile completion
+  const profileChecks = {
+    basicInfo: !!(user.full_name && user.email),
+    profilePhoto: !!user.avatar_url,
+    skills: !!(freelancerProfile?.skills && freelancerProfile.skills.length > 0),
+    portfolio: !!(freelancerProfile?.portfolio_url || freelancerProfile?.bio),
+  };
+  
+  const completedCount = Object.values(profileChecks).filter(Boolean).length;
+  const totalChecks = Object.keys(profileChecks).length;
+  const completionPercentage = Math.round((completedCount / totalChecks) * 100);
 
   return (
     <div className="space-y-8">
@@ -417,35 +441,53 @@ export function DashboardContent({ user }: DashboardContentProps) {
               <div className="space-y-4">
                 <div className="flex items-center justify-between text-sm">
                   <span>Completion</span>
-                  <span className="font-medium">25%</span>
+                  <span className="font-medium">{completionPercentage}%</span>
                 </div>
                 <div className="h-2 bg-muted rounded-full overflow-hidden">
                   <div
                     className="h-full bg-primary rounded-full transition-all"
-                    style={{ width: "25%" }}
+                    style={{ width: `${completionPercentage}%` }}
                   />
                 </div>
                 <div className="space-y-2">
-                  <div className="flex items-center gap-2 text-sm">
-                    <CheckCircle2 className="h-4 w-4 text-green-500" />
+                  <div className={`flex items-center gap-2 text-sm ${profileChecks.basicInfo ? '' : 'text-muted-foreground'}`}>
+                    {profileChecks.basicInfo ? (
+                      <CheckCircle2 className="h-4 w-4 text-green-500" />
+                    ) : (
+                      <div className="h-4 w-4 rounded-full border-2" />
+                    )}
                     <span>Basic info added</span>
                   </div>
-                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <div className="h-4 w-4 rounded-full border-2" />
+                  <div className={`flex items-center gap-2 text-sm ${profileChecks.profilePhoto ? '' : 'text-muted-foreground'}`}>
+                    {profileChecks.profilePhoto ? (
+                      <CheckCircle2 className="h-4 w-4 text-green-500" />
+                    ) : (
+                      <div className="h-4 w-4 rounded-full border-2" />
+                    )}
                     <span>Add profile photo</span>
                   </div>
-                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <div className="h-4 w-4 rounded-full border-2" />
+                  <div className={`flex items-center gap-2 text-sm ${profileChecks.skills ? '' : 'text-muted-foreground'}`}>
+                    {profileChecks.skills ? (
+                      <CheckCircle2 className="h-4 w-4 text-green-500" />
+                    ) : (
+                      <div className="h-4 w-4 rounded-full border-2" />
+                    )}
                     <span>Add skills</span>
                   </div>
-                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <div className="h-4 w-4 rounded-full border-2" />
+                  <div className={`flex items-center gap-2 text-sm ${profileChecks.portfolio ? '' : 'text-muted-foreground'}`}>
+                    {profileChecks.portfolio ? (
+                      <CheckCircle2 className="h-4 w-4 text-green-500" />
+                    ) : (
+                      <div className="h-4 w-4 rounded-full border-2" />
+                    )}
                     <span>Add portfolio</span>
                   </div>
                 </div>
-                <Button variant="outline" className="w-full" asChild>
-                  <Link href="/profile/edit">Complete Profile</Link>
-                </Button>
+                {completionPercentage < 100 && (
+                  <Button variant="outline" className="w-full" asChild>
+                    <Link href="/profile/edit">Complete Profile</Link>
+                  </Button>
+                )}
               </div>
             </CardContent>
           </Card>

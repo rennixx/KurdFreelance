@@ -62,6 +62,17 @@ export default async function DashboardPage() {
     redirect("/onboarding");
   }
 
+  // Fetch freelancer profile if user is a freelancer
+  let freelancerProfile = null;
+  if (profile.role === "freelancer") {
+    const { data: fpData } = await supabase
+      .from("freelancer_profiles")
+      .select("*")
+      .eq("user_id", user.id)
+      .maybeSingle();
+    freelancerProfile = fpData;
+  }
+
   // Ensure role has a default value
   const userWithDefaults = {
     ...profile,
@@ -69,5 +80,5 @@ export default async function DashboardPage() {
     full_name: profile.full_name || "User",
   };
 
-  return <DashboardContent user={userWithDefaults} />;
+  return <DashboardContent user={userWithDefaults} freelancerProfile={freelancerProfile} />;
 }
