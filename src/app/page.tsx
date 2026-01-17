@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import KurdistanShape from "@/components/landing/kurdistan-shape";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
@@ -137,52 +138,60 @@ export default function HomePage() {
       {/* Hero Section */}
       <section className="relative overflow-hidden bg-gradient-to-br from-primary/5 via-background to-primary/10 py-20 md:py-32">
         <div className="container relative z-10">
-          <div className="mx-auto max-w-3xl text-center">
-            <Badge variant="secondary" className="mb-4">
-              🎉 Now serving 5,000+ freelancers in Kurdistan
-            </Badge>
-            <h1 className="text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl">
-              Find Kurdistan&apos;s Best{" "}
-              <span className="text-primary">Freelancers</span>
-              <br />
-              Or Get Hired for Your Skills
-            </h1>
-            <p className="mt-6 text-lg text-muted-foreground md:text-xl">
-              The local freelance marketplace with lower fees, fast local
-              payments, and quality talent. Connect with professionals who
-              understand your market.
-            </p>
-            <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
-              <Button size="lg" asChild className="w-full sm:w-auto">
-                <Link href="/register?type=client">
-                  I&apos;m looking to hire
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Link>
-              </Button>
-              <Button
-                size="lg"
-                variant="outline"
-                asChild
-                className="w-full sm:w-auto"
-              >
-                <Link href="/register?type=freelancer">
-                  I&apos;m looking for work
-                </Link>
-              </Button>
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            {/* Left: Text Content */}
+            <div className="text-center lg:text-left">
+              <Badge variant="secondary" className="mb-4">
+                🎉 Now serving 5,000+ freelancers in Kurdistan
+              </Badge>
+              <h1 className="text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl">
+                Find Kurdistan&apos;s Best{" "}
+                <span className="text-primary">Freelancers</span>
+                <br />
+                Or Get Hired for Your Skills
+              </h1>
+              <p className="mt-6 text-lg text-muted-foreground md:text-xl">
+                The local freelance marketplace with lower fees, fast local
+                payments, and quality talent. Connect with professionals who
+                understand your market.
+              </p>
+              <div className="mt-10 flex flex-col sm:flex-row items-center lg:items-start justify-center lg:justify-start gap-4">
+                <Button size="lg" asChild className="w-full sm:w-auto">
+                  <Link href="/register?type=client">
+                    I&apos;m looking to hire
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Link>
+                </Button>
+                <Button
+                  size="lg"
+                  variant="outline"
+                  asChild
+                  className="w-full sm:w-auto"
+                >
+                  <Link href="/register?type=freelancer">
+                    I&apos;m looking for work
+                  </Link>
+                </Button>
+              </div>
+              <div className="mt-8 flex flex-wrap items-center justify-center lg:justify-start gap-6 text-sm text-muted-foreground">
+                <div className="flex items-center gap-2">
+                  <CheckCircle className="h-4 w-4 text-green-500" />
+                  <span>10-15% fees (vs 20% elsewhere)</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <CheckCircle className="h-4 w-4 text-green-500" />
+                  <span>Local payment methods</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <CheckCircle className="h-4 w-4 text-green-500" />
+                  <span>Kurdish & Arabic support</span>
+                </div>
+              </div>
             </div>
-            <div className="mt-8 flex flex-wrap items-center justify-center gap-6 text-sm text-muted-foreground">
-              <div className="flex items-center gap-2">
-                <CheckCircle className="h-4 w-4 text-green-500" />
-                <span>10-15% fees (vs 20% elsewhere)</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <CheckCircle className="h-4 w-4 text-green-500" />
-                <span>Local payment methods</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <CheckCircle className="h-4 w-4 text-green-500" />
-                <span>Kurdish & Arabic support</span>
-              </div>
+
+            {/* Right: Kurdistan Shape */}
+            <div className="relative">
+              <KurdistanShape />
             </div>
           </div>
         </div>
@@ -227,7 +236,7 @@ export default function HomePage() {
                 key={category.name}
                 href={`/jobs?category=${category.name.toLowerCase()}`}
               >
-                <Card className="hover:border-primary hover:shadow-md transition-all cursor-pointer group">
+                <Card className="hover:border-primary hover:shadow-md transition-all cursor-pointer group category-card">
                   <CardContent className="p-6 text-center">
                     <category.icon className="h-10 w-10 mx-auto mb-3 text-muted-foreground group-hover:text-primary transition-colors" />
                     <h3 className="font-semibold">{category.name}</h3>
@@ -242,52 +251,8 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* How It Works */}
-      <section className="py-16 md:py-24 bg-muted/30">
-        <div className="container">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold tracking-tight">How It Works</h2>
-            <p className="mt-2 text-muted-foreground">
-              Get started in just 3 simple steps
-            </p>
-          </div>
-          <div className="grid md:grid-cols-3 gap-8">
-            <div className="text-center">
-              <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4">
-                <span className="text-2xl font-bold text-primary">1</span>
-              </div>
-              <h3 className="text-xl font-semibold mb-2">Create Your Profile</h3>
-              <p className="text-muted-foreground">
-                Sign up and build your professional profile. Showcase your
-                skills, portfolio, and experience.
-              </p>
-            </div>
-            <div className="text-center">
-              <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4">
-                <span className="text-2xl font-bold text-primary">2</span>
-              </div>
-              <h3 className="text-xl font-semibold mb-2">Find Work or Talent</h3>
-              <p className="text-muted-foreground">
-                Browse jobs that match your skills or post a project and receive
-                proposals from qualified freelancers.
-              </p>
-            </div>
-            <div className="text-center">
-              <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4">
-                <span className="text-2xl font-bold text-primary">3</span>
-              </div>
-              <h3 className="text-xl font-semibold mb-2">Get Paid Securely</h3>
-              <p className="text-muted-foreground">
-                Work with confidence using our secure escrow system. Get paid
-                fast via local payment methods.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* Featured Freelancers */}
-      <section className="py-16 md:py-24">
+      <section className="py-16 md:py-24 bg-muted/30">
         <div className="container">
           <div className="flex items-center justify-between mb-12">
             <div>
@@ -351,7 +316,7 @@ export default function HomePage() {
       </section>
 
       {/* Recent Jobs */}
-      <section className="py-16 md:py-24 bg-muted/30">
+      <section className="py-16 md:py-24">
         <div className="container">
           <div className="flex items-center justify-between mb-12">
             <div>
