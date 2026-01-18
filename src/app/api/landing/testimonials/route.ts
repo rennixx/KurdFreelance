@@ -14,9 +14,7 @@ export async function GET() {
         rating,
         role,
         is_featured,
-        user:users(full_name, avatar_url),
-        freelancer_profile:freelancer_profiles(professional_title, total_jobs_completed),
-        client_profile:client_profiles(company_name, total_jobs_completed)
+        user:users(full_name, avatar_url)
       `)
       .eq("is_approved", true)
       .eq("is_featured", false)
@@ -32,9 +30,7 @@ export async function GET() {
         rating,
         role,
         is_featured,
-        user:users(full_name, avatar_url),
-        freelancer_profile:freelancer_profiles(professional_title, total_jobs_completed),
-        client_profile:client_profiles(company_name, total_jobs_completed)
+        user:users(full_name, avatar_url)
       `)
       .eq("is_approved", true)
       .eq("is_featured", true)
@@ -43,11 +39,37 @@ export async function GET() {
 
     if (regularError || featuredError) throw regularError || featuredError;
 
-    const formatTestimonial = (t: any) => {
+    // Fetch profile data for each testimonial
+    const formatTestimonial = async (t: any) => {
       const user = Array.isArray(t.user) ? t.user[0] : t.user;
-      const freelancerProfile = Array.isArray(t.freelancer_profile) ? t.freelancer_profile[0] : t.freelancer_profile;
-      const clientProfile = Array.isArray(t.client_profile) ? t.client_profile[0] : t.client_profile;
-      
+      let title = t.role === "freelancer" ? "Freelancer" : "Client";
+      let jobsCompleted = 0;
+
+      // Fetch profile data based on role
+      if (user && t.user_id) {
+        if (t.role === "freelancer") {
+          const { data: profile } = await supabase
+            .from("freelancer_profiles")
+            .select("professional_title, total_jobs_completed")
+            .eq("user_id", t.user_id)
+            .single();
+          if (profile) {
+            title = profile.professional_title || title;
+            jobsCompleted = profile.total_jobs_completed || 0;
+          }
+        } else {
+          const { data: profile } = await supabase
+            .from("client_profiles")
+            .select("company_name, total_jobs_completed")
+            .eq("user_id", t.user_id)
+            .single();
+          if (profile) {
+            title = profile.company_name || title;
+            jobsCompleted = profile.total_jobs_completed || 0;
+          }
+        }
+      }
+
       return {
         id: t.id,
         content: t.content,
@@ -57,18 +79,14 @@ export async function GET() {
           name: user?.full_name || "Anonymous",
           avatar: user?.avatar_url || "",
           role: t.role,
-          title: t.role === "freelancer" 
-            ? freelancerProfile?.professional_title 
-            : clientProfile?.company_name || "Client",
-          jobsCompleted: t.role === "freelancer"
-            ? freelancerProfile?.total_jobs_completed
-            : clientProfile?.total_jobs_completed,
+          title,
+          jobsCompleted,
         },
       };
     };
 
-    const formattedRegular = (regularTestimonials || []).map(formatTestimonial);
-    const formattedFeatured = (featuredTestimonials || []).map(formatTestimonial);
+    const formattedRegular = await Promise.all((regularTestimonials || []).map(formatTestimonial));
+    const formattedFeatured = await Promise.all((featuredTestimonials || []).map(formatTestimonial));
 
     return NextResponse.json({
       testimonials: formattedRegular,
