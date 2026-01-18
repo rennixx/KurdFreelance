@@ -23,6 +23,7 @@ import {
   TrustShieldIllustration,
   TrustFeatureCard,
 } from "@/components/landing/trust-shield-illustration";
+import { CategoriesBento } from "@/components/landing/categories-bento";
 import {
   Code,
   Palette,
@@ -622,7 +623,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Section 3: Browse Categories */}
+      {/* Section 3: Browse Categories - Bento Grid */}
       <section className="py-16 md:py-24">
         <div className="container">
           <div className="text-center mb-12">
@@ -632,43 +633,20 @@ export default function HomePage() {
             <h2 className="text-3xl md:text-4xl font-bold tracking-tight">
               Browse by Category
             </h2>
-            <p className="mt-4 text-lg text-muted-foreground">
-              Find the perfect freelancer for any project
+            <p className="mt-4 text-lg text-muted-foreground max-w-2xl mx-auto">
+              Find the perfect freelancer for any project across our most popular categories
             </p>
           </div>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {isLoading
-              ? Array(8)
-                  .fill(0)
-                  .map((_, i) => (
-                    <Card key={i} className="animate-pulse">
-                      <CardContent className="p-6 text-center">
-                        <div className="h-10 w-10 mx-auto mb-3 rounded bg-muted" />
-                        <div className="h-4 w-20 mx-auto mb-2 rounded bg-muted" />
-                        <div className="h-3 w-16 mx-auto rounded bg-muted" />
-                      </CardContent>
-                    </Card>
-                  ))
-              : categories.map((category) => {
-                  const IconComponent =
-                    iconMap[category.icon] || Code;
-                  return (
-                    <Link
-                      key={category.id}
-                      href={`/jobs?category=${category.slug}`}
-                    >
-                      <Card className="hover:border-primary hover:shadow-md transition-all cursor-pointer group">
-                        <CardContent className="p-6 text-center">
-                          <IconComponent className="h-10 w-10 mx-auto mb-3 text-muted-foreground group-hover:text-primary transition-colors" />
-                          <h3 className="font-semibold">{category.name}</h3>
-                          <p className="text-sm text-muted-foreground mt-1">
-                            {category.jobsCount} jobs
-                          </p>
-                        </CardContent>
-                      </Card>
-                    </Link>
-                  );
-                })}
+          <CategoriesBento />
+          
+          {/* View All Link */}
+          <div className="text-center mt-8">
+            <Link href="/categories">
+              <Button variant="outline" size="lg" className="group">
+                View All Categories
+                <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+              </Button>
+            </Link>
           </div>
         </div>
       </section>
