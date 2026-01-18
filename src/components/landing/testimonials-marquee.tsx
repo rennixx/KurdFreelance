@@ -289,12 +289,15 @@ export function TestimonialsMarquee() {
   const row1 = testimonials.filter(t => t.author.role === "freelancer");
   const row2 = testimonials.filter(t => t.author.role === "client");
 
+  // Use fewer repetitions on mobile for better performance
+  const repetitions = 4; // Will be overridden by responsive classes if needed
+
   return (
     <div className="relative">
       {/* Marquee Row 1 - Scrolling Left (Freelancers) */}
       <div className="relative mb-6 overflow-hidden mask-gradient">
         <div className="flex shrink-0 animate-marquee-slow">
-          {[...Array(4)].map((_, setIndex) => (
+          {[...Array(repetitions)].map((_, setIndex) => (
             <div key={setIndex} className="flex shrink-0 gap-3 px-2">
               {row1.map((testimonial) => (
                 <div key={`${testimonial.id}-${setIndex}`} className="shrink-0 w-[280px] sm:w-[320px] lg:w-[340px]">
@@ -309,8 +312,8 @@ export function TestimonialsMarquee() {
       {/* Featured Testimonial - Center */}
       <div className="max-w-2xl mx-auto my-8 px-4">
         <div className="relative">
-          {/* Glow effect */}
-          <div className="absolute -inset-1 bg-gradient-to-r from-primary/20 via-primary/10 to-primary/20 rounded-3xl blur-xl opacity-60" />
+          {/* Glow effect - skip on mobile for performance */}
+          <div className="hidden sm:block absolute -inset-1 bg-gradient-to-r from-primary/20 via-primary/10 to-primary/20 rounded-3xl blur-xl opacity-60" />
           <div className="relative">
             <TestimonialCard testimonial={featuredTestimonial} variant="featured" />
           </div>
@@ -320,7 +323,7 @@ export function TestimonialsMarquee() {
       {/* Marquee Row 2 - Scrolling Right (Clients) */}
       <div className="relative mt-6 overflow-hidden mask-gradient">
         <div className="flex shrink-0 animate-marquee-slow-reverse">
-          {[...Array(4)].map((_, setIndex) => (
+          {[...Array(repetitions)].map((_, setIndex) => (
             <div key={setIndex} className="flex shrink-0 gap-4 px-2">
               {row2.map((testimonial) => (
                 <div key={`${testimonial.id}-${setIndex}`} className="shrink-0 w-[280px] sm:w-[320px] lg:w-[340px]">
