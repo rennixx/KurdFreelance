@@ -25,6 +25,7 @@ import {
 } from "@/components/landing/trust-shield-illustration";
 import { CategoriesBento } from "@/components/landing/categories-bento";
 import { TestimonialsMarquee } from "@/components/landing/testimonials-marquee";
+import { ScrollAnimate } from "@/hooks/use-scroll-animation";
 import {
   Code,
   Palette,
@@ -405,7 +406,7 @@ export default function HomePage() {
       <section className="py-16 md:py-24 overflow-hidden">
         <div className="container">
           {/* Section Header */}
-          <div className="text-center mb-16 md:mb-24">
+          <ScrollAnimate animation="fade-up" className="text-center mb-16 md:mb-24">
             <Badge variant="outline" className="mb-4">
               Simple Process
             </Badge>
@@ -416,17 +417,17 @@ export default function HomePage() {
               Get started in minutes. Whether you&apos;re hiring or looking for
               work, our platform makes it easy.
             </p>
-          </div>
+          </ScrollAnimate>
 
           {/* Step 1: Create Profile */}
           <div className="grid lg:grid-cols-2 gap-8 lg:gap-16 items-center mb-24 md:mb-32">
             {/* Illustration */}
-            <div className="order-2 lg:order-1">
+            <ScrollAnimate animation="fade-right" className="order-2 lg:order-1">
               <ProfileIllustration />
-            </div>
+            </ScrollAnimate>
             
             {/* Content */}
-            <div className="order-1 lg:order-2 space-y-6">
+            <ScrollAnimate animation="fade-left" delay={200} className="order-1 lg:order-2 space-y-6">
               <div className="inline-flex items-center gap-3">
                 <span className="flex items-center justify-center w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-500 to-blue-600 text-white text-xl font-bold shadow-lg shadow-blue-500/25">
                   1
@@ -450,13 +451,13 @@ export default function HomePage() {
                   </li>
                 ))}
               </ul>
-            </div>
+            </ScrollAnimate>
           </div>
 
           {/* Step 2: Find Opportunities - Reversed */}
           <div className="grid lg:grid-cols-2 gap-8 lg:gap-16 items-center mb-24 md:mb-32">
             {/* Content */}
-            <div className="space-y-6">
+            <ScrollAnimate animation="fade-right" className="space-y-6">
               <div className="inline-flex items-center gap-3">
                 <span className="flex items-center justify-center w-12 h-12 rounded-2xl bg-gradient-to-br from-purple-500 to-purple-600 text-white text-xl font-bold shadow-lg shadow-purple-500/25">
                   2
@@ -480,23 +481,23 @@ export default function HomePage() {
                   </li>
                 ))}
               </ul>
-            </div>
+            </ScrollAnimate>
             
             {/* Illustration */}
-            <div>
+            <ScrollAnimate animation="fade-left" delay={200}>
               <DiscoveryIllustration />
-            </div>
+            </ScrollAnimate>
           </div>
 
           {/* Step 3: Work & Get Paid */}
           <div className="grid lg:grid-cols-2 gap-8 lg:gap-16 items-center">
             {/* Illustration */}
-            <div className="order-2 lg:order-1">
+            <ScrollAnimate animation="fade-right" className="order-2 lg:order-1">
               <PaymentIllustration />
-            </div>
+            </ScrollAnimate>
             
             {/* Content */}
-            <div className="order-1 lg:order-2 space-y-6">
+            <ScrollAnimate animation="fade-left" delay={200} className="order-1 lg:order-2 space-y-6">
               <div className="inline-flex items-center gap-3">
                 <span className="flex items-center justify-center w-12 h-12 rounded-2xl bg-gradient-to-br from-green-500 to-green-600 text-white text-xl font-bold shadow-lg shadow-green-500/25">
                   3
@@ -520,7 +521,7 @@ export default function HomePage() {
                   </li>
                 ))}
               </ul>
-            </div>
+            </ScrollAnimate>
           </div>
         </div>
       </section>
@@ -529,7 +530,7 @@ export default function HomePage() {
       <section className="py-16 md:py-24 bg-muted/30 overflow-hidden">
         <div className="container">
           {/* Header */}
-          <div className="text-center mb-8 md:mb-12">
+          <ScrollAnimate animation="fade-up" className="text-center mb-8 md:mb-12">
             <Badge variant="outline" className="mb-4">
               Why Choose Us
             </Badge>
@@ -540,12 +541,12 @@ export default function HomePage() {
               We prioritize your safety and satisfaction with industry-leading
               protections.
             </p>
-          </div>
+          </ScrollAnimate>
 
           {/* Main content: Shield + Features */}
           <div className="grid lg:grid-cols-3 gap-8 items-center">
             {/* Left Features */}
-            <div className="space-y-6 order-2 lg:order-1">
+            <ScrollAnimate animation="fade-right" className="space-y-6 order-2 lg:order-1">
               <TrustFeatureCard
                 icon={Shield}
                 title="Secure Escrow"
@@ -567,15 +568,15 @@ export default function HomePage() {
                 color="green"
                 delay={200}
               />
-            </div>
+            </ScrollAnimate>
 
             {/* Center Shield */}
-            <div className="order-1 lg:order-2">
+            <ScrollAnimate animation="zoom-in" delay={100} className="order-1 lg:order-2">
               <TrustShieldIllustration />
-            </div>
+            </ScrollAnimate>
 
             {/* Right Features */}
-            <div className="space-y-6 order-3">
+            <ScrollAnimate animation="fade-left" className="space-y-6 order-3">
               <TrustFeatureCard
                 icon={Globe}
                 title="Local Support"
@@ -597,11 +598,11 @@ export default function HomePage() {
                 color="yellow"
                 delay={200}
               />
-            </div>
+            </ScrollAnimate>
           </div>
 
           {/* Bottom Stats Bar */}
-          <div className="mt-16 pt-8 border-t">
+          <ScrollAnimate animation="fade-up" delay={200} className="mt-16 pt-8 border-t">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               <div className="text-center p-4 rounded-2xl bg-card/50 backdrop-blur-sm border">
                 <div className="text-2xl md:text-3xl font-bold text-primary">$2M+</div>
@@ -620,14 +621,14 @@ export default function HomePage() {
                 <div className="text-sm text-muted-foreground">Customer Support</div>
               </div>
             </div>
-          </div>
+          </ScrollAnimate>
         </div>
       </section>
 
       {/* Section 3: Browse Categories - Bento Grid */}
       <section className="py-16 md:py-24">
         <div className="container">
-          <div className="text-center mb-12">
+          <ScrollAnimate animation="fade-up" className="text-center mb-12">
             <Badge variant="outline" className="mb-4">
               Explore
             </Badge>
@@ -637,25 +638,27 @@ export default function HomePage() {
             <p className="mt-4 text-lg text-muted-foreground max-w-2xl mx-auto">
               Find the perfect freelancer for any project across our most popular categories
             </p>
-          </div>
-          <CategoriesBento />
+          </ScrollAnimate>
+          <ScrollAnimate animation="fade-up" delay={150}>
+            <CategoriesBento />
+          </ScrollAnimate>
           
           {/* View All Link */}
-          <div className="text-center mt-8">
+          <ScrollAnimate animation="fade-up" delay={300} className="text-center mt-8">
             <Link href="/categories">
               <Button variant="outline" size="lg" className="group">
                 View All Categories
                 <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
               </Button>
             </Link>
-          </div>
+          </ScrollAnimate>
         </div>
       </section>
 
       {/* Section 4: Testimonials - Marquee Style */}
       <section className="py-16 md:py-24 bg-muted/30 overflow-hidden">
         <div className="container">
-          <div className="text-center mb-12">
+          <ScrollAnimate animation="fade-up" className="text-center mb-12">
             <Badge variant="outline" className="mb-4">
               <Quotes className="h-3 w-3 mr-1" />
               Testimonials
@@ -667,7 +670,7 @@ export default function HomePage() {
               Hear from freelancers and clients who have transformed their
               businesses with KurdFreelance.
             </p>
-          </div>
+          </ScrollAnimate>
         </div>
         {/* Full-width marquee */}
         <TestimonialsMarquee />
@@ -680,7 +683,7 @@ export default function HomePage() {
       <section className="py-16 md:py-24 bg-muted/30">
         <div className="container">
           <div className="max-w-3xl mx-auto">
-            <div className="text-center mb-12">
+            <ScrollAnimate animation="fade-up" className="text-center mb-12">
               <Badge variant="outline" className="mb-4">
                 FAQ
               </Badge>
@@ -690,39 +693,41 @@ export default function HomePage() {
               <p className="mt-4 text-lg text-muted-foreground">
                 Everything you need to know about KurdFreelance.
               </p>
-            </div>
-            {isLoading ? (
-              <div className="space-y-4">
-                {Array(5)
-                  .fill(0)
-                  .map((_, i) => (
-                    <div key={i} className="animate-pulse">
-                      <div className="h-14 rounded-lg bg-muted" />
-                    </div>
+            </ScrollAnimate>
+            <ScrollAnimate animation="fade-up" delay={150}>
+              {isLoading ? (
+                <div className="space-y-4">
+                  {Array(5)
+                    .fill(0)
+                    .map((_, i) => (
+                      <div key={i} className="animate-pulse">
+                        <div className="h-14 rounded-lg bg-muted" />
+                      </div>
+                    ))}
+                </div>
+              ) : (
+                <Accordion type="single" collapsible className="w-full">
+                  {faqs.map((faq) => (
+                    <AccordionItem key={faq.id} value={faq.id}>
+                      <AccordionTrigger className="text-left">
+                        {faq.question}
+                      </AccordionTrigger>
+                      <AccordionContent className="text-muted-foreground">
+                        {faq.answer}
+                      </AccordionContent>
+                    </AccordionItem>
                   ))}
-              </div>
-            ) : (
-              <Accordion type="single" collapsible className="w-full">
-                {faqs.map((faq) => (
-                  <AccordionItem key={faq.id} value={faq.id}>
-                    <AccordionTrigger className="text-left">
-                      {faq.question}
-                    </AccordionTrigger>
-                    <AccordionContent className="text-muted-foreground">
-                      {faq.answer}
-                    </AccordionContent>
-                  </AccordionItem>
-                ))}
-              </Accordion>
-            )}
-            <div className="mt-8 text-center">
+                </Accordion>
+              )}
+            </ScrollAnimate>
+            <ScrollAnimate animation="fade-up" delay={300} className="mt-8 text-center">
               <p className="text-muted-foreground mb-4">
                 Still have questions?
               </p>
               <Button variant="outline" asChild>
                 <Link href="/contact">Contact Support</Link>
               </Button>
-            </div>
+            </ScrollAnimate>
           </div>
         </div>
       </section>
@@ -730,7 +735,7 @@ export default function HomePage() {
       {/* Section 7: Newsletter */}
       <section className="py-16 md:py-24">
         <div className="container">
-          <div className="max-w-2xl mx-auto text-center">
+          <ScrollAnimate animation="zoom-in" className="max-w-2xl mx-auto text-center">
             <div className="inline-flex items-center justify-center h-16 w-16 rounded-2xl bg-primary/10 mb-6">
               <EnvelopeSimple className="h-8 w-8 text-primary" />
             </div>
@@ -770,7 +775,7 @@ export default function HomePage() {
                 {subscribeMessage}
               </p>
             )}
-          </div>
+          </ScrollAnimate>
         </div>
       </section>
 
