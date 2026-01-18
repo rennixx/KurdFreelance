@@ -62,7 +62,7 @@ const fallbackCategories: CategoryData[] = [
     name: "Web & App Development",
     slug: "development",
     icon: "Code",
-    jobsCount: 234,
+    jobsCount: 0,
     color_hex: "#3B82F6",
     size: "large",
     illustration_key: "dev",
@@ -72,7 +72,7 @@ const fallbackCategories: CategoryData[] = [
     name: "Design & Creative",
     slug: "design",
     icon: "PaintBrush",
-    jobsCount: 187,
+    jobsCount: 0,
     color_hex: "#A855F7",
     size: "medium",
     illustration_key: "design",
@@ -82,7 +82,7 @@ const fallbackCategories: CategoryData[] = [
     name: "Writing & Translation",
     slug: "writing",
     icon: "PencilLine",
-    jobsCount: 156,
+    jobsCount: 0,
     color_hex: "#22C55E",
     size: "medium",
     illustration_key: "writing",
@@ -92,7 +92,7 @@ const fallbackCategories: CategoryData[] = [
     name: "Digital Marketing",
     slug: "marketing",
     icon: "Megaphone",
-    jobsCount: 145,
+    jobsCount: 0,
     color_hex: "#F97316",
     size: "medium",
     illustration_key: "marketing",
@@ -102,7 +102,7 @@ const fallbackCategories: CategoryData[] = [
     name: "Video & Animation",
     slug: "video",
     icon: "VideoCamera",
-    jobsCount: 98,
+    jobsCount: 0,
     color_hex: "#EF4444",
     size: "medium",
     illustration_key: "video",
@@ -112,7 +112,7 @@ const fallbackCategories: CategoryData[] = [
     name: "Business Consulting",
     slug: "business",
     icon: "Briefcase",
-    jobsCount: 67,
+    jobsCount: 0,
     color_hex: "#06B6D4",
     size: "small",
     illustration_key: "business",
@@ -122,7 +122,7 @@ const fallbackCategories: CategoryData[] = [
     name: "AI & Data Science",
     slug: "ai-data",
     icon: "Brain",
-    jobsCount: 89,
+    jobsCount: 0,
     color_hex: "#8B5CF6",
     size: "wide",
     illustration_key: "ai",
@@ -131,10 +131,13 @@ const fallbackCategories: CategoryData[] = [
 
 // Helper to format job count
 function formatJobCount(count: number): string {
+  if (count === 0) {
+    return "0";
+  }
   if (count >= 1000) {
     return `${(count / 1000).toFixed(1)}k+`;
   }
-  return `${count}+`;
+  return `${count}`;
 }
 
 // Helper to generate gradient from hex color
@@ -214,7 +217,10 @@ function BentoCard({
               {category.name}
             </h3>
             <p className="text-sm text-muted-foreground">
-              {jobCount} jobs available
+              {category.jobsCount === 0 
+                ? "No jobs yet" 
+                : `${jobCount} ${category.jobsCount === 1 ? "job" : "jobs"} available`
+              }
             </p>
           </div>
 
