@@ -232,6 +232,29 @@
   animation: rna-wave 3s ease-in-out infinite;
 }
 
+/* Floating animation for footer particles */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0) translateX(0);
+    opacity: 0.3;
+  }
+  50% {
+    transform: translateY(-20px) translateX(10px);
+    opacity: 0.6;
+  }
+}
+
+.animate-float {
+  animation: float 4s ease-in-out infinite;
+}
+
+/* Glass card effect */
+.glass-card {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
 /* Staggered delays for wave effect */
 .animate-rna-wave:nth-child(6n+1) { animation-delay: 0s; }
 .animate-rna-wave:nth-child(6n+2) { animation-delay: 0.2s; }
