@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
 import KurdistanShape from "@/components/landing/kurdistan-shape";
 import { EnhancedFooter } from "@/components/landing/enhanced-footer";
@@ -58,6 +58,8 @@ import {
   Globe,
   Clock,
   SpinnerGap,
+  List,
+  X,
 } from "@phosphor-icons/react";
 
 // Icon mapping for dynamic categories
@@ -147,6 +149,27 @@ export default function HomePage() {
   const [partners, setPartners] = useState<Partner[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+
+  // Mobile menu state
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const mobileMenuRef = useRef<HTMLDivElement>(null);
+
+  // Close mobile menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (mobileMenuRef.current && !mobileMenuRef.current.contains(event.target as Node)) {
+        setMobileMenuOpen(false);
+      }
+    };
+
+    if (mobileMenuOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [mobileMenuOpen]);
 
   // Newsletter state
   const [email, setEmail] = useState("");
@@ -302,103 +325,173 @@ export default function HomePage() {
   return (
     <div className="flex flex-col min-h-screen">
       {/* Floating Pill Header */}
-      <header className="fixed top-4 left-0 right-0 z-50 flex justify-center px-4">
-        <div className="w-full max-w-5xl bg-background/80 backdrop-blur-lg border rounded-full shadow-lg px-6 py-3 flex items-center justify-between gap-4">
+      <header className="fixed top-4 left-0 right-0 z-50 flex justify-center px-3 sm:px-4">
+        <div className="w-full max-w-5xl bg-background/80 backdrop-blur-lg border rounded-full shadow-lg px-3 sm:px-4 md:px-6 py-2.5 sm:py-3 flex items-center justify-between gap-2">
           <Link href="/" className="flex items-center shrink-0">
-            <img src="/logo.png" alt="KurdFreelance" className="h-8 w-auto" />
+            <img src="/logo.png" alt="KurdFreelance" className="h-6 sm:h-7 md:h-8 w-auto" />
           </Link>
-          <nav className="hidden md:flex items-center gap-1">
+
+          {/* Desktop Navigation */}
+          <nav className="hidden lg:flex items-center gap-1">
             <Link
               href="/jobs"
-              className="px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-full transition-all"
+              className="px-3 sm:px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-full transition-all"
             >
               Browse Jobs
             </Link>
             <Link
               href="/freelancers"
-              className="px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-full transition-all"
+              className="px-3 sm:px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-full transition-all"
             >
               Find Freelancers
             </Link>
             <Link
               href="/how-it-works"
-              className="px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-full transition-all"
+              className="px-3 sm:px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-full transition-all"
             >
               How It Works
             </Link>
             <Link
               href="/pricing"
-              className="px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-full transition-all"
+              className="px-3 sm:px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-full transition-all"
             >
               Pricing
             </Link>
           </nav>
-          <div className="flex items-center gap-2 shrink-0">
-            <Button variant="ghost" size="sm" asChild className="rounded-full">
-              <Link href="/login">Log In</Link>
-            </Button>
-            <Button size="sm" asChild className="rounded-full">
-              <Link href="/register">Sign Up</Link>
-            </Button>
+
+          <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+            {/* Desktop Auth Buttons */}
+            <div className="hidden lg:flex items-center gap-2">
+              <Button variant="ghost" size="sm" asChild className="rounded-full">
+                <Link href="/login">Log In</Link>
+              </Button>
+              <Button size="sm" asChild className="rounded-full">
+                <Link href="/register">Sign Up</Link>
+              </Button>
+            </div>
+
+            {/* Mobile Menu Button */}
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="lg:hidden h-9 w-9 sm:h-10 sm:w-10 md:h-11 md:w-11 rounded-full flex items-center justify-center hover:bg-muted/50 transition-colors"
+              aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
+            >
+              {mobileMenuOpen ? (
+                <X className="h-5 w-5 sm:h-6 sm:w-6" />
+              ) : (
+                <List className="h-5 w-5 sm:h-6 sm:w-6" />
+              )}
+            </button>
           </div>
         </div>
       </header>
 
+      {/* Mobile Menu Overlay */}
+      {mobileMenuOpen && (
+        <div className="md:hidden fixed inset-0 top-20 bg-black/50 backdrop-blur-sm z-40" />
+      )}
+
+      {/* Mobile Menu */}
+      {mobileMenuOpen && (
+        <div ref={mobileMenuRef} className="md:hidden fixed top-20 left-4 right-4 bg-background border rounded-2xl shadow-xl z-50">
+          <nav className="p-4 space-y-1">
+            <Link
+              href="/jobs"
+              className="flex items-center gap-3 px-4 py-3 text-base font-medium rounded-lg hover:bg-accent transition-colors"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              <Briefcase className="h-5 w-5" />
+              Browse Jobs
+            </Link>
+            <Link
+              href="/freelancers"
+              className="flex items-center gap-3 px-4 py-3 text-base font-medium rounded-lg hover:bg-accent transition-colors"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              <Users className="h-5 w-5" />
+              Find Freelancers
+            </Link>
+            <Link
+              href="/how-it-works"
+              className="flex items-center gap-3 px-4 py-3 text-base font-medium rounded-lg hover:bg-accent transition-colors"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              <MagnifyingGlass className="h-5 w-5" />
+              How It Works
+            </Link>
+            <Link
+              href="/pricing"
+              className="flex items-center gap-3 px-4 py-3 text-base font-medium rounded-lg hover:bg-accent transition-colors"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              <CurrencyDollar className="h-5 w-5" />
+              Pricing
+            </Link>
+            <div className="border-t my-2" />
+            <Link
+              href="/login"
+              className="flex items-center gap-3 px-4 py-3 text-base font-medium rounded-lg hover:bg-accent transition-colors"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              Log In
+            </Link>
+            <Button asChild className="w-full" onClick={() => setMobileMenuOpen(false)}>
+              <Link href="/register">Sign Up</Link>
+            </Button>
+          </nav>
+        </div>
+      )}
+
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-primary/5 via-background to-primary/10 py-20 md:py-32">
-        <div className="container relative z-10">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div className="text-center lg:text-left">
-              <Badge variant="secondary" className="mb-4">
-                🎉 Now serving {stats?.freelancersCount || "5,000+"} freelancers
-                in Kurdistan
-              </Badge>
-              <h1 className="text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl">
-                Find Kurdistan&apos;s Best{" "}
-                <span className="text-primary">Freelancers</span>
-                <br />
-                Or Get Hired for Your Skills
-              </h1>
-              <p className="mt-6 text-lg text-muted-foreground md:text-xl">
-                The local freelance marketplace with lower fees, fast local
-                payments, and quality talent. Connect with professionals who
-                understand your market.
-              </p>
-              <div className="mt-10 flex flex-col sm:flex-row items-center lg:items-start justify-center lg:justify-start gap-4">
-                <Button size="lg" asChild className="w-full sm:w-auto">
-                  <Link href="/register?type=client">
-                    I&apos;m looking to hire
-                    <ArrowRight className="ml-2 h-4 w-4" />
-                  </Link>
-                </Button>
-                <Button
-                  size="lg"
-                  variant="outline"
-                  asChild
-                  className="w-full sm:w-auto"
-                >
-                  <Link href="/register?type=freelancer">
-                    I&apos;m looking for work
-                  </Link>
-                </Button>
-              </div>
-              <div className="mt-8 flex flex-wrap items-center justify-center lg:justify-start gap-6 text-sm text-muted-foreground">
-                <div className="flex items-center gap-2">
-                  <CheckCircle className="h-4 w-4 text-green-500" />
-                  <span>10-15% fees (vs 20% elsewhere)</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <CheckCircle className="h-4 w-4 text-green-500" />
-                  <span>Local payment methods</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <CheckCircle className="h-4 w-4 text-green-500" />
-                  <span>Kurdish & Arabic support</span>
-                </div>
-              </div>
+      <section className="relative overflow-hidden bg-gradient-to-br from-primary/5 via-background to-primary/10 pt-24 pb-12 sm:pt-28 sm:pb-16 md:pt-32 md:py-20">
+        <div className="container relative z-10 px-4 sm:px-6">
+          <div className="max-w-4xl mx-auto text-center">
+            <Badge variant="secondary" className="mb-3 sm:mb-4 text-xs sm:text-sm inline-flex">
+              🎉 Now serving {stats?.freelancersCount || "5,000+"} freelancers
+              in Kurdistan
+            </Badge>
+            <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold tracking-tight">
+              Find Kurdistan&apos;s Best{" "}
+              <span className="text-primary">Freelancers</span>
+              <br />
+              Or Get Hired for Your Skills
+            </h1>
+            <p className="mt-3 sm:mt-4 md:mt-6 text-sm sm:text-base md:text-lg lg:text-xl text-muted-foreground max-w-2xl mx-auto">
+              The local freelance marketplace with lower fees, fast local
+              payments, and quality talent. Connect with professionals who
+              understand your market.
+            </p>
+            <div className="mt-5 sm:mt-6 md:mt-8 lg:mt-10 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4">
+              <Button size="lg" asChild className="w-full sm:w-auto text-sm sm:text-base">
+                <Link href="/register?type=client">
+                  I&apos;m looking to hire
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Link>
+              </Button>
+              <Button
+                size="lg"
+                variant="outline"
+                asChild
+                className="w-full sm:w-auto text-sm sm:text-base"
+              >
+                <Link href="/register?type=freelancer">
+                  I&apos;m looking for work
+                </Link>
+              </Button>
             </div>
-            <div className="relative">
-              <KurdistanShape />
+            <div className="mt-5 sm:mt-6 md:mt-8 flex flex-wrap items-center justify-center gap-3 sm:gap-4 md:gap-6 text-xs sm:text-sm text-muted-foreground">
+              <div className="flex items-center gap-1.5 sm:gap-2">
+                <CheckCircle className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-green-500 shrink-0" />
+                <span className="whitespace-nowrap">10-15% fees (vs 20%)</span>
+              </div>
+              <div className="flex items-center gap-1.5 sm:gap-2">
+                <CheckCircle className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-green-500 shrink-0" />
+                <span className="whitespace-nowrap">Local payment methods</span>
+              </div>
+              <div className="flex items-center gap-1.5 sm:gap-2">
+                <CheckCircle className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-green-500 shrink-0" />
+                <span className="whitespace-nowrap">Kurdish & Arabic support</span>
+              </div>
             </div>
           </div>
         </div>

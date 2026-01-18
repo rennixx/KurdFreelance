@@ -1,10 +1,19 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { useAuthStore } from "@/stores";
 import { type Permission } from "@/lib/permissions";
 import {
@@ -20,6 +29,7 @@ import {
   FolderOpen,
   Star,
   Question,
+  List,
 } from "@phosphor-icons/react";
 
 interface NavItem {
@@ -152,29 +162,83 @@ export function DashboardSidebar() {
       </aside>
 
       {/* Mobile Bottom Navigation */}
-      <nav className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t z-50">
-        <div className="flex justify-around items-center py-2">
-          {navItems.slice(0, 5).map((item) => {
-            const isActive = pathname === item.href;
+      <nav className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t z-50 safe-area-bottom">
+        <div className="flex justify-around items-center py-1">
+          {navItems.slice(0, 4).map((item) => {
+            const isActive = pathname === item.href ||
+              (item.href !== "/dashboard" && pathname.startsWith(item.href));
             return (
               <Link
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  "flex flex-col items-center gap-1 px-3 py-2 rounded-lg transition-colors relative",
-                  isActive ? "text-green-600" : "text-gray-500"
+                  "flex flex-col items-center justify-center gap-1 min-w-[64px] h-14 rounded-lg transition-colors relative",
+                  isActive ? "text-green-600 bg-green-50" : "text-gray-500"
                 )}
               >
-                <item.icon className="h-5 w-5" />
-                <span className="text-xs">{item.label.split(" ")[0]}</span>
-                {item.badge && (
-                  <span className="absolute top-1 right-1 h-4 w-4 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">
-                    {item.badge}
-                  </span>
-                )}
+                <div className="relative">
+                  <item.icon className="h-6 w-6" />
+                  {item.badge && (
+                    <span className="absolute -top-1 -right-2 h-5 w-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center font-medium">
+                      {item.badge}
+                    </span>
+                  )}
+                </div>
+                <span className="text-xs font-medium">{item.label.split(" ")[0]}</span>
               </Link>
             );
           })}
+
+          {/* More Menu Button */}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button
+                className={cn(
+                  "flex flex-col items-center justify-center gap-1 min-w-[64px] h-14 rounded-lg transition-colors text-gray-500 hover:bg-gray-50"
+                )}
+              >
+                <List className="h-6 w-6" weight="bold" />
+                <span className="text-xs font-medium">More</span>
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-56">
+              <DropdownMenuLabel>More Options</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              {navItems.slice(4).map((item) => {
+                const isActive = pathname === item.href ||
+                  (item.href !== "/dashboard" && pathname.startsWith(item.href));
+                return (
+                  <DropdownMenuItem key={item.href} asChild>
+                    <Link
+                      href={item.href}
+                      className={cn(
+                        "flex items-center gap-3 cursor-pointer",
+                        isActive ? "text-green-600" : "text-gray-600"
+                      )}
+                    >
+                      <item.icon className="h-5 w-5" />
+                      <span className="flex-1">{item.label}</span>
+                      {item.badge && (
+                        <Badge variant="secondary" className="ml-auto">
+                          {item.badge}
+                        </Badge>
+                      )}
+                    </Link>
+                  </DropdownMenuItem>
+                );
+              })}
+              <DropdownMenuSeparator />
+              <DropdownMenuItem asChild>
+                <Link
+                  href="/help"
+                  className="flex items-center gap-3 cursor-pointer text-gray-600"
+                >
+                  <Question className="h-5 w-5" />
+                  <span>Help & Support</span>
+                </Link>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </nav>
     </>

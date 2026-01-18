@@ -51,8 +51,8 @@ function SocialIcon({
         className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"
         style={{ background: color }}
       />
-      <div className="relative w-9 h-9 rounded-full bg-muted/80 flex items-center justify-center group-hover:bg-background transition-colors duration-300">
-        <Icon className="w-4 h-4 text-foreground" />
+      <div className="relative w-11 h-11 rounded-full bg-muted/80 flex items-center justify-center group-hover:bg-background transition-colors duration-300">
+        <Icon className="w-5 h-5 text-foreground" />
       </div>
     </a>
   );
@@ -163,10 +163,10 @@ export function EnhancedFooter() {
 
           <button
             onClick={scrollToTop}
-            className="group flex items-center gap-2 px-4 py-2 rounded-full bg-primary text-primary-foreground hover:bg-primary/90 transition-all text-sm font-medium"
+            className="group flex items-center gap-2 px-5 py-2.5 rounded-full bg-primary text-primary-foreground hover:bg-primary/90 transition-all text-sm font-medium"
           >
             <span>Back to Top</span>
-            <ArrowUp className="w-3.5 h-3.5 group-hover:-translate-y-0.5 transition-transform" />
+            <ArrowUp className="w-4 h-4 group-hover:-translate-y-0.5 transition-transform" />
           </button>
         </div>
       </div>

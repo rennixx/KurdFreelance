@@ -295,9 +295,9 @@ export function TestimonialsMarquee() {
       <div className="relative mb-6 overflow-hidden mask-gradient">
         <div className="flex shrink-0 animate-marquee-slow">
           {[...Array(4)].map((_, setIndex) => (
-            <div key={setIndex} className="flex shrink-0 gap-4 px-2">
+            <div key={setIndex} className="flex shrink-0 gap-3 px-2">
               {row1.map((testimonial) => (
-                <div key={`${testimonial.id}-${setIndex}`} className="shrink-0 w-[340px]">
+                <div key={`${testimonial.id}-${setIndex}`} className="shrink-0 w-[280px] sm:w-[320px] lg:w-[340px]">
                   <TestimonialCard testimonial={testimonial} />
                 </div>
               ))}
@@ -323,7 +323,7 @@ export function TestimonialsMarquee() {
           {[...Array(4)].map((_, setIndex) => (
             <div key={setIndex} className="flex shrink-0 gap-4 px-2">
               {row2.map((testimonial) => (
-                <div key={`${testimonial.id}-${setIndex}`} className="shrink-0 w-[340px]">
+                <div key={`${testimonial.id}-${setIndex}`} className="shrink-0 w-[280px] sm:w-[320px] lg:w-[340px]">
                   <TestimonialCard testimonial={testimonial} />
                 </div>
               ))}

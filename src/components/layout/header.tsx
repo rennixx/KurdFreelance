@@ -25,7 +25,7 @@ import {
   SquaresFour,
   X,
 } from "@phosphor-icons/react";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useAuthStore } from "@/stores";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
@@ -35,6 +35,29 @@ export function Header() {
   const router = useRouter();
   const { user, isAuthenticated, logout } = useAuthStore();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const mobileMenuRef = useRef<HTMLDivElement>(null);
+
+  // Close mobile menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (mobileMenuRef.current && !mobileMenuRef.current.contains(event.target as Node)) {
+        setMobileMenuOpen(false);
+      }
+    };
+
+    if (mobileMenuOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [mobileMenuOpen]);
+
+  // Close mobile menu on route change
+  useEffect(() => {
+    setMobileMenuOpen(false);
+  }, [pathname]);
 
   const handleLogout = async () => {
     const supabase = createClient();
@@ -176,34 +199,39 @@ export function Header() {
             </>
           )}
 
-          {/* Mobile Menu Button */}
+          {/* Mobile Menu Button - Increased touch target */}
           <Button
             variant="ghost"
             size="icon"
-            className="md:hidden"
+            className="md:hidden h-11 w-11"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
           >
             {mobileMenuOpen ? (
-              <X className="h-5 w-5" />
+              <X className="h-6 w-6" />
             ) : (
-              <List className="h-5 w-5" />
+              <List className="h-6 w-6" />
             )}
           </Button>
         </div>
       </div>
 
+      {/* Mobile Menu Overlay */}
+      {mobileMenuOpen && (
+        <div className="md:hidden fixed inset-0 top-16 bg-black/50 backdrop-blur-sm z-40" />
+      )}
+
       {/* Mobile Menu */}
       {mobileMenuOpen && (
-        <div className="md:hidden border-t">
-          <nav className="container py-4 space-y-2">
+        <div ref={mobileMenuRef} className="md:hidden fixed top-16 left-0 right-0 bg-background border-b shadow-lg z-50">
+          <nav className="container py-4 space-y-1">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
-                className="flex items-center space-x-2 px-4 py-2 text-sm font-medium rounded-md hover:bg-accent"
-                onClick={() => setMobileMenuOpen(false)}
+                className="flex items-center space-x-3 px-4 py-3 text-base font-medium rounded-lg hover:bg-accent transition-colors"
               >
-                <link.icon className="h-4 w-4" />
+                <link.icon className="h-5 w-5" />
                 <span>{link.label}</span>
               </Link>
             ))}
@@ -212,22 +240,27 @@ export function Header() {
                 <Link
                   key={link.href}
                   href={link.href}
-                  className="flex items-center space-x-2 px-4 py-2 text-sm font-medium rounded-md hover:bg-accent"
-                  onClick={() => setMobileMenuOpen(false)}
+                  className="flex items-center space-x-3 px-4 py-3 text-base font-medium rounded-lg hover:bg-accent transition-colors"
                 >
-                  <link.icon className="h-4 w-4" />
+                  <link.icon className="h-5 w-5" />
                   <span>{link.label}</span>
                 </Link>
               ))}
             {!isAuthenticated && (
-              <Link
-                href="/login"
-                className="flex items-center space-x-2 px-4 py-2 text-sm font-medium rounded-md hover:bg-accent sm:hidden"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                <User className="h-4 w-4" />
-                <span>Log in</span>
-              </Link>
+              <>
+                <Link
+                  href="/login"
+                  className="flex items-center space-x-3 px-4 py-3 text-base font-medium rounded-lg hover:bg-accent transition-colors"
+                >
+                  <User className="h-5 w-5" />
+                  <span>Log in</span>
+                </Link>
+                <div className="px-4 pt-2">
+                  <Button asChild className="w-full">
+                    <Link href="/register">Sign up</Link>
+                  </Button>
+                </div>
+              </>
             )}
           </nav>
         </div>

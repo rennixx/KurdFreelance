@@ -164,7 +164,7 @@ function BentoCard({
   return (
     <Link href={`/jobs?category=${category.slug}`} className={className}>
       <div
-        className="relative h-full overflow-hidden rounded-3xl border bg-card p-6 transition-all duration-500 ease-out cursor-pointer group hover:shadow-2xl hover:-translate-y-1"
+        className="relative h-full overflow-hidden rounded-2xl sm:rounded-3xl border bg-card p-4 sm:p-6 transition-all duration-500 ease-out cursor-pointer group hover:shadow-2xl hover:-translate-y-1"
         style={{
           ["--accent-color" as string]: category.color_hex,
         }}
@@ -198,14 +198,14 @@ function BentoCard({
         <div className="relative z-10 h-full flex flex-col">
           {/* Icon */}
           <div
-            className="w-12 h-12 md:w-14 md:h-14 rounded-2xl flex items-center justify-center mb-4 border group-hover:scale-110 transition-transform duration-500"
-            style={{ 
+            className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 rounded-xl sm:rounded-2xl flex items-center justify-center mb-3 sm:mb-4 border group-hover:scale-110 transition-transform duration-500"
+            style={{
               background: bgGradient,
               borderColor: `${category.color_hex}20`,
             }}
           >
             <Icon
-              className="w-6 h-6 md:w-7 md:h-7"
+              className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7"
               style={{ color: category.color_hex }}
               weight="duotone"
             />
@@ -213,12 +213,12 @@ function BentoCard({
 
           {/* Title & Count */}
           <div className="mt-auto">
-            <h3 className="font-semibold text-base md:text-lg mb-1 group-hover:text-foreground transition-colors">
+            <h3 className="font-semibold text-sm sm:text-base md:text-lg mb-1 group-hover:text-foreground transition-colors">
               {category.name}
             </h3>
-            <p className="text-sm text-muted-foreground">
-              {category.jobsCount === 0 
-                ? "No jobs yet" 
+            <p className="text-xs sm:text-sm text-muted-foreground">
+              {category.jobsCount === 0
+                ? "No jobs yet"
                 : `${jobCount} ${category.jobsCount === 1 ? "job" : "jobs"} available`
               }
             </p>
@@ -226,11 +226,11 @@ function BentoCard({
 
           {/* Hover Arrow */}
           <div
-            className="absolute bottom-5 right-5 w-9 h-9 md:w-10 md:h-10 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 translate-x-2 group-hover:translate-x-0 transition-all duration-300"
+            className="absolute bottom-4 right-4 sm:bottom-5 sm:right-5 w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 translate-x-2 group-hover:translate-x-0 transition-all duration-300"
             style={{ background: `${category.color_hex}15` }}
           >
             <svg
-              className="w-4 h-4 md:w-5 md:h-5"
+              className="w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-5 md:h-5"
               style={{ color: category.color_hex }}
               fill="none"
               viewBox="0 0 24 24"
@@ -248,8 +248,8 @@ function BentoCard({
 
         {/* Job count badge */}
         <div
-          className="absolute top-4 right-4 px-2.5 py-1 rounded-full text-xs font-medium z-20"
-          style={{ 
+          className="absolute top-3 right-3 sm:top-4 sm:right-4 px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full text-xs font-medium z-20"
+          style={{
             background: `${category.color_hex}15`,
             color: category.color_hex,
           }}
@@ -299,40 +299,40 @@ export function CategoriesBento() {
   const mediumCategories = categories.filter(c => c.size === "medium").slice(0, 4);
 
   return (
-    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-      {/* Row 1: Development (large) + Design + Writing */}
-      <div className="col-span-2 row-span-2">
-        <BentoCard category={largeCategory} className="h-full min-h-[320px]" />
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 md:gap-6">
+      {/* Row 1: Development (large) - Full width on mobile */}
+      <div className="col-span-1 sm:col-span-2 row-span-2">
+        <BentoCard category={largeCategory} className="h-full min-h-[200px] sm:min-h-[280px] md:min-h-[320px]" />
       </div>
       {mediumCategories[0] && (
-        <div className="col-span-1">
-          <BentoCard category={mediumCategories[0]} className="h-full min-h-[150px]" />
+        <div className="col-span-1 sm:col-span-1">
+          <BentoCard category={mediumCategories[0]} className="h-full min-h-[140px] sm:min-h-[150px]" />
         </div>
       )}
       {mediumCategories[1] && (
-        <div className="col-span-1">
-          <BentoCard category={mediumCategories[1]} className="h-full min-h-[150px]" />
+        <div className="col-span-1 sm:col-span-1">
+          <BentoCard category={mediumCategories[1]} className="h-full min-h-[140px] sm:min-h-[150px]" />
         </div>
       )}
 
       {/* Row 2: Marketing + Video (fill beside development) */}
       {mediumCategories[2] && (
-        <div className="col-span-1">
-          <BentoCard category={mediumCategories[2]} className="h-full min-h-[150px]" />
+        <div className="col-span-1 sm:col-span-1">
+          <BentoCard category={mediumCategories[2]} className="h-full min-h-[140px] sm:min-h-[150px]" />
         </div>
       )}
       {mediumCategories[3] && (
-        <div className="col-span-1">
-          <BentoCard category={mediumCategories[3]} className="h-full min-h-[150px]" />
+        <div className="col-span-1 sm:col-span-1">
+          <BentoCard category={mediumCategories[3]} className="h-full min-h-[140px] sm:min-h-[150px]" />
         </div>
       )}
 
       {/* Row 3: Business (small) + AI & Data (wide) */}
-      <div className="col-span-1">
-        <BentoCard category={smallCategory} className="h-full min-h-[150px]" />
+      <div className="col-span-1 sm:col-span-1">
+        <BentoCard category={smallCategory} className="h-full min-h-[140px] sm:min-h-[150px]" />
       </div>
-      <div className="col-span-2 md:col-span-3">
-        <BentoCard category={wideCategory} className="h-full min-h-[150px]" />
+      <div className="col-span-1 sm:col-span-2 md:col-span-3">
+        <BentoCard category={wideCategory} className="h-full min-h-[140px] sm:min-h-[150px]" />
       </div>
     </div>
   );
