@@ -222,12 +222,12 @@ export function PaymentIllustration() {
         
         {/* Central shield */}
         <g className="animate-float-slow">
-          <path d="M200 100 L260 130 L260 200 C260 250 200 290 200 290 C200 290 140 250 140 200 L140 130 Z" 
+          <path d="M200 90 L275 125 L275 200 C275 255 200 295 200 295 C200 295 125 255 125 200 L125 125 Z"
             fill="url(#greenGradient)" opacity="0.2" className="stroke-green-500" strokeWidth="2"/>
-          <path d="M200 120 L245 142 L245 195 C245 235 200 265 200 265 C200 265 155 235 155 195 L155 142 Z" 
+          <path d="M200 110 L260 138 L260 195 C260 240 200 270 200 270 C200 270 140 240 140 195 L140 138 Z"
             fill="url(#greenGradient)" />
           {/* Checkmark */}
-          <path d="M180 190 L195 205 L225 170" stroke="white" strokeWidth="6" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
+          <path d="M175 185 L192 202 L228 165" stroke="white" strokeWidth="6" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
         </g>
         
         {/* Floating coins */}
