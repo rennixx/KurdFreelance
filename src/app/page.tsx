@@ -326,10 +326,10 @@ export default function HomePage() {
     <div className="flex flex-col min-h-screen">
       {/* Floating Pill Header */}
       <header className="fixed top-4 left-0 right-0 z-50 flex justify-center px-3 sm:px-4">
-        <div className={`w-full max-w-5xl bg-background/80 backdrop-blur-lg border shadow-lg transition-all duration-300 ease-out ${
+        <div className={`w-full max-w-5xl bg-background/80 backdrop-blur-lg border shadow-lg transition-all duration-300 ease-out rounded-3xl${
           mobileMenuOpen
-            ? 'rounded-3xl flex flex-col overflow-hidden'
-            : 'rounded-3xl'
+            ? ' flex flex-col overflow-hidden'
+            : ''
         }`}>
           {/* Header Row - always present */}
           <div className={`flex gap-2 transition-all duration-300 ${
