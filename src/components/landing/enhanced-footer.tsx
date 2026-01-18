@@ -65,8 +65,20 @@ export function EnhancedFooter() {
   };
 
   return (
-    <footer className="relative border-t bg-muted/30">
-      <div className="container py-12 md:py-16">
+    <footer className="relative overflow-hidden border-t">
+      {/* Animated background gradient */}
+      <div className="absolute inset-0 bg-gradient-to-b from-background via-muted/30 to-muted/50" />
+
+      {/* Floating particles effect */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-10 left-10 w-2 h-2 bg-primary/20 rounded-full animate-float" style={{ animationDelay: "0s" }} />
+        <div className="absolute top-20 right-20 w-3 h-3 bg-purple-500/20 rounded-full animate-float" style={{ animationDelay: "1s" }} />
+        <div className="absolute bottom-20 left-1/4 w-2 h-2 bg-blue-500/20 rounded-full animate-float" style={{ animationDelay: "2s" }} />
+        <div className="absolute top-1/3 right-1/3 w-2 h-2 bg-green-500/20 rounded-full animate-float" style={{ animationDelay: "0.5s" }} />
+        <div className="absolute bottom-10 right-10 w-3 h-3 bg-yellow-500/20 rounded-full animate-float" style={{ animationDelay: "1.5s" }} />
+      </div>
+
+      <div className="relative container py-12 md:py-16">
         {/* Main Grid - Brand & Links */}
         <div className="grid grid-cols-1 md:grid-cols-6 gap-10 mb-10">
           {/* Brand Column - Spans 2 columns */}
