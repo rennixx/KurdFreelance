@@ -328,7 +328,7 @@ export default function HomePage() {
       <header className="fixed top-4 left-0 right-0 z-50 flex justify-center px-3 sm:px-4">
         <div className={`w-full max-w-5xl bg-background/80 backdrop-blur-lg border shadow-lg transition-all duration-300 ${
           mobileMenuOpen
-            ? 'rounded-t-3xl flex flex-col overflow-hidden'
+            ? 'rounded-3xl flex flex-col overflow-hidden'
             : 'rounded-full'
         }`}>
           {/* Header Row - always present */}
