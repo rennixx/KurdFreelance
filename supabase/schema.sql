@@ -482,3 +482,82 @@ INSERT INTO public.skills (name, category) VALUES
     ('Machine Learning', 'Data'),
     ('Data Visualization', 'Data')
 ON CONFLICT (name) DO NOTHING;
+-- =====================================================
+-- LANDING PAGE TABLES
+-- =====================================================
+
+-- Skill Categories table (for landing page bento grid)
+CREATE TABLE IF NOT EXISTS public.skill_categories (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    name TEXT NOT NULL,
+    slug TEXT UNIQUE NOT NULL,
+    description TEXT,
+    icon TEXT NOT NULL DEFAULT 'Code',
+    color_hex TEXT NOT NULL DEFAULT '#3B82F6',
+    illustration_key TEXT, -- Maps to frontend illustration component
+    display_order INTEGER DEFAULT 0,
+    size TEXT DEFAULT 'medium' CHECK (size IN ('large', 'medium', 'small', 'wide')),
+    is_active BOOLEAN DEFAULT true,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Platform Testimonials table (user reviews of the platform)
+CREATE TABLE IF NOT EXISTS public.testimonials (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    user_id UUID REFERENCES public.users(id) ON DELETE CASCADE,
+    content TEXT NOT NULL,
+    rating INTEGER NOT NULL CHECK (rating >= 1 AND rating <= 5),
+    role TEXT NOT NULL CHECK (role IN ('freelancer', 'client')),
+    is_featured BOOLEAN DEFAULT false,
+    is_approved BOOLEAN DEFAULT false, -- Admin moderation
+    admin_notes TEXT, -- Internal notes for moderation
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Indexes for landing page tables
+CREATE INDEX IF NOT EXISTS idx_skill_categories_display_order ON public.skill_categories(display_order);
+CREATE INDEX IF NOT EXISTS idx_skill_categories_is_active ON public.skill_categories(is_active);
+CREATE INDEX IF NOT EXISTS idx_testimonials_user_id ON public.testimonials(user_id);
+CREATE INDEX IF NOT EXISTS idx_testimonials_is_featured ON public.testimonials(is_featured);
+CREATE INDEX IF NOT EXISTS idx_testimonials_is_approved ON public.testimonials(is_approved);
+
+-- RLS for landing page tables
+ALTER TABLE public.skill_categories ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.testimonials ENABLE ROW LEVEL SECURITY;
+
+-- Skill categories policies (public read)
+CREATE POLICY "Skill categories are viewable by everyone" ON public.skill_categories
+    FOR SELECT USING (true);
+
+-- Testimonials policies
+CREATE POLICY "Approved testimonials are viewable by everyone" ON public.testimonials
+    FOR SELECT USING (is_approved = true OR auth.uid() = user_id);
+
+CREATE POLICY "Users can create testimonials" ON public.testimonials
+    FOR INSERT WITH CHECK (auth.uid() = user_id);
+
+CREATE POLICY "Users can update own testimonials" ON public.testimonials
+    FOR UPDATE USING (auth.uid() = user_id AND is_approved = false);
+
+CREATE POLICY "Users can delete own testimonials" ON public.testimonials
+    FOR DELETE USING (auth.uid() = user_id AND is_approved = false);
+
+-- Triggers for landing page tables
+CREATE TRIGGER update_skill_categories_updated_at BEFORE UPDATE ON public.skill_categories
+    FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+CREATE TRIGGER update_testimonials_updated_at BEFORE UPDATE ON public.testimonials
+    FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+-- Insert default skill categories
+INSERT INTO public.skill_categories (name, slug, description, icon, color_hex, illustration_key, display_order, size) VALUES
+    ('Web & App Development', 'development', 'Build websites, web apps, and mobile applications', 'Code', '#3B82F6', 'dev', 1, 'large'),
+    ('Design & Creative', 'design', 'UI/UX design, graphic design, and creative work', 'PaintBrush', '#A855F7', 'design', 2, 'medium'),
+    ('Writing & Translation', 'writing', 'Content writing, copywriting, and translation services', 'PencilLine', '#22C55E', 'writing', 3, 'medium'),
+    ('Digital Marketing', 'marketing', 'SEO, social media, and digital advertising', 'Megaphone', '#F97316', 'marketing', 4, 'medium'),
+    ('Video & Animation', 'video', 'Video editing, motion graphics, and animation', 'VideoCamera', '#EF4444', 'video', 5, 'medium'),
+    ('Business Consulting', 'business', 'Business strategy, consulting, and professional services', 'Briefcase', '#06B6D4', 'business', 6, 'small'),
+    ('AI & Data Science', 'ai-data', 'Machine learning, data analysis, and AI development', 'Brain', '#8B5CF6', 'ai', 7, 'wide')
+ON CONFLICT (slug) DO NOTHING;

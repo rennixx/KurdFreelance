@@ -1,10 +1,28 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Star, Quotes } from "@phosphor-icons/react";
 
-// Extended testimonials data for marquee
-const testimonials = [
+// Type definitions
+interface TestimonialAuthor {
+  name: string;
+  avatar: string;
+  role: "freelancer" | "client";
+  title: string;
+  jobsCompleted: number;
+}
+
+interface Testimonial {
+  id: string;
+  content: string;
+  rating: number;
+  isFeatured?: boolean;
+  author: TestimonialAuthor;
+}
+
+// Fallback testimonials data for marquee
+const fallbackTestimonials: Testimonial[] = [
   // Row 1 - Freelancers
   {
     id: "1",
@@ -129,11 +147,12 @@ const testimonials = [
   },
 ];
 
-// Featured testimonial (center highlight)
-const featuredTestimonial = {
+// Fallback featured testimonial (center highlight)
+const fallbackFeaturedTestimonial: Testimonial = {
   id: "featured",
   content: "KurdFreelance transformed my career. I went from struggling to find clients to having a full pipeline of projects. The local support team is amazing - they actually speak Kurdish and understand our needs. This platform isn't just about work, it's about building Kurdistan's digital economy together.",
   rating: 5,
+  isFeatured: true,
   author: {
     name: "Shad Barzan",
     avatar: "",
@@ -147,7 +166,7 @@ function TestimonialCard({
   testimonial, 
   variant = "default" 
 }: { 
-  testimonial: typeof testimonials[0];
+  testimonial: Testimonial;
   variant?: "default" | "featured";
 }) {
   const isFreelancer = testimonial.author.role === "freelancer";
@@ -239,6 +258,34 @@ function TestimonialCard({
 }
 
 export function TestimonialsMarquee() {
+  const [testimonials, setTestimonials] = useState<Testimonial[]>(fallbackTestimonials);
+  const [featuredTestimonial, setFeaturedTestimonial] = useState<Testimonial>(fallbackFeaturedTestimonial);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchTestimonials() {
+      try {
+        const response = await fetch("/api/landing/testimonials");
+        if (response.ok) {
+          const data = await response.json();
+          if (data.testimonials && data.testimonials.length > 0) {
+            setTestimonials(data.testimonials);
+          }
+          if (data.featured) {
+            setFeaturedTestimonial(data.featured);
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching testimonials:", error);
+        // Keep fallback data
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchTestimonials();
+  }, []);
+
   const row1 = testimonials.filter(t => t.author.role === "freelancer");
   const row2 = testimonials.filter(t => t.author.role === "client");
 

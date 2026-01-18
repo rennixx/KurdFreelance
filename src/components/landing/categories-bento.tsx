@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import {
   Code,
   PaintBrush,
@@ -9,6 +10,7 @@ import {
   VideoCamera,
   Briefcase,
   Brain,
+  type Icon as PhosphorIcon,
 } from "@phosphor-icons/react";
 import {
   DevIllustration,
@@ -20,114 +22,160 @@ import {
   AIIllustration,
 } from "./category-illustrations";
 
-const categories = [
+// Icon and illustration mapping
+const iconMap: Record<string, PhosphorIcon> = {
+  Code,
+  PaintBrush,
+  PencilLine,
+  Megaphone,
+  VideoCamera,
+  Briefcase,
+  Brain,
+};
+
+const illustrationMap: Record<string, React.ComponentType<{ color: string }>> = {
+  dev: DevIllustration,
+  design: DesignIllustration,
+  writing: WritingIllustration,
+  marketing: MarketingIllustration,
+  video: VideoIllustration,
+  business: BusinessIllustration,
+  ai: AIIllustration,
+};
+
+// Type for API category data
+interface CategoryData {
+  id: string;
+  name: string;
+  slug: string;
+  icon: string;
+  color_hex: string;
+  illustration_key: string;
+  size: "large" | "medium" | "small" | "wide";
+  jobsCount: number;
+}
+
+// Fallback static data
+const fallbackCategories: CategoryData[] = [
   {
     id: "development",
     name: "Web & App Development",
     slug: "development",
-    icon: Code,
-    jobCount: "2.4k+",
-    colorHex: "#3B82F6", // blue-500
-    bgGradient: "linear-gradient(135deg, rgba(59,130,246,0.15) 0%, rgba(59,130,246,0.05) 50%, transparent 100%)",
+    icon: "Code",
+    jobsCount: 234,
+    color_hex: "#3B82F6",
     size: "large",
-    Illustration: DevIllustration,
+    illustration_key: "dev",
   },
   {
     id: "design",
     name: "Design & Creative",
     slug: "design",
-    icon: PaintBrush,
-    jobCount: "1.8k+",
-    colorHex: "#A855F7", // purple-500
-    bgGradient: "linear-gradient(135deg, rgba(168,85,247,0.15) 0%, rgba(168,85,247,0.05) 50%, transparent 100%)",
+    icon: "PaintBrush",
+    jobsCount: 187,
+    color_hex: "#A855F7",
     size: "medium",
-    Illustration: DesignIllustration,
+    illustration_key: "design",
   },
   {
     id: "writing",
     name: "Writing & Translation",
     slug: "writing",
-    icon: PencilLine,
-    jobCount: "1.2k+",
-    colorHex: "#22C55E", // green-500
-    bgGradient: "linear-gradient(135deg, rgba(34,197,94,0.15) 0%, rgba(34,197,94,0.05) 50%, transparent 100%)",
+    icon: "PencilLine",
+    jobsCount: 156,
+    color_hex: "#22C55E",
     size: "medium",
-    Illustration: WritingIllustration,
+    illustration_key: "writing",
   },
   {
     id: "marketing",
     name: "Digital Marketing",
     slug: "marketing",
-    icon: Megaphone,
-    jobCount: "980+",
-    colorHex: "#F97316", // orange-500
-    bgGradient: "linear-gradient(135deg, rgba(249,115,22,0.15) 0%, rgba(249,115,22,0.05) 50%, transparent 100%)",
+    icon: "Megaphone",
+    jobsCount: 145,
+    color_hex: "#F97316",
     size: "medium",
-    Illustration: MarketingIllustration,
+    illustration_key: "marketing",
   },
   {
     id: "video",
     name: "Video & Animation",
     slug: "video",
-    icon: VideoCamera,
-    jobCount: "750+",
-    colorHex: "#EF4444", // red-500
-    bgGradient: "linear-gradient(135deg, rgba(239,68,68,0.15) 0%, rgba(239,68,68,0.05) 50%, transparent 100%)",
+    icon: "VideoCamera",
+    jobsCount: 98,
+    color_hex: "#EF4444",
     size: "medium",
-    Illustration: VideoIllustration,
+    illustration_key: "video",
   },
   {
     id: "business",
     name: "Business Consulting",
     slug: "business",
-    icon: Briefcase,
-    jobCount: "640+",
-    colorHex: "#06B6D4", // cyan-500
-    bgGradient: "linear-gradient(135deg, rgba(6,182,212,0.15) 0%, rgba(6,182,212,0.05) 50%, transparent 100%)",
+    icon: "Briefcase",
+    jobsCount: 67,
+    color_hex: "#06B6D4",
     size: "small",
-    Illustration: BusinessIllustration,
+    illustration_key: "business",
   },
   {
     id: "ai-data",
     name: "AI & Data Science",
     slug: "ai-data",
-    icon: Brain,
-    jobCount: "520+",
-    colorHex: "#8B5CF6", // violet-500
-    bgGradient: "linear-gradient(135deg, rgba(139,92,246,0.15) 0%, rgba(139,92,246,0.05) 50%, transparent 100%)",
+    icon: "Brain",
+    jobsCount: 89,
+    color_hex: "#8B5CF6",
     size: "wide",
-    Illustration: AIIllustration,
+    illustration_key: "ai",
   },
 ];
+
+// Helper to format job count
+function formatJobCount(count: number): string {
+  if (count >= 1000) {
+    return `${(count / 1000).toFixed(1)}k+`;
+  }
+  return `${count}+`;
+}
+
+// Helper to generate gradient from hex color
+function createBgGradient(hex: string): string {
+  // Convert hex to rgba
+  const r = parseInt(hex.slice(1, 3), 16);
+  const g = parseInt(hex.slice(3, 5), 16);
+  const b = parseInt(hex.slice(5, 7), 16);
+  return `linear-gradient(135deg, rgba(${r},${g},${b},0.15) 0%, rgba(${r},${g},${b},0.05) 50%, transparent 100%)`;
+}
 
 function BentoCard({
   category,
   className = "",
 }: {
-  category: (typeof categories)[0];
+  category: CategoryData;
   className?: string;
 }) {
-  const Icon = category.icon;
-  const Illustration = category.Illustration;
+  const Icon = iconMap[category.icon] || Code;
+  const Illustration = illustrationMap[category.illustration_key] || DevIllustration;
+  const bgGradient = createBgGradient(category.color_hex);
+  const jobCount = formatJobCount(category.jobsCount);
 
   return (
     <Link href={`/jobs?category=${category.slug}`} className={className}>
       <div
         className="relative h-full overflow-hidden rounded-3xl border bg-card p-6 transition-all duration-500 ease-out cursor-pointer group hover:shadow-2xl hover:-translate-y-1"
         style={{
-          ["--accent-color" as string]: category.colorHex,
+          ["--accent-color" as string]: category.color_hex,
         }}
       >
         {/* Gradient Background */}
         <div
           className="absolute inset-0 opacity-60 group-hover:opacity-100 transition-opacity duration-500"
-          style={{ background: category.bgGradient }}
+          style={{ background: bgGradient }}
         />
 
         {/* Decorative circles */}
         <div 
           className="absolute -top-20 -right-20 w-40 h-40 rounded-full opacity-10 group-hover:opacity-20 transition-opacity duration-500"
-          style={{ background: `radial-gradient(circle, ${category.colorHex} 0%, transparent 70%)` }}
+          style={{ background: `radial-gradient(circle, ${category.color_hex} 0%, transparent 70%)` }}
         />
 
         {/* Illustration - positioned based on card size */}
@@ -140,7 +188,7 @@ function BentoCard({
               : "right-0 top-6 w-[60%] h-[55%] opacity-60 group-hover:opacity-80"
           }`}
         >
-          <Illustration color={category.colorHex} />
+          <Illustration color={category.color_hex} />
         </div>
 
         {/* Content */}
@@ -149,13 +197,13 @@ function BentoCard({
           <div
             className="w-12 h-12 md:w-14 md:h-14 rounded-2xl flex items-center justify-center mb-4 border group-hover:scale-110 transition-transform duration-500"
             style={{ 
-              background: category.bgGradient,
-              borderColor: `${category.colorHex}20`,
+              background: bgGradient,
+              borderColor: `${category.color_hex}20`,
             }}
           >
             <Icon
               className="w-6 h-6 md:w-7 md:h-7"
-              style={{ color: category.colorHex }}
+              style={{ color: category.color_hex }}
               weight="duotone"
             />
           </div>
@@ -166,18 +214,18 @@ function BentoCard({
               {category.name}
             </h3>
             <p className="text-sm text-muted-foreground">
-              {category.jobCount} jobs available
+              {jobCount} jobs available
             </p>
           </div>
 
           {/* Hover Arrow */}
           <div
             className="absolute bottom-5 right-5 w-9 h-9 md:w-10 md:h-10 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 translate-x-2 group-hover:translate-x-0 transition-all duration-300"
-            style={{ background: `${category.colorHex}15` }}
+            style={{ background: `${category.color_hex}15` }}
           >
             <svg
               className="w-4 h-4 md:w-5 md:h-5"
-              style={{ color: category.colorHex }}
+              style={{ color: category.color_hex }}
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -196,17 +244,17 @@ function BentoCard({
         <div
           className="absolute top-4 right-4 px-2.5 py-1 rounded-full text-xs font-medium z-20"
           style={{ 
-            background: `${category.colorHex}15`,
-            color: category.colorHex,
+            background: `${category.color_hex}15`,
+            color: category.color_hex,
           }}
         >
-          {category.jobCount}
+          {jobCount}
         </div>
 
         {/* Hover border effect */}
         <div 
           className="absolute inset-0 rounded-3xl border-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
-          style={{ borderColor: `${category.colorHex}40` }}
+          style={{ borderColor: `${category.color_hex}40` }}
         />
       </div>
     </Link>
@@ -214,33 +262,71 @@ function BentoCard({
 }
 
 export function CategoriesBento() {
+  const [categories, setCategories] = useState<CategoryData[]>(fallbackCategories);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchCategories() {
+      try {
+        const response = await fetch("/api/landing/categories");
+        if (response.ok) {
+          const data = await response.json();
+          if (data && data.length > 0) {
+            setCategories(data);
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+        // Keep fallback data
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchCategories();
+  }, []);
+
+  // Find categories by their expected positions
+  const largeCategory = categories.find(c => c.size === "large") || categories[0];
+  const wideCategory = categories.find(c => c.size === "wide") || categories[categories.length - 1];
+  const smallCategory = categories.find(c => c.size === "small") || categories[5];
+  const mediumCategories = categories.filter(c => c.size === "medium").slice(0, 4);
+
   return (
     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
       {/* Row 1: Development (large) + Design + Writing */}
       <div className="col-span-2 row-span-2">
-        <BentoCard category={categories[0]} className="h-full min-h-[320px]" />
+        <BentoCard category={largeCategory} className="h-full min-h-[320px]" />
       </div>
-      <div className="col-span-1">
-        <BentoCard category={categories[1]} className="h-full min-h-[150px]" />
-      </div>
-      <div className="col-span-1">
-        <BentoCard category={categories[2]} className="h-full min-h-[150px]" />
-      </div>
+      {mediumCategories[0] && (
+        <div className="col-span-1">
+          <BentoCard category={mediumCategories[0]} className="h-full min-h-[150px]" />
+        </div>
+      )}
+      {mediumCategories[1] && (
+        <div className="col-span-1">
+          <BentoCard category={mediumCategories[1]} className="h-full min-h-[150px]" />
+        </div>
+      )}
 
       {/* Row 2: Marketing + Video (fill beside development) */}
-      <div className="col-span-1">
-        <BentoCard category={categories[3]} className="h-full min-h-[150px]" />
-      </div>
-      <div className="col-span-1">
-        <BentoCard category={categories[4]} className="h-full min-h-[150px]" />
-      </div>
+      {mediumCategories[2] && (
+        <div className="col-span-1">
+          <BentoCard category={mediumCategories[2]} className="h-full min-h-[150px]" />
+        </div>
+      )}
+      {mediumCategories[3] && (
+        <div className="col-span-1">
+          <BentoCard category={mediumCategories[3]} className="h-full min-h-[150px]" />
+        </div>
+      )}
 
       {/* Row 3: Business (small) + AI & Data (wide) */}
       <div className="col-span-1">
-        <BentoCard category={categories[5]} className="h-full min-h-[150px]" />
+        <BentoCard category={smallCategory} className="h-full min-h-[150px]" />
       </div>
       <div className="col-span-2 md:col-span-3">
-        <BentoCard category={categories[6]} className="h-full min-h-[150px]" />
+        <BentoCard category={wideCategory} className="h-full min-h-[150px]" />
       </div>
     </div>
   );

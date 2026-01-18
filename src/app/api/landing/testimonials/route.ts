@@ -5,26 +5,45 @@ export async function GET() {
   try {
     const supabase = await createClient();
 
-    const { data: testimonials, error } = await supabase
+    // Get regular approved testimonials
+    const { data: regularTestimonials, error: regularError } = await supabase
       .from("testimonials")
       .select(`
         id,
         content,
         rating,
         role,
+        is_featured,
         user:users(full_name, avatar_url),
         freelancer_profile:freelancer_profiles(professional_title, total_jobs_completed),
         client_profile:client_profiles(company_name, total_jobs_completed)
       `)
-      .eq("is_featured", true)
       .eq("is_approved", true)
+      .eq("is_featured", false)
       .order("created_at", { ascending: false })
-      .limit(6);
+      .limit(10);
 
-    if (error) throw error;
+    // Get featured testimonial separately
+    const { data: featuredTestimonials, error: featuredError } = await supabase
+      .from("testimonials")
+      .select(`
+        id,
+        content,
+        rating,
+        role,
+        is_featured,
+        user:users(full_name, avatar_url),
+        freelancer_profile:freelancer_profiles(professional_title, total_jobs_completed),
+        client_profile:client_profiles(company_name, total_jobs_completed)
+      `)
+      .eq("is_approved", true)
+      .eq("is_featured", true)
+      .order("created_at", { ascending: false })
+      .limit(1);
 
-    const formattedTestimonials = testimonials?.map((t) => {
-      // Supabase returns arrays for joins - get first element
+    if (regularError || featuredError) throw regularError || featuredError;
+
+    const formatTestimonial = (t: any) => {
       const user = Array.isArray(t.user) ? t.user[0] : t.user;
       const freelancerProfile = Array.isArray(t.freelancer_profile) ? t.freelancer_profile[0] : t.freelancer_profile;
       const clientProfile = Array.isArray(t.client_profile) ? t.client_profile[0] : t.client_profile;
@@ -33,6 +52,7 @@ export async function GET() {
         id: t.id,
         content: t.content,
         rating: t.rating,
+        isFeatured: t.is_featured,
         author: {
           name: user?.full_name || "Anonymous",
           avatar: user?.avatar_url || "",
@@ -45,85 +65,98 @@ export async function GET() {
             : clientProfile?.total_jobs_completed,
         },
       };
-    }) || [];
+    };
 
-    return NextResponse.json(formattedTestimonials);
+    const formattedRegular = (regularTestimonials || []).map(formatTestimonial);
+    const formattedFeatured = (featuredTestimonials || []).map(formatTestimonial);
+
+    return NextResponse.json({
+      testimonials: formattedRegular,
+      featured: formattedFeatured[0] || null,
+    });
   } catch (error) {
     console.error("Error fetching testimonials:", error);
-    // Return fallback testimonials if table doesn't exist or error occurs
-    return NextResponse.json([
-      {
-        id: "1",
-        content: "KurdFreelance helped me find amazing local talent for my startup. The lower fees compared to international platforms made a huge difference for our budget.",
-        rating: 5,
-        author: {
-          name: "Karwan H.",
-          avatar: "",
-          role: "client",
-          title: "Tech Startup Founder",
-          jobsCompleted: 12,
+    // Return fallback testimonials
+    return NextResponse.json({
+      testimonials: [
+        {
+          id: "1",
+          content: "KurdFreelance helped me find amazing local talent for my startup. The lower fees compared to international platforms made a huge difference for our budget.",
+          rating: 5,
+          isFeatured: false,
+          author: { name: "Karwan H.", avatar: "", role: "client", title: "Tech Startup Founder", jobsCompleted: 12 },
         },
-      },
-      {
-        id: "2", 
-        content: "As a freelance developer in Erbil, this platform changed my career. I can now work with clients who understand my market and pay through local methods.",
-        rating: 5,
-        author: {
-          name: "Dilshad M.",
-          avatar: "",
-          role: "freelancer",
-          title: "Full Stack Developer",
-          jobsCompleted: 34,
+        {
+          id: "2", 
+          content: "As a freelance developer in Erbil, this platform changed my career. I can now work with clients who understand my market and pay through local methods.",
+          rating: 5,
+          isFeatured: false,
+          author: { name: "Dilshad M.", avatar: "", role: "freelancer", title: "Full Stack Developer", jobsCompleted: 34 },
         },
-      },
-      {
-        id: "3",
-        content: "The best platform for Kurdish businesses. We've hired 5 designers through KurdFreelance and every single one exceeded our expectations.",
-        rating: 5,
-        author: {
-          name: "Sara A.",
-          avatar: "",
-          role: "client",
-          title: "Marketing Agency Owner",
-          jobsCompleted: 8,
+        {
+          id: "3",
+          content: "The best platform for Kurdish businesses. We've hired 5 designers through KurdFreelance and every single one exceeded our expectations.",
+          rating: 5,
+          isFeatured: false,
+          author: { name: "Sara A.", avatar: "", role: "client", title: "Marketing Agency Owner", jobsCompleted: 8 },
         },
-      },
-      {
-        id: "4",
-        content: "Finally a freelance platform that supports Kurdish and Arabic! Communication with clients has never been easier. Highly recommend to all Kurdish freelancers.",
-        rating: 5,
-        author: {
-          name: "Rebin K.",
-          avatar: "",
-          role: "freelancer",
-          title: "UI/UX Designer",
-          jobsCompleted: 28,
+        {
+          id: "4",
+          content: "Finally a freelance platform that supports Kurdish and Arabic! Communication with clients has never been easier.",
+          rating: 5,
+          isFeatured: false,
+          author: { name: "Rebin K.", avatar: "", role: "freelancer", title: "UI/UX Designer", jobsCompleted: 28 },
         },
-      },
-      {
-        id: "5",
-        content: "The escrow system gives me peace of mind. I know my payment is secure before I start working. This is the future of freelancing in Kurdistan.",
-        rating: 5,
-        author: {
-          name: "Zhyan S.",
-          avatar: "",
-          role: "freelancer",
-          title: "Content Writer",
-          jobsCompleted: 45,
+        {
+          id: "5",
+          content: "The escrow system gives me peace of mind. I know my payment is secure before I start working.",
+          rating: 5,
+          isFeatured: false,
+          author: { name: "Zhyan S.", avatar: "", role: "freelancer", title: "Content Writer", jobsCompleted: 45 },
         },
-      },
-      {
-        id: "6",
-        content: "We saved over 40% in fees compared to Upwork. The local talent pool is incredible - skilled professionals who understand our regional market.",
-        rating: 5,
-        author: {
-          name: "Omed B.",
-          avatar: "",
-          role: "client",
-          title: "E-commerce Business Owner",
-          jobsCompleted: 15,
+        {
+          id: "6",
+          content: "We saved over 40% in fees compared to Upwork. The local talent pool is incredible.",
+          rating: 5,
+          isFeatured: false,
+          author: { name: "Omed B.", avatar: "", role: "client", title: "E-commerce Business Owner", jobsCompleted: 15 },
         },
+        {
+          id: "7",
+          content: "My business has grown 200% since joining. The quality of clients here actually appreciate good work.",
+          rating: 5,
+          isFeatured: false,
+          author: { name: "Lana M.", avatar: "", role: "freelancer", title: "Video Editor", jobsCompleted: 52 },
+        },
+        {
+          id: "8",
+          content: "Best decision we made was hiring locally through KurdFreelance. Faster communication, better understanding.",
+          rating: 5,
+          isFeatured: false,
+          author: { name: "Hawre J.", avatar: "", role: "client", title: "Restaurant Chain Owner", jobsCompleted: 6 },
+        },
+        {
+          id: "9",
+          content: "I went from struggling to find clients to being fully booked within 3 months.",
+          rating: 5,
+          isFeatured: false,
+          author: { name: "Soma A.", avatar: "", role: "freelancer", title: "Social Media Manager", jobsCompleted: 41 },
+        },
+        {
+          id: "10",
+          content: "The customer support is amazing - they actually speak Kurdish! Any issues get resolved quickly.",
+          rating: 5,
+          isFeatured: false,
+          author: { name: "Rawand T.", avatar: "", role: "client", title: "Construction Company", jobsCompleted: 9 },
+        },
+      ],
+      featured: {
+        id: "featured-1",
+        content: "KurdFreelance transformed how we hire talent in Kurdistan. The platform understands our market, supports local payment methods, and the quality of freelancers is outstanding. We've completed over 50 projects and counting!",
+        rating: 5,
+        isFeatured: true,
+        author: { name: "Darin Rashid", avatar: "", role: "client", title: "CEO, TechKurd Solutions", jobsCompleted: 54 },
       },
-    ]);
+    });
   }
 }
