@@ -17,7 +17,6 @@ import {
 import {
   Bell,
   SignOut,
-  List,
   ChatCircle,
   MagnifyingGlass,
   Gear,
@@ -25,7 +24,6 @@ import {
 } from "@phosphor-icons/react";
 import { useAuthStore } from "@/stores";
 import { createClient } from "@/lib/supabase/client";
-import { useState as useStateAlias } from "react";
 
 interface Notification {
   id: string;
@@ -181,16 +179,14 @@ export function DashboardHeader({ onMenuClick }: DashboardHeaderProps) {
   return (
     <header className="sticky top-0 z-40 bg-white border-b">
       <div className="flex h-16 items-center justify-between px-4 lg:px-6">
-        {/* Mobile menu button and logo */}
-        <div className="flex items-center gap-4 lg:hidden">
-          <Button variant="ghost" size="icon" onClick={onMenuClick}>
-            <List className="h-5 w-5" />
-          </Button>
-          <Link href="/dashboard" className="flex items-center space-x-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-green-600 text-white font-bold">
-              K
-            </div>
-            <span className="font-bold text-lg">KurdFreelance</span>
+        {/* Logo - Mobile (left aligned) */}
+        <div className="lg:hidden">
+          <Link href="/dashboard" className="flex items-center">
+            <img
+              src="/logo.png"
+              alt="KurdFreelance"
+              className="h-8 w-auto"
+            />
           </Link>
         </div>
 
