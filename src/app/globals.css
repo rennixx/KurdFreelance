@@ -147,6 +147,25 @@
   }
 }
 
+/* Slower, smoother testimonial marquee - seamless loop */
+@keyframes marquee-slow {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes marquee-slow-reverse {
+  0% {
+    transform: translateX(-50%);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
 .animate-marquee {
   animation: marquee 30s linear infinite;
 }
@@ -155,9 +174,38 @@
   animation: marquee-reverse 35s linear infinite;
 }
 
+/* Testimonial-specific animations */
+.animate-marquee-slow {
+  animation: marquee-slow 50s linear infinite;
+}
+
+.animate-marquee-slow-reverse {
+  animation: marquee-slow-reverse 55s linear infinite;
+}
+
 .animate-marquee:hover,
-.animate-marquee-reverse:hover {
+.animate-marquee-reverse:hover,
+.animate-marquee-slow:hover,
+.animate-marquee-slow-reverse:hover {
   animation-play-state: paused;
+}
+
+/* Smooth gradient mask for infinite marquee edges */
+.mask-gradient {
+  mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    black 5%,
+    black 95%,
+    transparent 100%
+  );
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    black 5%,
+    black 95%,
+    transparent 100%
+  );
 }
 
 /* RNA-like wave flow animation */

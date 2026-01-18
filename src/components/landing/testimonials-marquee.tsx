@@ -291,17 +291,16 @@ export function TestimonialsMarquee() {
 
   return (
     <div className="relative">
-      {/* Marquee Row 1 - Scrolling Left */}
-      <div className="relative mb-6 overflow-hidden">
-        {/* Fade edges */}
-        <div className="absolute left-0 top-0 bottom-0 w-20 md:w-40 bg-gradient-to-r from-muted/80 to-transparent z-10 pointer-events-none" />
-        <div className="absolute right-0 top-0 bottom-0 w-20 md:w-40 bg-gradient-to-l from-muted/80 to-transparent z-10 pointer-events-none" />
-        
-        <div className="flex gap-4 animate-marquee hover:[animation-play-state:paused]">
-          {/* Duplicate for infinite scroll */}
-          {[...row1, ...row1].map((testimonial, index) => (
-            <div key={`${testimonial.id}-${index}`} className="shrink-0 w-[340px]">
-              <TestimonialCard testimonial={testimonial} />
+      {/* Marquee Row 1 - Scrolling Left (Freelancers) */}
+      <div className="relative mb-6 overflow-hidden mask-gradient">
+        <div className="flex shrink-0 animate-marquee-slow">
+          {[...Array(4)].map((_, setIndex) => (
+            <div key={setIndex} className="flex shrink-0 gap-4 px-2">
+              {row1.map((testimonial) => (
+                <div key={`${testimonial.id}-${setIndex}`} className="shrink-0 w-[340px]">
+                  <TestimonialCard testimonial={testimonial} />
+                </div>
+              ))}
             </div>
           ))}
         </div>
@@ -318,17 +317,16 @@ export function TestimonialsMarquee() {
         </div>
       </div>
 
-      {/* Marquee Row 2 - Scrolling Right */}
-      <div className="relative mt-6 overflow-hidden">
-        {/* Fade edges */}
-        <div className="absolute left-0 top-0 bottom-0 w-20 md:w-40 bg-gradient-to-r from-muted/80 to-transparent z-10 pointer-events-none" />
-        <div className="absolute right-0 top-0 bottom-0 w-20 md:w-40 bg-gradient-to-l from-muted/80 to-transparent z-10 pointer-events-none" />
-        
-        <div className="flex gap-4 animate-marquee-reverse hover:[animation-play-state:paused]">
-          {/* Duplicate for infinite scroll */}
-          {[...row2, ...row2].map((testimonial, index) => (
-            <div key={`${testimonial.id}-${index}`} className="shrink-0 w-[340px]">
-              <TestimonialCard testimonial={testimonial} />
+      {/* Marquee Row 2 - Scrolling Right (Clients) */}
+      <div className="relative mt-6 overflow-hidden mask-gradient">
+        <div className="flex shrink-0 animate-marquee-slow-reverse">
+          {[...Array(4)].map((_, setIndex) => (
+            <div key={setIndex} className="flex shrink-0 gap-4 px-2">
+              {row2.map((testimonial) => (
+                <div key={`${testimonial.id}-${setIndex}`} className="shrink-0 w-[340px]">
+                  <TestimonialCard testimonial={testimonial} />
+                </div>
+              ))}
             </div>
           ))}
         </div>
