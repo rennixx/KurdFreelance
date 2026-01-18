@@ -24,6 +24,7 @@ import {
   TrustFeatureCard,
 } from "@/components/landing/trust-shield-illustration";
 import { CategoriesBento } from "@/components/landing/categories-bento";
+import { TestimonialsMarquee } from "@/components/landing/testimonials-marquee";
 import {
   Code,
   Palette,
@@ -651,8 +652,8 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Section 4: Testimonials */}
-      <section className="py-16 md:py-24 bg-muted/30">
+      {/* Section 4: Testimonials - Marquee Style */}
+      <section className="py-16 md:py-24 bg-muted/30 overflow-hidden">
         <div className="container">
           <div className="text-center mb-12">
             <Badge variant="outline" className="mb-4">
@@ -667,78 +668,9 @@ export default function HomePage() {
               businesses with KurdFreelance.
             </p>
           </div>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {isLoading
-              ? Array(6)
-                  .fill(0)
-                  .map((_, i) => (
-                    <Card key={i} className="animate-pulse">
-                      <CardContent className="p-6">
-                        <div className="h-24 rounded bg-muted mb-4" />
-                        <div className="flex items-center gap-3">
-                          <div className="h-12 w-12 rounded-full bg-muted" />
-                          <div>
-                            <div className="h-4 w-24 rounded bg-muted mb-2" />
-                            <div className="h-3 w-32 rounded bg-muted" />
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))
-              : testimonials.map((testimonial) => (
-                  <Card
-                    key={testimonial.id}
-                    className="hover:shadow-lg transition-shadow"
-                  >
-                    <CardContent className="p-6">
-                      <div className="flex gap-1 mb-3">
-                        {Array(testimonial.rating)
-                          .fill(0)
-                          .map((_, i) => (
-                            <Star
-                              key={i}
-                              className="h-4 w-4 fill-yellow-400 text-yellow-400"
-                            />
-                          ))}
-                      </div>
-                      <p className="text-muted-foreground mb-4 line-clamp-4">
-                        &ldquo;{testimonial.content}&rdquo;
-                      </p>
-                      <div className="flex items-center gap-3">
-                        <Avatar>
-                          <AvatarImage src={testimonial.author.avatar} />
-                          <AvatarFallback>
-                            {testimonial.author.name
-                              .split(" ")
-                              .map((n) => n[0])
-                              .join("")}
-                          </AvatarFallback>
-                        </Avatar>
-                        <div>
-                          <p className="font-semibold">
-                            {testimonial.author.name}
-                          </p>
-                          <p className="text-sm text-muted-foreground">
-                            {testimonial.author.title}
-                            {testimonial.author.jobsCompleted > 0 && (
-                              <span className="ml-1">
-                                • {testimonial.author.jobsCompleted} jobs
-                              </span>
-                            )}
-                          </p>
-                        </div>
-                        <Badge
-                          variant="outline"
-                          className="ml-auto capitalize text-xs"
-                        >
-                          {testimonial.author.role}
-                        </Badge>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
-          </div>
         </div>
+        {/* Full-width marquee */}
+        <TestimonialsMarquee />
       </section>
 
       {/* Section 5: Success Stories - Disabled for now */}
