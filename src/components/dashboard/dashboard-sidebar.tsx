@@ -73,8 +73,10 @@ export function DashboardSidebar() {
 
   // Determine which nav items to show based on user role (not profile existence)
   const userRole = getUserRole();
-  const allNavItems = userRole === "freelancer" ? freelancerNavItems : clientNavItems;
-  
+
+  // Use a stable default for SSR - always start with freelancer nav items to avoid hydration mismatch
+  const allNavItems = !mounted ? freelancerNavItems : (userRole === "freelancer" ? freelancerNavItems : clientNavItems);
+
   // Only filter nav items based on permissions after hydration and when role is available
   const navItems = mounted && userRole
     ? allNavItems.filter((item) => {
