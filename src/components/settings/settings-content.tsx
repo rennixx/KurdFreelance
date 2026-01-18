@@ -280,8 +280,8 @@ export function SettingsContent({ user }: SettingsContentProps) {
               </CardHeader>
               <CardContent className="space-y-6">
                 {/* Avatar */}
-                <div className="flex items-center gap-4">
-                  <Avatar className="h-20 w-20">
+                <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+                  <Avatar className="h-20 w-20 shrink-0">
                     <AvatarImage src={avatarUrl || undefined} />
                     <AvatarFallback className="text-xl">
                       {user.full_name
@@ -290,8 +290,8 @@ export function SettingsContent({ user }: SettingsContentProps) {
                         .join("")}
                     </AvatarFallback>
                   </Avatar>
-                  <div className="space-y-2">
-                    <div className="flex gap-2">
+                  <div className="space-y-2 w-full">
+                    <div className="flex flex-col sm:flex-row gap-2">
                       <input
                         ref={fileInputRef}
                         type="file"
@@ -299,11 +299,12 @@ export function SettingsContent({ user }: SettingsContentProps) {
                         onChange={handlePhotoChange}
                         className="hidden"
                       />
-                      <Button 
-                        type="button" 
+                      <Button
+                        type="button"
                         variant="outline"
                         onClick={() => fileInputRef.current?.click()}
                         disabled={isUploadingPhoto}
+                        className="w-full sm:w-auto"
                       >
                         {isUploadingPhoto ? (
                           <>
@@ -323,6 +324,7 @@ export function SettingsContent({ user }: SettingsContentProps) {
                           variant="outline"
                           onClick={handleRemovePhoto}
                           disabled={isUploadingPhoto}
+                          className="w-full sm:w-auto"
                         >
                           <Trash className="mr-2 h-4 w-4" />
                           Remove
