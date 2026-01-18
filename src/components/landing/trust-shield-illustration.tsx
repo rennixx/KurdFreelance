@@ -1,6 +1,6 @@
 "use client";
 
-import { Shield, LockKey, CurrencyDollar, Globe, Clock, Trophy } from "@phosphor-icons/react";
+import { Shield, LockKey, CurrencyDollar, Globe, Clock, Trophy, IconProps } from "@phosphor-icons/react";
 
 export function TrustShieldIllustration() {
   return (
@@ -141,7 +141,7 @@ export function TrustShieldIllustration() {
 
 // Feature card component with hover effects
 interface TrustFeatureCardProps {
-  icon: React.ComponentType<{ className?: string; weight?: "duotone" | "fill" | "regular" }>;
+  icon: React.ComponentType<IconProps>;
   title: string;
   description: string;
   color: string;

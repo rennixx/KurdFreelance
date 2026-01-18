@@ -200,7 +200,7 @@ export function SettingsContent({ user }: SettingsContentProps) {
 
       // Update local state and auth store
       setAvatarUrl(publicUrl);
-      setUser({ ...user, avatar_url: publicUrl });
+      setUser({ ...user, avatar_url: publicUrl } as any);
       
       toast.success("Profile photo updated successfully!");
       router.refresh();
@@ -224,8 +224,8 @@ export function SettingsContent({ user }: SettingsContentProps) {
 
       if (error) throw error;
 
-      setAvatarUrl(null);
-      setUser({ ...user, avatar_url: null });
+      setAvatarUrl(undefined);
+      setUser({ ...user, avatar_url: null } as any);
       
       toast.success("Profile photo removed");
       router.refresh();

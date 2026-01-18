@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, Suspense } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
@@ -26,11 +26,11 @@ import { registerSchema } from "@/lib/validations";
 
 type RegisterFormData = z.infer<typeof registerSchema>;
 
-export default function RegisterPage() {
+function RegisterForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const initialType = searchParams.get("type") as "freelancer" | "client" | null;
-  
+
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [userType, setUserType] = useState<"freelancer" | "client">(
@@ -300,5 +300,13 @@ export default function RegisterPage() {
         </div>
       </CardFooter>
     </Card>
+  );
+}
+
+export default function RegisterPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <RegisterForm />
+    </Suspense>
   );
 }
