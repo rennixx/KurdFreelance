@@ -218,7 +218,13 @@ export function NotificationsContent({
                 <CardContent className="p-4">
                   <div className="flex gap-4">
                     {/* Icon */}
-                    <div className={`p-3 rounded-lg ${config.bgColor} shrink-0`}>
+                    <div
+                      className={
+                        `w-12 h-12 flex items-center justify-center rounded-full shrink-0 ` +
+                        `${config.bgColor} shadow-sm backdrop-blur-[2px]`
+                      }
+                      aria-hidden
+                    >
                       <Icon className={`h-6 w-6 ${config.color}`} />
                     </div>
 
