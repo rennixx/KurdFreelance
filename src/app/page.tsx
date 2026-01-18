@@ -605,15 +605,15 @@ export default function HomePage() {
           <ScrollAnimate animation="fade-up" delay={200} className="mt-16 pt-8 border-t">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               <div className="text-center p-4 rounded-2xl bg-card/50 backdrop-blur-sm border">
-                <div className="text-2xl md:text-3xl font-bold text-primary">$2M+</div>
+                <div className="text-2xl md:text-3xl font-bold text-primary">{stats?.totalEarnings || "$500K+"}</div>
                 <div className="text-sm text-muted-foreground">Protected Payments</div>
               </div>
               <div className="text-center p-4 rounded-2xl bg-card/50 backdrop-blur-sm border">
-                <div className="text-2xl md:text-3xl font-bold text-primary">10,000+</div>
+                <div className="text-2xl md:text-3xl font-bold text-primary">{stats?.freelancersCount || "1,000+"}</div>
                 <div className="text-sm text-muted-foreground">Verified Users</div>
               </div>
               <div className="text-center p-4 rounded-2xl bg-card/50 backdrop-blur-sm border">
-                <div className="text-2xl md:text-3xl font-bold text-primary">99%</div>
+                <div className="text-2xl md:text-3xl font-bold text-primary">{stats?.successRate || "98%"}</div>
                 <div className="text-sm text-muted-foreground">Satisfaction Rate</div>
               </div>
               <div className="text-center p-4 rounded-2xl bg-card/50 backdrop-blur-sm border">
