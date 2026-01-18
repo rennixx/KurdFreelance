@@ -303,11 +303,37 @@ export default function HomePage() {
     <div className="flex flex-col min-h-screen">
       {/* Floating Pill Header */}
       <header className="fixed top-4 left-0 right-0 z-50 flex justify-center px-4">
-        <div className="w-full max-w-4xl bg-background/80 backdrop-blur-lg border rounded-full shadow-lg px-6 py-3 flex items-center justify-between">
-          <Link href="/" className="flex items-center">
+        <div className="w-full max-w-5xl bg-background/80 backdrop-blur-lg border rounded-full shadow-lg px-6 py-3 flex items-center justify-between gap-4">
+          <Link href="/" className="flex items-center shrink-0">
             <img src="/logo.png" alt="KurdFreelance" className="h-8 w-auto" />
           </Link>
-          <div className="flex items-center gap-2">
+          <nav className="hidden md:flex items-center gap-1">
+            <Link
+              href="/jobs"
+              className="px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-full transition-all"
+            >
+              Browse Jobs
+            </Link>
+            <Link
+              href="/freelancers"
+              className="px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-full transition-all"
+            >
+              Find Freelancers
+            </Link>
+            <Link
+              href="/how-it-works"
+              className="px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-full transition-all"
+            >
+              How It Works
+            </Link>
+            <Link
+              href="/pricing"
+              className="px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-full transition-all"
+            >
+              Pricing
+            </Link>
+          </nav>
+          <div className="flex items-center gap-2 shrink-0">
             <Button variant="ghost" size="sm" asChild className="rounded-full">
               <Link href="/login">Log In</Link>
             </Button>
