@@ -326,10 +326,10 @@ export default function HomePage() {
     <div className="flex flex-col min-h-screen">
       {/* Floating Pill Header */}
       <header className="fixed top-4 left-0 right-0 z-50 flex justify-center px-3 sm:px-4">
-        <div className={`w-full max-w-5xl bg-background/80 backdrop-blur-lg border shadow-lg transition-all duration-300 ${
+        <div className={`w-full max-w-5xl bg-background/80 backdrop-blur-lg border shadow-lg transition-all duration-300 ease-out ${
           mobileMenuOpen
             ? 'rounded-3xl flex flex-col overflow-hidden'
-            : 'rounded-full'
+            : 'rounded-3xl'
         }`}>
           {/* Header Row - always present */}
           <div className={`flex gap-2 transition-all duration-300 ${
@@ -382,8 +382,9 @@ export default function HomePage() {
             {/* Mobile Menu Button */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden h-9 w-9 sm:h-10 sm:w-10 md:h-11 md:w-11 rounded-full flex items-center justify-center hover:bg-muted/50 transition-colors shrink-0"
+              className="lg:hidden h-9 w-9 sm:h-10 sm:w-10 md:h-11 md:w-11 rounded-full flex items-center justify-center hover:bg-muted/50 transition-colors shrink-0 tap-highlight-transparent"
               aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
+              style={{ WebkitTapHighlightColor: 'transparent' }}
             >
               {mobileMenuOpen ? (
                 <X className="h-5 w-5 sm:h-6 sm:w-6" />

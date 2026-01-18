@@ -381,18 +381,27 @@
   }
 }
 
-/* Mobile dropdown menu animation */
+/* Mobile dropdown menu animation - Smooth Slide Down with Fade */
 @keyframes dropdown-slide {
   0% {
     opacity: 0;
-    transform: translateY(-10px) scale(0.95);
+    transform: translateY(-16px);
   }
   100% {
     opacity: 1;
-    transform: translateY(0) scale(1);
+    transform: translateY(0);
   }
 }
 
 .animate-dropdown {
-  animation: dropdown-slide 0.2s ease-out forwards;
+  animation: dropdown-slide 0.3s ease-out forwards;
+}
+
+/* Remove tap highlight on mobile */
+.tap-highlight-transparent {
+  -webkit-tap-highlight-color: transparent;
+}
+
+button {
+  -webkit-tap-highlight-color: transparent;
 }
