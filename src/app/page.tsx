@@ -15,6 +15,11 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import {
+  ProfileIllustration,
+  DiscoveryIllustration,
+  PaymentIllustration,
+} from "@/components/landing/how-it-works-illustrations";
+import {
   Code,
   Palette,
   PenNib,
@@ -390,10 +395,11 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Section 1: How It Works */}
-      <section className="py-16 md:py-24">
+      {/* Section 1: How It Works - Visual Journey */}
+      <section className="py-16 md:py-24 overflow-hidden">
         <div className="container">
-          <div className="text-center mb-12">
+          {/* Section Header */}
+          <div className="text-center mb-16 md:mb-24">
             <Badge variant="outline" className="mb-4">
               Simple Process
             </Badge>
@@ -405,26 +411,110 @@ export default function HomePage() {
               work, our platform makes it easy.
             </p>
           </div>
-          <div className="grid md:grid-cols-3 gap-8">
-            {howItWorksSteps.map((step, index) => (
-              <div
-                key={step.title}
-                className="relative text-center p-6 rounded-2xl border bg-card hover:shadow-lg transition-shadow"
-              >
-                <div className="absolute -top-4 left-1/2 -translate-x-1/2">
-                  <span className="inline-flex items-center justify-center h-8 w-8 rounded-full bg-primary text-primary-foreground font-bold text-sm">
-                    {index + 1}
-                  </span>
-                </div>
-                <div
-                  className={`mt-4 mb-4 inline-flex items-center justify-center h-16 w-16 rounded-2xl ${step.bgColor}`}
-                >
-                  <step.icon className={`h-8 w-8 ${step.color}`} />
-                </div>
-                <h3 className="text-xl font-semibold mb-2">{step.title}</h3>
-                <p className="text-muted-foreground">{step.description}</p>
+
+          {/* Step 1: Create Profile */}
+          <div className="grid lg:grid-cols-2 gap-8 lg:gap-16 items-center mb-24 md:mb-32">
+            {/* Illustration */}
+            <div className="order-2 lg:order-1">
+              <ProfileIllustration />
+            </div>
+            
+            {/* Content */}
+            <div className="order-1 lg:order-2 space-y-6">
+              <div className="inline-flex items-center gap-3">
+                <span className="flex items-center justify-center w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-500 to-blue-600 text-white text-xl font-bold shadow-lg shadow-blue-500/25">
+                  1
+                </span>
+                <div className="h-px w-12 bg-gradient-to-r from-blue-500 to-transparent" />
               </div>
-            ))}
+              <h3 className="text-2xl md:text-3xl font-bold">
+                Create Your Profile
+              </h3>
+              <p className="text-lg text-muted-foreground leading-relaxed">
+                Sign up for free and build your professional profile. Showcase your skills, 
+                portfolio, and experience to attract the right clients.
+              </p>
+              <ul className="space-y-3">
+                {["Free signup in under 2 minutes", "Showcase your portfolio", "Get verified for more trust"].map((item) => (
+                  <li key={item} className="flex items-center gap-3">
+                    <span className="flex-shrink-0 w-6 h-6 rounded-full bg-blue-500/10 flex items-center justify-center">
+                      <Check className="w-4 h-4 text-blue-500" />
+                    </span>
+                    <span className="text-muted-foreground">{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+
+          {/* Step 2: Find Opportunities - Reversed */}
+          <div className="grid lg:grid-cols-2 gap-8 lg:gap-16 items-center mb-24 md:mb-32">
+            {/* Content */}
+            <div className="space-y-6">
+              <div className="inline-flex items-center gap-3">
+                <span className="flex items-center justify-center w-12 h-12 rounded-2xl bg-gradient-to-br from-purple-500 to-purple-600 text-white text-xl font-bold shadow-lg shadow-purple-500/25">
+                  2
+                </span>
+                <div className="h-px w-12 bg-gradient-to-r from-purple-500 to-transparent" />
+              </div>
+              <h3 className="text-2xl md:text-3xl font-bold">
+                Find Opportunities
+              </h3>
+              <p className="text-lg text-muted-foreground leading-relaxed">
+                Browse jobs that match your skills or let clients find you. Our smart 
+                matching system connects you with the right projects instantly.
+              </p>
+              <ul className="space-y-3">
+                {["AI-powered job matching", "Real-time notifications", "Direct client invitations"].map((item) => (
+                  <li key={item} className="flex items-center gap-3">
+                    <span className="flex-shrink-0 w-6 h-6 rounded-full bg-purple-500/10 flex items-center justify-center">
+                      <Check className="w-4 h-4 text-purple-500" />
+                    </span>
+                    <span className="text-muted-foreground">{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            
+            {/* Illustration */}
+            <div>
+              <DiscoveryIllustration />
+            </div>
+          </div>
+
+          {/* Step 3: Work & Get Paid */}
+          <div className="grid lg:grid-cols-2 gap-8 lg:gap-16 items-center">
+            {/* Illustration */}
+            <div className="order-2 lg:order-1">
+              <PaymentIllustration />
+            </div>
+            
+            {/* Content */}
+            <div className="order-1 lg:order-2 space-y-6">
+              <div className="inline-flex items-center gap-3">
+                <span className="flex items-center justify-center w-12 h-12 rounded-2xl bg-gradient-to-br from-green-500 to-green-600 text-white text-xl font-bold shadow-lg shadow-green-500/25">
+                  3
+                </span>
+                <div className="h-px w-12 bg-gradient-to-r from-green-500 to-transparent" />
+              </div>
+              <h3 className="text-2xl md:text-3xl font-bold">
+                Work & Get Paid
+              </h3>
+              <p className="text-lg text-muted-foreground leading-relaxed">
+                Collaborate with clients, deliver quality work, and receive secure payments 
+                through our escrow system. Fast, simple, and protected.
+              </p>
+              <ul className="space-y-3">
+                {["100% payment protection", "Milestone-based payments", "Withdraw within 24-48 hours"].map((item) => (
+                  <li key={item} className="flex items-center gap-3">
+                    <span className="flex-shrink-0 w-6 h-6 rounded-full bg-green-500/10 flex items-center justify-center">
+                      <Check className="w-4 h-4 text-green-500" />
+                    </span>
+                    <span className="text-muted-foreground">{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
         </div>
       </section>
