@@ -184,6 +184,9 @@ export function ProposalsContent({ proposals, userRole }: ProposalsContentProps)
                 const status = getStatusConfig(proposal.status);
                 const StatusIcon = status.icon;
 
+                // Skip proposals without job data
+                if (!proposal.job) return null;
+
                 return (
                   <Card key={proposal.id}>
                     <CardContent className="p-4 md:p-6">
@@ -256,7 +259,7 @@ export function ProposalsContent({ proposals, userRole }: ProposalsContentProps)
                           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 pt-2">
                             <div className="flex items-center gap-2 text-sm">
                               <CurrencyDollar className="h-4 w-4 text-muted-foreground" />
-                              <span className="truncate">Job Budget: {formatBudget(proposal.job)}</span>
+                              <span className="truncate">Job Budget: {proposal.job ? formatBudget(proposal.job) : 'N/A'}</span>
                             </div>
                             <div className="flex flex-wrap gap-4 text-sm">
                               {proposal.proposed_rate && (
@@ -281,7 +284,7 @@ export function ProposalsContent({ proposals, userRole }: ProposalsContentProps)
 
                         <div className="flex flex-col sm:flex-row gap-2">
                           <Button asChild variant="outline" className="w-full sm:w-auto">
-                            <Link href={`/jobs/${proposal.job.id}`}>
+                            <Link href={`/jobs/${proposal.job?.id || '#'}`}>
                               View Job
                             </Link>
                           </Button>

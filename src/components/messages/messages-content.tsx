@@ -70,7 +70,7 @@ export function MessagesContent({
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  const getOtherParticipant = (conversation: Conversation) => {
+  const getOtherParticipant = (conversation: Conversation): Participant | null => {
     return conversation.participant_one === currentUserId
       ? conversation.participant_two_user
       : conversation.participant_one_user;
@@ -78,7 +78,7 @@ export function MessagesContent({
 
   const filteredConversations = conversations.filter((conv) => {
     const other = getOtherParticipant(conv);
-    return other.full_name.toLowerCase().includes(searchQuery.toLowerCase());
+    return other?.full_name?.toLowerCase().includes(searchQuery.toLowerCase()) || false;
   });
 
   // Fetch messages when conversation is selected
@@ -205,6 +205,8 @@ export function MessagesContent({
                     const isSelected =
                       selectedConversation?.id === conversation.id;
 
+                    if (!other) return null;
+
                     return (
                       <button
                         key={conversation.id}
@@ -256,18 +258,18 @@ export function MessagesContent({
                   <div className="flex items-center gap-3">
                     <Avatar>
                       <AvatarImage
-                        src={getOtherParticipant(selectedConversation).avatar_url}
+                        src={getOtherParticipant(selectedConversation)?.avatar_url}
                       />
                       <AvatarFallback>
                         {getOtherParticipant(selectedConversation)
-                          .full_name.split(" ")
+                          ?.full_name?.split(" ")
                           .map((n) => n[0])
-                          .join("")}
+                          .join("") || "?"}
                       </AvatarFallback>
                     </Avatar>
                     <div>
                       <p className="font-medium">
-                        {getOtherParticipant(selectedConversation).full_name}
+                        {getOtherParticipant(selectedConversation)?.full_name || "Unknown User"}
                       </p>
                       {selectedConversation.job && (
                         <p className="text-sm text-muted-foreground">

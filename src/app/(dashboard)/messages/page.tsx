@@ -18,17 +18,7 @@ export default async function MessagesPage() {
     .from("conversations")
     .select(`
       *,
-      participant_one_user:users!conversations_participant_one_fkey (
-        id,
-        full_name,
-        avatar_url
-      ),
-      participant_two_user:users!conversations_participant_two_fkey (
-        id,
-        full_name,
-        avatar_url
-      ),
-      job:jobs (
+      jobs (
         id,
         title
       )
@@ -36,10 +26,31 @@ export default async function MessagesPage() {
     .or(`participant_one.eq.${user.id},participant_two.eq.${user.id}`)
     .order("last_message_at", { ascending: false });
 
+  // Fetch user data separately and join manually
+  const userIds = new Set<string>();
+  conversations?.forEach(conv => {
+    userIds.add(conv.participant_one);
+    userIds.add(conv.participant_two);
+  });
+
+  const { data: users } = await supabase
+    .from("users")
+    .select("id, full_name, avatar_url")
+    .in("id", Array.from(userIds));
+
+  const userMap = new Map(users?.map(u => [u.id, u]) || []);
+
+  // Join the data manually
+  const conversationsWithUsers = (conversations || []).map(conv => ({
+    ...conv,
+    participant_one_user: userMap.get(conv.participant_one),
+    participant_two_user: userMap.get(conv.participant_two),
+  }));
+
   return (
     <div className="container py-8">
       <MessagesContent
-        conversations={conversations || []}
+        conversations={conversationsWithUsers}
         currentUserId={user.id}
       />
     </div>

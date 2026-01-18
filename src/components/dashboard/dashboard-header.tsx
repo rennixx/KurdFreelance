@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -42,13 +42,17 @@ export function DashboardHeader({ onMenuClick }: DashboardHeaderProps) {
   const { user, logout, refreshUser } = useAuthStore();
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [unreadCount, setUnreadCount] = useState(0);
+  const isMountedRef = useRef(true);
+  const fetchTimeoutRef = useRef<NodeJS.Timeout | undefined>(undefined);
 
   useEffect(() => {
     if (!user?.id) return;
 
     const fetchNotifications = async () => {
+      if (!isMountedRef.current) return;
+
       const supabase = createClient();
-      
+
       // Fetch recent notifications
       const { data, error } = await supabase
         .from("notifications")
@@ -56,6 +60,8 @@ export function DashboardHeader({ onMenuClick }: DashboardHeaderProps) {
         .eq("user_id", user.id)
         .order("created_at", { ascending: false })
         .limit(10);
+
+      if (!isMountedRef.current) return;
 
       if (error) {
         console.error("Error fetching notifications:", error);
@@ -68,26 +74,37 @@ export function DashboardHeader({ onMenuClick }: DashboardHeaderProps) {
 
     fetchNotifications();
 
-    // Set up real-time subscription
+    // Set up real-time subscription with debouncing
     const supabase = createClient();
     const channel = supabase
-      .channel("notifications")
+      .channel(`notifications-${user.id}`)
       .on(
         "postgres_changes",
         {
-          event: "*",
+          event: "INSERT",
           schema: "public",
           table: "notifications",
           filter: `user_id=eq.${user.id}`,
         },
-        (payload) => {
-          console.log("Notification update:", payload);
-          fetchNotifications();
+        () => {
+          // Debounce fetch to prevent rapid successive calls
+          if (fetchTimeoutRef.current) {
+            clearTimeout(fetchTimeoutRef.current);
+          }
+          fetchTimeoutRef.current = setTimeout(() => {
+            if (isMountedRef.current) {
+              fetchNotifications();
+            }
+          }, 500);
         }
       )
       .subscribe();
 
     return () => {
+      isMountedRef.current = false;
+      if (fetchTimeoutRef.current) {
+        clearTimeout(fetchTimeoutRef.current);
+      }
       supabase.removeChannel(channel);
     };
   }, [user?.id]);
@@ -201,7 +218,7 @@ export function DashboardHeader({ onMenuClick }: DashboardHeaderProps) {
                 )}
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-96">
+            <DropdownMenuContent align="center" className="w-[calc(100vw-2rem)] sm:w-96 max-w-sm sm:align-end">
               <div className="flex items-center justify-between px-4 py-2">
                 <DropdownMenuLabel className="p-0">Notifications</DropdownMenuLabel>
                 {unreadCount > 0 && (

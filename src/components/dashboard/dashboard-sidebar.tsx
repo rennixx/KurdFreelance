@@ -77,36 +77,79 @@ export function DashboardSidebar() {
   useEffect(() => {
     if (!user?.id || !mounted) return;
 
+    let isCancelled = false;
+
     const fetchBadgeCounts = async () => {
+      if (isCancelled) return;
+
       try {
         const supabase = createClient();
 
-        // Fetch pending proposals count
-        const { count: proposalsCount, error: proposalsError } = await supabase
+        // Fetch pending proposals count - only count proposals that have valid jobs
+        const { data: proposals } = await supabase
           .from("proposals")
-          .select("*", { count: "exact", head: true })
-          .eq("user_id", user.id)
-          .in("status", ["pending", "viewed"]);
+          .select("id, status, job_id")
+          .eq("freelancer_id", user.id)
+          .not("job_id", "is", null); // Only count proposals with valid jobs
 
-        // Fetch unread messages count
-        const { count: messagesCount, error: messagesError } = await supabase
+        if (isCancelled) return;
+
+        const pendingProposals = proposals?.filter(p => p.status === "pending" || p.status === "viewed").length || 0;
+
+        // Fetch unread messages count - fetch conversations and filter client-side
+        const { data: conversations, error: convError } = await supabase
           .from("conversations")
-          .select("*", { count: "exact", head: true })
-          .or(`participants.eq.${user.id}`)
-          .eq("last_message_sender_id", user.id)
-          .not("last_message_read_at", "is", null)
-          .gt("last_message_created_at", "last_message_read_at");
+          .select("id, participants, last_message_sender_id, last_message_read_at, last_message_created_at");
 
-        setBadgeCounts({
-          proposals: (proposalsCount || 0),
-          messages: (messagesCount || 0),
-        });
+        if (isCancelled) return;
+
+        if (!convError && conversations) {
+          // Find conversations where user is a participant
+          const userConversations = conversations.filter(conv =>
+            conv.participants && conv.participants.includes(user.id)
+          );
+
+          // Count unread messages
+          const unreadCount = userConversations.filter(conv => {
+            // Message sent by someone else
+            const sentByOthers = conv.last_message_sender_id !== user.id;
+            // Never read OR read before the last message was sent
+            const notRead = !conv.last_message_read_at ||
+              new Date(conv.last_message_created_at) > new Date(conv.last_message_read_at);
+
+            return sentByOthers && notRead;
+          }).length;
+
+          if (!isCancelled) {
+            setBadgeCounts({
+              proposals: pendingProposals,
+              messages: unreadCount,
+            });
+          }
+        } else {
+          if (!isCancelled) {
+            setBadgeCounts({
+              proposals: pendingProposals,
+              messages: 0,
+            });
+          }
+        }
       } catch (error) {
-        console.error("Error fetching badge counts:", error);
+        if (!isCancelled) {
+          console.error("Error fetching badge counts:", error);
+          setBadgeCounts({
+            proposals: 0,
+            messages: 0,
+          });
+        }
       }
     };
 
     fetchBadgeCounts();
+
+    return () => {
+      isCancelled = true;
+    };
   }, [user?.id, mounted]);
 
   // Determine which nav items to show based on user role (not profile existence)
