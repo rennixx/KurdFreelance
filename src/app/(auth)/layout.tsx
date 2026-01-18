@@ -7,16 +7,13 @@ export default function AuthLayout({
 }) {
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
-      {/* Simple header with logo */}
-      <header className="py-4 px-6">
-        <Link href="/" className="flex items-center space-x-2 w-fit">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-green-600 text-white font-bold">
-            K
-          </div>
-          <span className="font-bold text-xl">KurdFreelance</span>
+      {/* Simple header with logo only */}
+      <header className="py-6 px-6">
+        <Link href="/" className="flex items-center justify-center">
+          <img src="/logo.png" alt="KurdFreelance" className="h-16 w-auto" />
         </Link>
       </header>
-      
+
       {/* Auth content */}
       <div className="flex-1 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
         <div className="w-full max-w-md space-y-8">

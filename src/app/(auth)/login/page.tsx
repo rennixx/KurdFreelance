@@ -95,11 +95,7 @@ export default function LoginPage() {
   };
 
   return (
-    <>
-      <div className="flex justify-center mb-6">
-        <img src="/logo.png" alt="KurdFreelance" className="h-12 w-auto" />
-      </div>
-      <Card>
+    <Card>
         <CardHeader className="space-y-1 text-center">
         <CardTitle className="text-2xl font-bold">Welcome back</CardTitle>
         <CardDescription>
@@ -214,6 +210,5 @@ export default function LoginPage() {
         </div>
       </CardFooter>
     </Card>
-    </>
   );
 }
