@@ -121,8 +121,12 @@ function RegisterForm() {
   };
 
   return (
-    <Card>
-      <CardHeader className="space-y-1 text-center">
+    <>
+      <div className="flex justify`-center mb-6">
+        <img src="/logo.png" alt="KurdFreelance" className="h-12 w-auto" />
+      </div>
+      <Card>
+        <CardHeader className="space-y-1 text-center">
         <CardTitle className="text-2xl font-bold">Create an account</CardTitle>
         <CardDescription>
           Join KurdFreelance and start your journey
@@ -300,6 +304,7 @@ function RegisterForm() {
         </div>
       </CardFooter>
     </Card>
+    </>
   );
 }
 
