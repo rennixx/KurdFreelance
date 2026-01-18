@@ -338,7 +338,7 @@ export default function HomePage() {
               : 'items-center justify-between px-3 sm:px-4 md:px-6 py-2.5 sm:py-3'
           }`}>
             <Link href="/" className="flex items-center shrink-0">
-              <img src="/logo.png" alt="KurdFreelance" className="h-6 sm:h-7 md:h-8 w-auto" />
+              <img src="/logo.png" alt="KurdFreelance" className="h-8 sm:h-10 md:h-12 w-auto" />
             </Link>
 
             {/* Desktop Navigation */}
