@@ -380,3 +380,19 @@
     padding-right: max(1rem, env(safe-area-inset-right));
   }
 }
+
+/* Mobile dropdown menu animation */
+@keyframes dropdown-slide {
+  0% {
+    opacity: 0;
+    transform: translateY(-10px) scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.animate-dropdown {
+  animation: dropdown-slide 0.2s ease-out forwards;
+}

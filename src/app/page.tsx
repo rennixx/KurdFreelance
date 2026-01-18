@@ -326,40 +326,49 @@ export default function HomePage() {
     <div className="flex flex-col min-h-screen">
       {/* Floating Pill Header */}
       <header className="fixed top-4 left-0 right-0 z-50 flex justify-center px-3 sm:px-4">
-        <div className="w-full max-w-5xl bg-background/80 backdrop-blur-lg border rounded-full shadow-lg px-3 sm:px-4 md:px-6 py-2.5 sm:py-3 flex items-center justify-between gap-2">
-          <Link href="/" className="flex items-center shrink-0">
-            <img src="/logo.png" alt="KurdFreelance" className="h-6 sm:h-7 md:h-8 w-auto" />
-          </Link>
+        <div className={`w-full max-w-5xl bg-background/80 backdrop-blur-lg border shadow-lg transition-all duration-300 ${
+          mobileMenuOpen
+            ? 'rounded-t-3xl flex flex-col overflow-hidden'
+            : 'rounded-full'
+        }`}>
+          {/* Header Row - always present */}
+          <div className={`flex gap-2 transition-all duration-300 ${
+            mobileMenuOpen
+              ? 'items-center justify-between px-3 sm:px-4 md:px-6 py-2.5 sm:py-3'
+              : 'items-center justify-between px-3 sm:px-4 md:px-6 py-2.5 sm:py-3'
+          }`}>
+            <Link href="/" className="flex items-center shrink-0">
+              <img src="/logo.png" alt="KurdFreelance" className="h-6 sm:h-7 md:h-8 w-auto" />
+            </Link>
 
-          {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-center gap-1">
-            <Link
-              href="/jobs"
-              className="px-3 sm:px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-full transition-all"
-            >
-              Browse Jobs
-            </Link>
-            <Link
-              href="/freelancers"
-              className="px-3 sm:px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-full transition-all"
-            >
-              Find Freelancers
-            </Link>
-            <Link
-              href="/how-it-works"
-              className="px-3 sm:px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-full transition-all"
-            >
-              How It Works
-            </Link>
-            <Link
-              href="/pricing"
-              className="px-3 sm:px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-full transition-all"
-            >
-              Pricing
-            </Link>
-          </nav>
+            {/* Desktop Navigation */}
+            <nav className="hidden lg:flex items-center gap-1">
+              <Link
+                href="/jobs"
+                className="px-3 sm:px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-full transition-all"
+              >
+                Browse Jobs
+              </Link>
+              <Link
+                href="/freelancers"
+                className="px-3 sm:px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-full transition-all"
+              >
+                Find Freelancers
+              </Link>
+              <Link
+                href="/how-it-works"
+                className="px-3 sm:px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-full transition-all"
+              >
+                How It Works
+              </Link>
+              <Link
+                href="/pricing"
+                className="px-3 sm:px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-full transition-all"
+              >
+                Pricing
+              </Link>
+            </nav>
 
-          <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
             {/* Desktop Auth Buttons */}
             <div className="hidden lg:flex items-center gap-2">
               <Button variant="ghost" size="sm" asChild className="rounded-full">
@@ -373,7 +382,7 @@ export default function HomePage() {
             {/* Mobile Menu Button */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden h-9 w-9 sm:h-10 sm:w-10 md:h-11 md:w-11 rounded-full flex items-center justify-center hover:bg-muted/50 transition-colors"
+              className="lg:hidden h-9 w-9 sm:h-10 sm:w-10 md:h-11 md:w-11 rounded-full flex items-center justify-center hover:bg-muted/50 transition-colors shrink-0"
               aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
             >
               {mobileMenuOpen ? (
@@ -383,64 +392,59 @@ export default function HomePage() {
               )}
             </button>
           </div>
+
+          {/* Mobile Dropdown Menu */}
+          {mobileMenuOpen && (
+            <div className="lg:hidden border-t bg-background/95 backdrop-blur-lg animate-dropdown">
+              <nav className="p-2 space-y-1">
+                <Link
+                  href="/jobs"
+                  className="flex items-center gap-3 px-4 py-3 text-base font-medium rounded-lg hover:bg-accent transition-colors"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  <Briefcase className="h-5 w-5" />
+                  Browse Jobs
+                </Link>
+                <Link
+                  href="/freelancers"
+                  className="flex items-center gap-3 px-4 py-3 text-base font-medium rounded-lg hover:bg-accent transition-colors"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  <Users className="h-5 w-5" />
+                  Find Freelancers
+                </Link>
+                <Link
+                  href="/how-it-works"
+                  className="flex items-center gap-3 px-4 py-3 text-base font-medium rounded-lg hover:bg-accent transition-colors"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  <MagnifyingGlass className="h-5 w-5" />
+                  How It Works
+                </Link>
+                <Link
+                  href="/pricing"
+                  className="flex items-center gap-3 px-4 py-3 text-base font-medium rounded-lg hover:bg-accent transition-colors"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  <CurrencyDollar className="h-5 w-5" />
+                  Pricing
+                </Link>
+                <div className="border-t my-2" />
+                <Link
+                  href="/login"
+                  className="flex items-center gap-3 px-4 py-3 text-base font-medium rounded-lg hover:bg-accent transition-colors"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  Log In
+                </Link>
+                <Button asChild className="w-full mt-2" onClick={() => setMobileMenuOpen(false)}>
+                  <Link href="/register">Sign Up</Link>
+                </Button>
+              </nav>
+            </div>
+          )}
         </div>
       </header>
-
-      {/* Mobile Menu Overlay */}
-      {mobileMenuOpen && (
-        <div className="md:hidden fixed inset-0 top-20 bg-black/50 backdrop-blur-sm z-40" />
-      )}
-
-      {/* Mobile Menu */}
-      {mobileMenuOpen && (
-        <div ref={mobileMenuRef} className="md:hidden fixed top-20 left-4 right-4 bg-background border rounded-2xl shadow-xl z-50">
-          <nav className="p-4 space-y-1">
-            <Link
-              href="/jobs"
-              className="flex items-center gap-3 px-4 py-3 text-base font-medium rounded-lg hover:bg-accent transition-colors"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              <Briefcase className="h-5 w-5" />
-              Browse Jobs
-            </Link>
-            <Link
-              href="/freelancers"
-              className="flex items-center gap-3 px-4 py-3 text-base font-medium rounded-lg hover:bg-accent transition-colors"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              <Users className="h-5 w-5" />
-              Find Freelancers
-            </Link>
-            <Link
-              href="/how-it-works"
-              className="flex items-center gap-3 px-4 py-3 text-base font-medium rounded-lg hover:bg-accent transition-colors"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              <MagnifyingGlass className="h-5 w-5" />
-              How It Works
-            </Link>
-            <Link
-              href="/pricing"
-              className="flex items-center gap-3 px-4 py-3 text-base font-medium rounded-lg hover:bg-accent transition-colors"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              <CurrencyDollar className="h-5 w-5" />
-              Pricing
-            </Link>
-            <div className="border-t my-2" />
-            <Link
-              href="/login"
-              className="flex items-center gap-3 px-4 py-3 text-base font-medium rounded-lg hover:bg-accent transition-colors"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              Log In
-            </Link>
-            <Button asChild className="w-full" onClick={() => setMobileMenuOpen(false)}>
-              <Link href="/register">Sign Up</Link>
-            </Button>
-          </nav>
-        </div>
-      )}
 
       {/* Hero Section */}
       <section className="relative overflow-hidden bg-gradient-to-br from-primary/5 via-background to-primary/10 pt-24 pb-12 sm:pt-28 sm:pb-16 md:pt-32 md:py-20">
