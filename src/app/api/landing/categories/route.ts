@@ -98,10 +98,6 @@ export async function GET() {
       console.error("Error fetching jobs:", jobsError);
     }
 
-    // Debug log
-    console.log("Jobs found:", openJobs?.length, "Jobs data:", JSON.stringify(openJobs));
-    console.log("Skills found:", allSkills?.length, "Skills data:", JSON.stringify(allSkills));
-
     // Build a map of skill name -> skill category (case insensitive)
     const skillToCategoryMap: Record<string, string> = {};
     (allSkills || []).forEach(skill => {
@@ -109,7 +105,6 @@ export async function GET() {
         skillToCategoryMap[skill.name.toLowerCase()] = skill.category;
       }
     });
-    console.log("Skill to category map:", skillToCategoryMap);
 
     // Count jobs for each category
     const categoriesWithCounts = categoriesConfig.map(category => {
