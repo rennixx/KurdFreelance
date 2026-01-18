@@ -158,7 +158,7 @@ export function EnhancedFooter() {
         {/* Bottom Section - Copyright & Back to Top */}
         <div className="border-t pt-6 flex flex-col sm:flex-row justify-between items-center gap-4">
           <p className="text-xs text-muted-foreground">
-            © {new Date().getFullYear()} KurdFreelance. All rights reserved.
+            © {new Date().getFullYear()} Kurdlance. All rights reserved.
           </p>
 
           <button
