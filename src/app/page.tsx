@@ -154,6 +154,35 @@ export default function HomePage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const mobileMenuRef = useRef<HTMLDivElement>(null);
 
+  // Scroll behavior for header
+  const [isHeaderVisible, setIsHeaderVisible] = useState(true);
+  const lastScrollY = useRef(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      const scrollDirection = currentScrollY - lastScrollY.current;
+
+      // At top of page - always show
+      if (currentScrollY < 10) {
+        setIsHeaderVisible(true);
+      }
+      // Scrolling down - hide (unless mobile menu is open)
+      else if (scrollDirection > 5 && !mobileMenuOpen) {
+        setIsHeaderVisible(false);
+      }
+      // Scrolling up - show
+      else if (scrollDirection < -5) {
+        setIsHeaderVisible(true);
+      }
+
+      lastScrollY.current = currentScrollY;
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [mobileMenuOpen]);
+
   // Close mobile menu when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -325,7 +354,9 @@ export default function HomePage() {
   return (
     <div className="flex flex-col min-h-screen">
       {/* Floating Pill Header */}
-      <header className="fixed top-4 left-0 right-0 z-50 flex justify-center px-3 sm:px-4">
+      <header className={`fixed top-4 left-0 right-0 z-50 flex justify-center px-3 sm:px-4 transition-transform duration-300 ease-out ${
+        isHeaderVisible ? 'translate-y-0' : '-translate-y-[200%]'
+      }`}>
         <div className={`w-full max-w-5xl bg-background/80 backdrop-blur-lg border shadow-lg transition-all duration-300 ease-out rounded-3xl${
           mobileMenuOpen
             ? ' flex flex-col overflow-hidden'
