@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useAuthStore } from "@/stores";
 import { type Permission } from "@/lib/permissions";
+import { createClient } from "@/lib/supabase/client";
 import {
   SquaresFour,
   Briefcase,
@@ -43,9 +44,9 @@ interface NavItem {
 const freelancerNavItems: NavItem[] = [
   { href: "/dashboard", label: "Dashboard", icon: SquaresFour },
   { href: "/jobs", label: "Find Jobs", icon: Briefcase, requiredPermission: "jobs:browse" },
-  { href: "/proposals", label: "My Proposals", icon: PaperPlaneTilt, badge: "3", requiredPermission: "proposals:view-own" },
+  { href: "/proposals", label: "My Proposals", icon: PaperPlaneTilt, badge: "proposals", requiredPermission: "proposals:view-own" },
   { href: "/contracts", label: "Contracts", icon: FileText, requiredPermission: "contracts:view-own" },
-  { href: "/messages", label: "Messages", icon: ChatCircle, badge: "5" },
+  { href: "/messages", label: "Messages", icon: ChatCircle, badge: "messages" },
   { href: "/earnings", label: "Earnings", icon: CurrencyDollar, requiredPermission: "profile:view-earnings" },
   { href: "/profile/edit", label: "Edit Profile", icon: User, requiredPermission: "profile:edit-own" },
   { href: "/settings", label: "Settings", icon: Gear },
@@ -57,19 +58,56 @@ const clientNavItems: NavItem[] = [
   { href: "/my-jobs", label: "My Jobs", icon: FolderOpen, requiredPermission: "jobs:edit-own" },
   { href: "/freelancers", label: "Find Talent", icon: Users, requiredPermission: "freelancers:browse" },
   { href: "/contracts", label: "Contracts", icon: FileText, requiredPermission: "contracts:view-own" },
-  { href: "/messages", label: "Messages", icon: ChatCircle, badge: "2" },
+  { href: "/messages", label: "Messages", icon: ChatCircle, badge: "messages" },
   { href: "/settings", label: "Settings", icon: Gear },
 ];
 
 export function DashboardSidebar() {
   const pathname = usePathname();
-  const { freelancerProfile, clientProfile, hasPermission, getUserRole } = useAuthStore();
+  const { user, freelancerProfile, clientProfile, hasPermission, getUserRole } = useAuthStore();
   const [mounted, setMounted] = useState(false);
+  const [badgeCounts, setBadgeCounts] = useState<Record<string, number>>({});
 
   // Wait for client-side hydration to complete before filtering
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  // Fetch badge counts
+  useEffect(() => {
+    if (!user?.id || !mounted) return;
+
+    const fetchBadgeCounts = async () => {
+      try {
+        const supabase = createClient();
+
+        // Fetch pending proposals count
+        const { count: proposalsCount, error: proposalsError } = await supabase
+          .from("proposals")
+          .select("*", { count: "exact", head: true })
+          .eq("user_id", user.id)
+          .in("status", ["pending", "viewed"]);
+
+        // Fetch unread messages count
+        const { count: messagesCount, error: messagesError } = await supabase
+          .from("conversations")
+          .select("*", { count: "exact", head: true })
+          .or(`participants.eq.${user.id}`)
+          .eq("last_message_sender_id", user.id)
+          .not("last_message_read_at", "is", null)
+          .gt("last_message_created_at", "last_message_read_at");
+
+        setBadgeCounts({
+          proposals: (proposalsCount || 0),
+          messages: (messagesCount || 0),
+        });
+      } catch (error) {
+        console.error("Error fetching badge counts:", error);
+      }
+    };
+
+    fetchBadgeCounts();
+  }, [user?.id, mounted]);
 
   // Determine which nav items to show based on user role (not profile existence)
   const userRole = getUserRole();
@@ -119,9 +157,9 @@ export function DashboardSidebar() {
                     isActive ? "text-green-600" : "text-gray-400"
                   )} />
                   <span className="flex-1">{item.label}</span>
-                  {item.badge && (
+                  {item.badge && badgeCounts[item.badge] > 0 && (
                     <Badge variant="secondary" className="bg-green-100 text-green-700">
-                      {item.badge}
+                      {badgeCounts[item.badge]}
                     </Badge>
                   )}
                 </Link>
@@ -180,9 +218,9 @@ export function DashboardSidebar() {
               >
                 <div className="relative">
                   <item.icon className="h-6 w-6" />
-                  {item.badge && (
+                  {item.badge && badgeCounts[item.badge] > 0 && (
                     <span className="absolute -top-1 -right-2 h-5 w-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center font-medium">
-                      {item.badge}
+                      {badgeCounts[item.badge]}
                     </span>
                   )}
                 </div>
@@ -220,9 +258,9 @@ export function DashboardSidebar() {
                     >
                       <item.icon className="h-5 w-5" />
                       <span className="flex-1">{item.label}</span>
-                      {item.badge && (
+                      {item.badge && badgeCounts[item.badge] > 0 && (
                         <Badge variant="secondary" className="ml-auto">
-                          {item.badge}
+                          {badgeCounts[item.badge]}
                         </Badge>
                       )}
                     </Link>
