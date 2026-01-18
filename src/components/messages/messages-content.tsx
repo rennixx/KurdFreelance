@@ -247,7 +247,7 @@ export function MessagesContent({
         </Card>
 
         {/* Chat Area */}
-        <Card className="flex-1 flex flex-col hidden md:flex">
+        <Card className="flex-1 flex flex-col w-full md:col-span-2 hidden md:flex">
           {selectedConversation ? (
             <>
               {/* Chat Header */}
@@ -321,7 +321,7 @@ export function MessagesContent({
 
               {/* Message Input */}
               <div className="p-4 border-t">
-                <div className="flex items-center gap-2">
+                <div className="flex flex-col sm:flex-row gap-2">
                   <Button variant="ghost" size="icon">
                     <Paperclip className="h-5 w-5" />
                   </Button>
@@ -335,6 +335,7 @@ export function MessagesContent({
                         sendMessage();
                       }
                     }}
+                    className="flex-1"
                   />
                   <Button
                     size="icon"

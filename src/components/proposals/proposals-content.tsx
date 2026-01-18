@@ -186,25 +186,25 @@ export function ProposalsContent({ proposals, userRole }: ProposalsContentProps)
 
                 return (
                   <Card key={proposal.id}>
-                    <CardContent className="p-6">
-                      <div className="flex flex-col md:flex-row gap-4">
-                        <div className="flex-1 space-y-3">
-                          <div className="flex items-start justify-between gap-4">
-                            <div>
+                    <CardContent className="p-4 md:p-6">
+                      <div className="flex flex-col gap-4">
+                        <div className="space-y-3 min-w-0">
+                          <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+                            <div className="min-w-0">
                               <Link
                                 href={`/jobs/${proposal.job.id}`}
-                                className="text-lg font-semibold hover:text-primary transition-colors"
+                                className="text-base sm:text-lg font-semibold hover:text-primary transition-colors line-clamp-1"
                               >
                                 {proposal.job.title}
                               </Link>
-                              <div className="flex items-center gap-3 mt-1 text-sm text-muted-foreground">
+                              <div className="flex items-center gap-2 mt-1 text-sm text-muted-foreground">
                                 <span className="flex items-center gap-1">
                                   <Clock className="h-3 w-3" />
                                   Submitted {formatTimeAgo(proposal.created_at)}
                                 </span>
                               </div>
                             </div>
-                            <Badge variant={status.variant}>
+                            <Badge variant={status.variant} className="self-start sm:self-auto">
                               <StatusIcon className="h-3 w-3 mr-1" />
                               {status.label}
                             </Badge>
@@ -224,7 +224,7 @@ export function ProposalsContent({ proposals, userRole }: ProposalsContentProps)
                                     .join("")}
                                 </AvatarFallback>
                               </Avatar>
-                              <span className="text-sm text-muted-foreground">
+                              <span className="text-sm text-muted-foreground truncate">
                                 {proposal.job.client.full_name}
                               </span>
                             </div>
@@ -243,7 +243,7 @@ export function ProposalsContent({ proposals, userRole }: ProposalsContentProps)
                                     .join("")}
                                 </AvatarFallback>
                               </Avatar>
-                              <span className="text-sm">
+                              <span className="text-sm truncate">
                                 {proposal.freelancer.full_name}
                               </span>
                             </div>
@@ -253,46 +253,48 @@ export function ProposalsContent({ proposals, userRole }: ProposalsContentProps)
                             {proposal.cover_letter}
                           </p>
 
-                          <div className="flex items-center gap-4 pt-2">
-                            <div className="flex items-center gap-1 text-sm">
+                          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 pt-2">
+                            <div className="flex items-center gap-2 text-sm">
                               <CurrencyDollar className="h-4 w-4 text-muted-foreground" />
-                              <span>Job Budget: {formatBudget(proposal.job)}</span>
+                              <span className="truncate">Job Budget: {formatBudget(proposal.job)}</span>
                             </div>
-                            {proposal.proposed_rate && (
-                              <div className="flex items-center gap-1 text-sm">
-                                <span className="text-muted-foreground">
-                                  Your bid:
-                                </span>
-                                <span className="font-medium">
-                                  ${proposal.proposed_rate}
-                                </span>
-                              </div>
-                            )}
-                            {proposal.estimated_duration && (
-                              <div className="flex items-center gap-1 text-sm">
-                                <Clock className="h-4 w-4 text-muted-foreground" />
-                                <span>{proposal.estimated_duration}</span>
-                              </div>
-                            )}
+                            <div className="flex flex-wrap gap-4 text-sm">
+                              {proposal.proposed_rate && (
+                                <div className="flex items-center gap-1">
+                                  <span className="text-muted-foreground">
+                                    Your bid:
+                                  </span>
+                                  <span className="font-medium">
+                                    ${proposal.proposed_rate}
+                                  </span>
+                                </div>
+                              )}
+                              {proposal.estimated_duration && (
+                                <div className="flex items-center gap-1">
+                                  <Clock className="h-4 w-4 text-muted-foreground" />
+                                  <span className="truncate">{proposal.estimated_duration}</span>
+                                </div>
+                              )}
+                            </div>
                           </div>
                         </div>
 
-                        <div className="flex md:flex-col gap-2">
-                          <Button asChild variant="outline">
+                        <div className="flex flex-col sm:flex-row gap-2">
+                          <Button asChild variant="outline" className="w-full sm:w-auto">
                             <Link href={`/jobs/${proposal.job.id}`}>
                               View Job
                             </Link>
                           </Button>
                           {!isFreelancer && proposal.status === "pending" && (
-                            <>
-                              <Button size="sm">Accept</Button>
-                              <Button size="sm" variant="outline">
+                            <div className="flex gap-2">
+                              <Button size="sm" className="flex-1">Accept</Button>
+                              <Button size="sm" variant="outline" className="flex-1">
                                 Reject
                               </Button>
-                            </>
+                            </div>
                           )}
                           {isFreelancer && proposal.status === "pending" && (
-                            <Button variant="outline" size="sm">
+                            <Button variant="outline" size="sm" className="w-full sm:w-auto">
                               Withdraw
                             </Button>
                           )}

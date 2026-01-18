@@ -245,26 +245,26 @@ export function SettingsContent({ user }: SettingsContentProps) {
   };
 
   return (
-    <div className="max-w-4xl mx-auto">
-      <h1 className="text-3xl font-bold mb-6">Settings</h1>
+    <div className="max-w-4xl mx-auto px-2 sm:px-0">
+      <h1 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6">Settings</h1>
 
-      <Tabs defaultValue="profile" className="space-y-6">
-        <TabsList>
-          <TabsTrigger value="profile">
+      <Tabs defaultValue="profile" className="space-y-4 sm:space-y-6">
+        <TabsList className="w-full overflow-x-auto">
+          <TabsTrigger value="profile" className="flex-shrink-0">
             <User className="h-4 w-4 mr-2" />
-            Profile
+            <span className="hidden sm:inline">Profile</span>
           </TabsTrigger>
-          <TabsTrigger value="notifications">
+          <TabsTrigger value="notifications" className="flex-shrink-0">
             <Bell className="h-4 w-4 mr-2" />
-            Notifications
+            <span className="hidden sm:inline">Notifications</span>
           </TabsTrigger>
-          <TabsTrigger value="security">
+          <TabsTrigger value="security" className="flex-shrink-0">
             <Shield className="h-4 w-4 mr-2" />
-            Security
+            <span className="hidden sm:inline">Security</span>
           </TabsTrigger>
-          <TabsTrigger value="billing">
+          <TabsTrigger value="billing" className="flex-shrink-0">
             <CreditCard className="h-4 w-4 mr-2" />
-            Billing
+            <span className="hidden sm:inline">Billing</span>
           </TabsTrigger>
         </TabsList>
 

@@ -79,17 +79,17 @@ export function DashboardContent({ user, freelancerProfile }: DashboardContentPr
     <div className="space-y-8">
       {/* Welcome Section */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div className="flex items-center gap-4">
-          <Avatar className="h-16 w-16">
+        <div className="flex items-center gap-3 sm:gap-4">
+          <Avatar className="h-12 w-12 sm:h-16 sm:w-16 shrink-0">
             <AvatarImage src={user.avatar_url || undefined} />
-            <AvatarFallback className="text-xl bg-green-100 text-green-700">
+            <AvatarFallback className="text-lg sm:text-xl bg-green-100 text-green-700">
               {initials}
             </AvatarFallback>
           </Avatar>
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900">Welcome back, {displayName.split(" ")[0]}!</h1>
-            <p className="text-gray-500">
-              {mounted 
+          <div className="min-w-0 flex-1">
+            <h1 className="text-xl sm:text-2xl font-bold text-gray-900 truncate">Welcome back, {displayName.split(" ")[0]}!</h1>
+            <p className="text-sm sm:text-base text-gray-500">
+              {mounted
                 ? (isFreelancer
                     ? "Here's what's happening with your freelance work"
                     : "Here's an overview of your projects and hires")
@@ -98,20 +98,22 @@ export function DashboardContent({ user, freelancerProfile }: DashboardContentPr
             </p>
           </div>
         </div>
-        <div className="flex gap-3">
+        <div className="flex gap-2 sm:gap-3">
           {mounted && hasPermission("jobs:browse") && isFreelancer && (
-            <Button asChild className="bg-green-600 hover:bg-green-700">
+            <Button asChild className="bg-green-600 hover:bg-green-700 text-sm sm:text-base">
               <Link href="/jobs">
                 <Briefcase className="mr-2 h-4 w-4" />
-                Find Jobs
+                <span className="hidden sm:inline">Find Jobs</span>
+                <span className="sm:hidden">Jobs</span>
               </Link>
             </Button>
           )}
           {mounted && hasPermission("jobs:post") && isClient && (
-            <Button asChild className="bg-green-600 hover:bg-green-700">
+            <Button asChild className="bg-green-600 hover:bg-green-700 text-sm sm:text-base">
               <Link href="/my-jobs/post">
                 <FileText className="mr-2 h-4 w-4" />
-                Post a Job
+                <span className="hidden sm:inline">Post a Job</span>
+                <span className="sm:hidden">Post</span>
               </Link>
             </Button>
           )}
@@ -120,57 +122,57 @@ export function DashboardContent({ user, freelancerProfile }: DashboardContentPr
 
       {/* Stats Grid - Only render after hydration to avoid mismatch */}
       {mounted && (
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-6 sm:mb-8">
           {isFreelancer ? (
           <>
-            <Card>
-              <CardContent className="pt-6">
-                <div className="flex items-center gap-4">
-                  <div className="p-2 bg-green-500/10 rounded-lg">
-                    <CurrencyDollar className="h-6 w-6 text-green-500" />
+            <Card className="overflow-hidden">
+              <CardContent className="pt-4 sm:pt-6 pb-4">
+                <div className="flex items-center gap-2 sm:gap-4">
+                  <div className="p-1.5 sm:p-2 bg-green-500/10 rounded-lg shrink-0">
+                    <CurrencyDollar className="h-5 w-5 sm:h-6 sm:w-6 text-green-500" />
                   </div>
-                  <div>
-                    <p className="text-sm text-muted-foreground">Total Earnings</p>
-                    <p className="text-2xl font-bold">$0.00</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardContent className="pt-6">
-                <div className="flex items-center gap-4">
-                  <div className="p-2 bg-blue-500/10 rounded-lg">
-                    <Briefcase className="h-6 w-6 text-blue-500" />
-                  </div>
-                  <div>
-                    <p className="text-sm text-muted-foreground">Active Jobs</p>
-                    <p className="text-2xl font-bold">0</p>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-xs sm:text-sm text-muted-foreground">Total Earnings</p>
+                    <p className="text-lg sm:text-2xl font-bold truncate">$0.00</p>
                   </div>
                 </div>
               </CardContent>
             </Card>
-            <Card>
-              <CardContent className="pt-6">
-                <div className="flex items-center gap-4">
-                  <div className="p-2 bg-yellow-500/10 rounded-lg">
-                    <Star className="h-6 w-6 text-yellow-500" />
+            <Card className="overflow-hidden">
+              <CardContent className="pt-4 sm:pt-6 pb-4">
+                <div className="flex items-center gap-2 sm:gap-4">
+                  <div className="p-1.5 sm:p-2 bg-blue-500/10 rounded-lg shrink-0">
+                    <Briefcase className="h-5 w-5 sm:h-6 sm:w-6 text-blue-500" />
                   </div>
-                  <div>
-                    <p className="text-sm text-muted-foreground">Rating</p>
-                    <p className="text-2xl font-bold">-</p>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-xs sm:text-sm text-muted-foreground">Active Jobs</p>
+                    <p className="text-lg sm:text-2xl font-bold">0</p>
                   </div>
                 </div>
               </CardContent>
             </Card>
-            <Card>
-              <CardContent className="pt-6">
-                <div className="flex items-center gap-4">
-                  <div className="p-2 bg-purple-500/10 rounded-lg">
-                    <CheckCircle className="h-6 w-6 text-purple-500" />
+            <Card className="overflow-hidden">
+              <CardContent className="pt-4 sm:pt-6 pb-4">
+                <div className="flex items-center gap-2 sm:gap-4">
+                  <div className="p-1.5 sm:p-2 bg-yellow-500/10 rounded-lg shrink-0">
+                    <Star className="h-5 w-5 sm:h-6 sm:w-6 text-yellow-500" />
                   </div>
-                  <div>
-                    <p className="text-sm text-muted-foreground">Completed</p>
-                    <p className="text-2xl font-bold">0</p>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-xs sm:text-sm text-muted-foreground">Rating</p>
+                    <p className="text-lg sm:text-2xl font-bold">-</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+            <Card className="overflow-hidden">
+              <CardContent className="pt-4 sm:pt-6 pb-4">
+                <div className="flex items-center gap-2 sm:gap-4">
+                  <div className="p-1.5 sm:p-2 bg-purple-500/10 rounded-lg shrink-0">
+                    <CheckCircle className="h-5 w-5 sm:h-6 sm:w-6 text-purple-500" />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-xs sm:text-sm text-muted-foreground">Completed</p>
+                    <p className="text-lg sm:text-2xl font-bold">0</p>
                   </div>
                 </div>
               </CardContent>
@@ -178,54 +180,54 @@ export function DashboardContent({ user, freelancerProfile }: DashboardContentPr
           </>
         ) : (
           <>
-            <Card>
-              <CardContent className="pt-6">
-                <div className="flex items-center gap-4">
-                  <div className="p-2 bg-blue-500/10 rounded-lg">
-                    <FileText className="h-6 w-6 text-blue-500" />
+            <Card className="overflow-hidden">
+              <CardContent className="pt-4 sm:pt-6 pb-4">
+                <div className="flex items-center gap-2 sm:gap-4">
+                  <div className="p-1.5 sm:p-2 bg-blue-500/10 rounded-lg shrink-0">
+                    <FileText className="h-5 w-5 sm:h-6 sm:w-6 text-blue-500" />
                   </div>
-                  <div>
-                    <p className="text-sm text-muted-foreground">Posted Jobs</p>
-                    <p className="text-2xl font-bold">0</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardContent className="pt-6">
-                <div className="flex items-center gap-4">
-                  <div className="p-2 bg-green-500/10 rounded-lg">
-                    <Users className="h-6 w-6 text-green-500" />
-                  </div>
-                  <div>
-                    <p className="text-sm text-muted-foreground">Active Hires</p>
-                    <p className="text-2xl font-bold">0</p>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-xs sm:text-sm text-muted-foreground">Posted Jobs</p>
+                    <p className="text-lg sm:text-2xl font-bold">0</p>
                   </div>
                 </div>
               </CardContent>
             </Card>
-            <Card>
-              <CardContent className="pt-6">
-                <div className="flex items-center gap-4">
-                  <div className="p-2 bg-yellow-500/10 rounded-lg">
-                    <CurrencyDollar className="h-6 w-6 text-yellow-500" />
+            <Card className="overflow-hidden">
+              <CardContent className="pt-4 sm:pt-6 pb-4">
+                <div className="flex items-center gap-2 sm:gap-4">
+                  <div className="p-1.5 sm:p-2 bg-green-500/10 rounded-lg shrink-0">
+                    <Users className="h-5 w-5 sm:h-6 sm:w-6 text-green-500" />
                   </div>
-                  <div>
-                    <p className="text-sm text-muted-foreground">Total Spent</p>
-                    <p className="text-2xl font-bold">$0.00</p>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-xs sm:text-sm text-muted-foreground">Active Hires</p>
+                    <p className="text-lg sm:text-2xl font-bold">0</p>
                   </div>
                 </div>
               </CardContent>
             </Card>
-            <Card>
-              <CardContent className="pt-6">
-                <div className="flex items-center gap-4">
-                  <div className="p-2 bg-purple-500/10 rounded-lg">
-                    <CheckCircle className="h-6 w-6 text-purple-500" />
+            <Card className="overflow-hidden">
+              <CardContent className="pt-4 sm:pt-6 pb-4">
+                <div className="flex items-center gap-2 sm:gap-4">
+                  <div className="p-1.5 sm:p-2 bg-yellow-500/10 rounded-lg shrink-0">
+                    <CurrencyDollar className="h-5 w-5 sm:h-6 sm:w-6 text-yellow-500" />
                   </div>
-                  <div>
-                    <p className="text-sm text-muted-foreground">Completed</p>
-                    <p className="text-2xl font-bold">0</p>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-xs sm:text-sm text-muted-foreground">Total Spent</p>
+                    <p className="text-lg sm:text-2xl font-bold truncate">$0.00</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+            <Card className="overflow-hidden">
+              <CardContent className="pt-4 sm:pt-6 pb-4">
+                <div className="flex items-center gap-2 sm:gap-4">
+                  <div className="p-1.5 sm:p-2 bg-purple-500/10 rounded-lg shrink-0">
+                    <CheckCircle className="h-5 w-5 sm:h-6 sm:w-6 text-purple-500" />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-xs sm:text-sm text-muted-foreground">Completed</p>
+                    <p className="text-lg sm:text-2xl font-bold">0</p>
                   </div>
                 </div>
               </CardContent>
@@ -248,131 +250,131 @@ export function DashboardContent({ user, freelancerProfile }: DashboardContentPr
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="grid sm:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {mounted && isFreelancer ? (
                   <>
                     <Link
                       href="/profile/edit"
-                      className="flex items-center gap-4 p-4 rounded-lg border hover:bg-muted/50 transition-colors"
+                      className="flex items-center gap-3 p-3 sm:p-4 rounded-lg border hover:bg-muted/50 transition-colors"
                     >
-                      <div className="p-2 bg-primary/10 rounded-lg">
-                        <Users className="h-5 w-5 text-primary" />
+                      <div className="p-1.5 sm:p-2 bg-primary/10 rounded-lg shrink-0">
+                        <Users className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
                       </div>
-                      <div className="flex-1">
-                        <p className="font-medium">Complete Profile</p>
-                        <p className="text-sm text-muted-foreground">
+                      <div className="min-w-0 flex-1">
+                        <p className="font-medium text-sm sm:text-base">Complete Profile</p>
+                        <p className="text-xs sm:text-sm text-muted-foreground line-clamp-1">
                           Add skills and portfolio
                         </p>
                       </div>
-                      <ArrowRight className="h-5 w-5 text-muted-foreground" />
+                      <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground shrink-0" />
                     </Link>
                     <Link
                       href="/jobs"
-                      className="flex items-center gap-4 p-4 rounded-lg border hover:bg-muted/50 transition-colors"
+                      className="flex items-center gap-3 p-3 sm:p-4 rounded-lg border hover:bg-muted/50 transition-colors"
                     >
-                      <div className="p-2 bg-primary/10 rounded-lg">
-                        <Briefcase className="h-5 w-5 text-primary" />
+                      <div className="p-1.5 sm:p-2 bg-primary/10 rounded-lg shrink-0">
+                        <Briefcase className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
                       </div>
-                      <div className="flex-1">
-                        <p className="font-medium">Browse Jobs</p>
-                        <p className="text-sm text-muted-foreground">
+                      <div className="min-w-0 flex-1">
+                        <p className="font-medium text-sm sm:text-base">Browse Jobs</p>
+                        <p className="text-xs sm:text-sm text-muted-foreground line-clamp-1">
                           Find your next project
                         </p>
                       </div>
-                      <ArrowRight className="h-5 w-5 text-muted-foreground" />
+                      <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground shrink-0" />
                     </Link>
                     <Link
                       href="/proposals"
-                      className="flex items-center gap-4 p-4 rounded-lg border hover:bg-muted/50 transition-colors"
+                      className="flex items-center gap-3 p-3 sm:p-4 rounded-lg border hover:bg-muted/50 transition-colors"
                     >
-                      <div className="p-2 bg-primary/10 rounded-lg">
-                        <FileText className="h-5 w-5 text-primary" />
+                      <div className="p-1.5 sm:p-2 bg-primary/10 rounded-lg shrink-0">
+                        <FileText className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
                       </div>
-                      <div className="flex-1">
-                        <p className="font-medium">My Proposals</p>
-                        <p className="text-sm text-muted-foreground">
+                      <div className="min-w-0 flex-1">
+                        <p className="font-medium text-sm sm:text-base">My Proposals</p>
+                        <p className="text-xs sm:text-sm text-muted-foreground line-clamp-1">
                           Track your submissions
                         </p>
                       </div>
-                      <ArrowRight className="h-5 w-5 text-muted-foreground" />
+                      <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground shrink-0" />
                     </Link>
                     <Link
                       href="/earnings"
-                      className="flex items-center gap-4 p-4 rounded-lg border hover:bg-muted/50 transition-colors"
+                      className="flex items-center gap-3 p-3 sm:p-4 rounded-lg border hover:bg-muted/50 transition-colors"
                     >
-                      <div className="p-2 bg-primary/10 rounded-lg">
-                        <CurrencyDollar className="h-5 w-5 text-primary" />
+                      <div className="p-1.5 sm:p-2 bg-primary/10 rounded-lg shrink-0">
+                        <CurrencyDollar className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
                       </div>
-                      <div className="flex-1">
-                        <p className="font-medium">Earnings</p>
-                        <p className="text-sm text-muted-foreground">
+                      <div className="min-w-0 flex-1">
+                        <p className="font-medium text-sm sm:text-base">Earnings</p>
+                        <p className="text-xs sm:text-sm text-muted-foreground line-clamp-1">
                           View your income
                         </p>
                       </div>
-                      <ArrowRight className="h-5 w-5 text-muted-foreground" />
+                      <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground shrink-0" />
                     </Link>
                   </>
                 ) : (
                   <>
                     <Link
                       href="/jobs/post"
-                      className="flex items-center gap-4 p-4 rounded-lg border hover:bg-muted/50 transition-colors"
+                      className="flex items-center gap-3 p-3 sm:p-4 rounded-lg border hover:bg-muted/50 transition-colors"
                     >
-                      <div className="p-2 bg-primary/10 rounded-lg">
-                        <FileText className="h-5 w-5 text-primary" />
+                      <div className="p-1.5 sm:p-2 bg-primary/10 rounded-lg shrink-0">
+                        <FileText className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
                       </div>
-                      <div className="flex-1">
-                        <p className="font-medium">Post a Job</p>
-                        <p className="text-sm text-muted-foreground">
+                      <div className="min-w-0 flex-1">
+                        <p className="font-medium text-sm sm:text-base">Post a Job</p>
+                        <p className="text-xs sm:text-sm text-muted-foreground line-clamp-1">
                           Find talent for your project
                         </p>
                       </div>
-                      <ArrowRight className="h-5 w-5 text-muted-foreground" />
+                      <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground shrink-0" />
                     </Link>
                     <Link
                       href="/freelancers"
-                      className="flex items-center gap-4 p-4 rounded-lg border hover:bg-muted/50 transition-colors"
+                      className="flex items-center gap-3 p-3 sm:p-4 rounded-lg border hover:bg-muted/50 transition-colors"
                     >
-                      <div className="p-2 bg-primary/10 rounded-lg">
-                        <Users className="h-5 w-5 text-primary" />
+                      <div className="p-1.5 sm:p-2 bg-primary/10 rounded-lg shrink-0">
+                        <Users className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
                       </div>
-                      <div className="flex-1">
-                        <p className="font-medium">Browse Freelancers</p>
-                        <p className="text-sm text-muted-foreground">
+                      <div className="min-w-0 flex-1">
+                        <p className="font-medium text-sm sm:text-base">Browse Freelancers</p>
+                        <p className="text-xs sm:text-sm text-muted-foreground line-clamp-1">
                           Find skilled professionals
                         </p>
                       </div>
-                      <ArrowRight className="h-5 w-5 text-muted-foreground" />
+                      <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground shrink-0" />
                     </Link>
                     <Link
                       href="/jobs/my-jobs"
-                      className="flex items-center gap-4 p-4 rounded-lg border hover:bg-muted/50 transition-colors"
+                      className="flex items-center gap-3 p-3 sm:p-4 rounded-lg border hover:bg-muted/50 transition-colors"
                     >
-                      <div className="p-2 bg-primary/10 rounded-lg">
-                        <Briefcase className="h-5 w-5 text-primary" />
+                      <div className="p-1.5 sm:p-2 bg-primary/10 rounded-lg shrink-0">
+                        <Briefcase className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
                       </div>
-                      <div className="flex-1">
-                        <p className="font-medium">My Jobs</p>
-                        <p className="text-sm text-muted-foreground">
+                      <div className="min-w-0 flex-1">
+                        <p className="font-medium text-sm sm:text-base">My Jobs</p>
+                        <p className="text-xs sm:text-sm text-muted-foreground line-clamp-1">
                           Manage your listings
                         </p>
                       </div>
-                      <ArrowRight className="h-5 w-5 text-muted-foreground" />
+                      <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground shrink-0" />
                     </Link>
                     <Link
                       href="/contracts"
-                      className="flex items-center gap-4 p-4 rounded-lg border hover:bg-muted/50 transition-colors"
+                      className="flex items-center gap-3 p-3 sm:p-4 rounded-lg border hover:bg-muted/50 transition-colors"
                     >
-                      <div className="p-2 bg-primary/10 rounded-lg">
-                        <CheckCircle className="h-5 w-5 text-primary" />
+                      <div className="p-1.5 sm:p-2 bg-primary/10 rounded-lg shrink-0">
+                        <CheckCircle className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
                       </div>
-                      <div className="flex-1">
-                        <p className="font-medium">Contracts</p>
-                        <p className="text-sm text-muted-foreground">
+                      <div className="min-w-0 flex-1">
+                        <p className="font-medium text-sm sm:text-base">Contracts</p>
+                        <p className="text-xs sm:text-sm text-muted-foreground line-clamp-1">
                           View active contracts
                         </p>
                       </div>
-                      <ArrowRight className="h-5 w-5 text-muted-foreground" />
+                      <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground shrink-0" />
                     </Link>
                   </>
                 )}

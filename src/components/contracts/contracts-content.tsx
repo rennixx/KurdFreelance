@@ -352,88 +352,90 @@ export function ContractsContent() {
 
     return (
       <Card className="hover:shadow-md transition-shadow">
-        <CardContent className="p-6">
-          <div className="flex items-start justify-between gap-4 mb-4">
-            <div className="flex items-start gap-4">
-              <Avatar className="h-12 w-12">
-                <AvatarImage src={otherParty.avatar_url} />
-                <AvatarFallback>{otherParty.full_name.charAt(0)}</AvatarFallback>
-              </Avatar>
-              <div>
-                <h3 className="font-semibold line-clamp-1">{contract.title}</h3>
-                <p className="text-sm text-gray-500">
-                  {isFreelancer ? "Client" : "Freelancer"}: {otherParty.full_name}
-                  {isFreelancer && contract.client.company && (
-                    <span className="text-gray-400"> • {contract.client.company}</span>
-                  )}
-                </p>
+        <CardContent className="p-4 md:p-6">
+          <div className="flex flex-col gap-4">
+            <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+              <div className="flex items-start gap-4">
+                <Avatar className="h-12 w-12">
+                  <AvatarImage src={otherParty.avatar_url} />
+                  <AvatarFallback>{otherParty.full_name.charAt(0)}</AvatarFallback>
+                </Avatar>
+                <div className="min-w-0">
+                  <h3 className="font-semibold line-clamp-1">{contract.title}</h3>
+                  <p className="text-sm text-gray-500">
+                    {isFreelancer ? "Client" : "Freelancer"}: {otherParty.full_name}
+                    {isFreelancer && contract.client.company && (
+                      <span className="text-gray-400"> • {contract.client.company}</span>
+                    )}
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center gap-2">
+                <Badge className={status.color}>
+                  {status.icon}
+                  <span className="ml-1">{status.label}</span>
+                </Badge>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" size="icon">
+                      <DotsThreeVertical className="h-4 w-4" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuItem onClick={() => setSelectedContract(contract)}>
+                      <Eye className="h-4 w-4 mr-2" />
+                      View Details
+                    </DropdownMenuItem>
+                    <DropdownMenuItem>
+                      <ChatCircle className="h-4 w-4 mr-2" />
+                      Message
+                    </DropdownMenuItem>
+                    <DropdownMenuItem>
+                      <Download className="h-4 w-4 mr-2" />
+                      Download Contract
+                    </DropdownMenuItem>
+                    {contract.status === "completed" && (
+                      <DropdownMenuItem onClick={() => {
+                        setSelectedContract(contract);
+                        setReviewDialogOpen(true);
+                      }}>
+                        <Star className="h-4 w-4 mr-2" />
+                        Leave Review
+                      </DropdownMenuItem>
+                    )}
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </div>
             </div>
-            <div className="flex items-center gap-2">
-              <Badge className={status.color}>
-                {status.icon}
-                <span className="ml-1">{status.label}</span>
-              </Badge>
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="icon">
-                    <DotsThreeVertical className="h-4 w-4" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  <DropdownMenuItem onClick={() => setSelectedContract(contract)}>
-                    <Eye className="h-4 w-4 mr-2" />
-                    View Details
-                  </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    <ChatCircle className="h-4 w-4 mr-2" />
-                    Message
-                  </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    <Download className="h-4 w-4 mr-2" />
-                    Download Contract
-                  </DropdownMenuItem>
-                  {contract.status === "completed" && (
-                    <DropdownMenuItem onClick={() => {
-                      setSelectedContract(contract);
-                      setReviewDialogOpen(true);
-                    }}>
-                      <Star className="h-4 w-4 mr-2" />
-                      Leave Review
-                    </DropdownMenuItem>
-                  )}
-                </DropdownMenuContent>
-              </DropdownMenu>
+
+            <p className="text-sm text-gray-600 line-clamp-2 mb-4">
+              {contract.description}
+            </p>
+
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 text-sm text-gray-500 mb-4">
+              <div className="flex items-center gap-1">
+                <CurrencyDollar className="h-4 w-4" />
+                <span className="truncate">${contract.total_amount.toLocaleString()}</span>
+              </div>
+              <div className="flex items-center gap-1">
+                <Calendar className="h-4 w-4" />
+                <span className="truncate">{new Date(contract.start_date).toLocaleDateString()} - {new Date(contract.end_date).toLocaleDateString()}</span>
+              </div>
+              <div className="flex items-center gap-1">
+                <CheckSquare className="h-4 w-4" />
+                <span className="truncate">{contract.milestones.filter((m) => m.status === "paid").length}/{contract.milestones.length} milestones</span>
+              </div>
             </div>
-          </div>
 
-          <p className="text-sm text-gray-600 line-clamp-2 mb-4">
-            {contract.description}
-          </p>
-
-          <div className="flex flex-wrap gap-4 text-sm text-gray-500 mb-4">
-            <span className="flex items-center gap-1">
-              <CurrencyDollar className="h-4 w-4" />
-              ${contract.total_amount.toLocaleString()}
-            </span>
-            <span className="flex items-center gap-1">
-              <Calendar className="h-4 w-4" />
-              {new Date(contract.start_date).toLocaleDateString()} - {new Date(contract.end_date).toLocaleDateString()}
-            </span>
-            <span className="flex items-center gap-1">
-              <CheckSquare className="h-4 w-4" />
-              {contract.milestones.filter((m) => m.status === "paid").length}/{contract.milestones.length} milestones
-            </span>
-          </div>
-
-          <div className="space-y-2">
-            <div className="flex justify-between text-sm">
-              <span className="text-gray-500">Payment Progress</span>
-              <span className="font-medium">
-                ${contract.paid_amount.toLocaleString()} / ${contract.total_amount.toLocaleString()}
-              </span>
+            <div className="space-y-2">
+              <div className="flex justify-between text-sm">
+                <span className="text-gray-500">Payment Progress</span>
+                <span className="font-medium">
+                  ${contract.paid_amount.toLocaleString()} / ${contract.total_amount.toLocaleString()}
+                </span>
+              </div>
+              <Progress value={progress} className="h-2" />
             </div>
-            <Progress value={progress} className="h-2" />
           </div>
         </CardContent>
       </Card>
@@ -461,15 +463,15 @@ export function ContractsContent() {
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold">Contracts</h1>
-          <p className="text-gray-500">Manage your active and past contracts</p>
+          <h1 className="text-xl md:text-2xl font-bold">Contracts</h1>
+          <p className="text-sm text-gray-500">Manage your active and past contracts</p>
         </div>
-        <div className="flex items-center gap-2">
-          <div className="relative">
+        <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+          <div className="relative flex-1 sm:flex-none">
             <MagnifyingGlass className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
             <Input
               placeholder="Search contracts..."
-              className="pl-9 w-64"
+              className="pl-9 w-full sm:w-64"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />

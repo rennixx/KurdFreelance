@@ -276,10 +276,10 @@ export function EarningsContent() {
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold">Earnings</h1>
-          <p className="text-gray-500">Manage your earnings and withdrawals</p>
+          <h1 className="text-xl md:text-2xl font-bold">Earnings</h1>
+          <p className="text-sm text-gray-500">Manage your earnings and withdrawals</p>
         </div>
-        <div className="flex gap-2">
+        <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
           <Button variant="outline">
             <Download className="h-4 w-4 mr-2" />
             Export Report
@@ -370,7 +370,7 @@ export function EarningsContent() {
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <Card>
           <CardContent className="p-6">
             <div className="flex items-center justify-between mb-4">
@@ -428,17 +428,17 @@ export function EarningsContent() {
         </Card>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         {/* Transactions */}
         <div className="lg:col-span-2">
           <Card>
-            <CardHeader className="flex flex-row items-center justify-between">
+            <CardHeader className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
               <div>
-                <CardTitle>Transaction History</CardTitle>
-                <CardDescription>Your recent earnings and withdrawals</CardDescription>
+                <CardTitle className="text-lg">Transaction History</CardTitle>
+                <CardDescription className="text-sm">Your recent earnings and withdrawals</CardDescription>
               </div>
               <Select value={filterPeriod} onValueChange={setFilterPeriod}>
-                <SelectTrigger className="w-[140px]">
+                <SelectTrigger className="w-full sm:w-[140px] mt-2 sm:mt-0">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -467,15 +467,15 @@ export function EarningsContent() {
                       return (
                         <div
                           key={transaction.id}
-                          className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50 transition-colors"
+                          className="flex flex-col md:flex-row md:items-center gap-4 p-4 border rounded-lg hover:bg-gray-50 transition-colors"
                         >
-                          <div className="flex items-center gap-4">
+                          <div className="flex items-center gap-3">
                             <div className={`p-2 rounded-full ${typeConfig.bgColor}`}>
                               <TypeIcon className={`h-5 w-5 ${typeConfig.color}`} />
                             </div>
                             <div>
-                              <p className="font-medium">{transaction.description}</p>
-                              <div className="flex items-center gap-2 text-sm text-gray-500">
+                              <p className="font-medium line-clamp-1">{transaction.description}</p>
+                              <div className="flex flex-col md:flex-row md:items-center gap-1 md:gap-2 text-sm text-gray-500">
                                 <span>{new Date(transaction.date).toLocaleDateString()}</span>
                                 {transaction.reference && (
                                   <>
@@ -491,14 +491,14 @@ export function EarningsContent() {
                                       {transaction.client.full_name.charAt(0)}
                                     </AvatarFallback>
                                   </Avatar>
-                                  <span className="text-sm text-gray-500">
+                                  <span className="text-sm text-gray-500 truncate">
                                     {transaction.client.full_name}
                                   </span>
                                 </div>
                               )}
                             </div>
                           </div>
-                          <div className="text-right">
+                          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2">
                             <p className={`font-semibold ${
                               transaction.type === "earning" || transaction.type === "refund"
                                 ? "text-green-600"
@@ -606,10 +606,10 @@ export function EarningsContent() {
         {/* Payment Methods */}
         <div className="space-y-6">
           <Card>
-            <CardHeader className="flex flex-row items-center justify-between">
+            <CardHeader className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
               <div>
-                <CardTitle>Payment Methods</CardTitle>
-                <CardDescription>Manage your withdrawal methods</CardDescription>
+                <CardTitle className="text-lg">Payment Methods</CardTitle>
+                <CardDescription className="text-sm">Manage your withdrawal methods</CardDescription>
               </div>
               <Dialog open={addPaymentDialogOpen} onOpenChange={setAddPaymentDialogOpen}>
                 <DialogTrigger asChild>
@@ -661,7 +661,7 @@ export function EarningsContent() {
               {paymentMethods.map((method) => (
                 <div
                   key={method.id}
-                  className="flex items-center justify-between p-4 border rounded-lg"
+                  className="flex flex-col md:flex-row md:items-center gap-3 p-4 border rounded-lg"
                 >
                   <div className="flex items-center gap-3">
                     <div className="p-2 bg-gray-100 rounded-lg">
@@ -677,7 +677,7 @@ export function EarningsContent() {
                           <Badge variant="secondary" className="text-xs">Default</Badge>
                         )}
                       </div>
-                      <p className="text-sm text-gray-500">{method.details}</p>
+                      <p className="text-sm text-gray-500 truncate">{method.details}</p>
                     </div>
                   </div>
                   {!method.is_default && (
@@ -685,6 +685,7 @@ export function EarningsContent() {
                       variant="ghost"
                       size="sm"
                       onClick={() => handleSetDefault(method.id)}
+                      className="mt-2 md:mt-0 w-full md:w-auto"
                     >
                       Set Default
                     </Button>
@@ -697,26 +698,26 @@ export function EarningsContent() {
           {/* Quick Stats */}
           <Card>
             <CardHeader>
-              <CardTitle>Quick Stats</CardTitle>
+              <CardTitle className="text-lg">Quick Stats</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="flex justify-between items-center">
-                <span className="text-gray-500">Total Withdrawn</span>
+                <span className="text-sm text-gray-500">Total Withdrawn</span>
                 <span className="font-semibold">${stats?.total_withdrawn.toLocaleString()}</span>
               </div>
               <Separator />
               <div className="flex justify-between items-center">
-                <span className="text-gray-500">Last Month</span>
+                <span className="text-sm text-gray-500">Last Month</span>
                 <span className="font-semibold">${stats?.last_month.toLocaleString()}</span>
               </div>
               <Separator />
               <div className="flex justify-between items-center">
-                <span className="text-gray-500">Avg. per Project</span>
+                <span className="text-sm text-gray-500">Avg. per Project</span>
                 <span className="font-semibold">$1,437</span>
               </div>
               <Separator />
               <div className="flex justify-between items-center">
-                <span className="text-gray-500">Platform Fee Rate</span>
+                <span className="text-sm text-gray-500">Platform Fee Rate</span>
                 <span className="font-semibold">5%</span>
               </div>
             </CardContent>

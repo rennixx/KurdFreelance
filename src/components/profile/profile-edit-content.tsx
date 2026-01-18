@@ -265,7 +265,7 @@ export function ProfileEditContent() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6">
+    <div className="max-w-4xl mx-auto px-4 md:px-0 space-y-6">
       {/* Header */}
       <div className="flex items-center gap-4">
         <Button variant="ghost" size="icon" onClick={() => router.back()}>
@@ -292,7 +292,7 @@ export function ProfileEditContent() {
             </CardHeader>
             <CardContent className="space-y-6">
               {/* Avatar Upload */}
-              <div className="flex items-center gap-6">
+              <div className="flex flex-col md:flex-row items-center gap-6">
                 {userId ? (
                   <FileUpload
                     bucket="avatars"
@@ -308,7 +308,7 @@ export function ProfileEditContent() {
                     <User className="h-8 w-8 text-muted-foreground" />
                   </div>
                 )}
-                <div>
+                <div className="text-center md:text-left">
                   <h3 className="font-medium">Profile Photo</h3>
                   <p className="text-sm text-gray-500">
                     Upload a professional photo. Max 5MB, JPG or PNG.
@@ -316,7 +316,7 @@ export function ProfileEditContent() {
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                 <FormField
                   control={form.control}
                   name="full_name"
@@ -499,7 +499,7 @@ export function ProfileEditContent() {
 
               {/* Skills */}
               <div className="space-y-3">
-                <Label>Skills</Label>
+                <Label className="text-sm sm:text-base">Skills</Label>
                 <div className="flex flex-wrap gap-2 mb-2">
                   {selectedSkills.map((skill) => (
                     <Badge key={skill} variant="secondary" className="px-3 py-1">
@@ -514,7 +514,7 @@ export function ProfileEditContent() {
                     </Badge>
                   ))}
                 </div>
-                <div className="flex gap-2">
+                <div className="flex flex-col sm:flex-row gap-2">
                   <Input
                     placeholder="Add a skill..."
                     value={skillInput}
@@ -525,6 +525,7 @@ export function ProfileEditContent() {
                         addSkill(skillInput);
                       }
                     }}
+                    className="flex-1"
                   />
                   <Button type="button" variant="outline" onClick={() => addSkill(skillInput)}>
                     <Plus className="h-4 w-4" />
@@ -624,7 +625,7 @@ export function ProfileEditContent() {
                       <Trash className="h-4 w-4 text-red-500" />
                     </Button>
                   </div>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
                     <Input
                       placeholder="Degree"
                       value={edu.degree}
@@ -749,7 +750,7 @@ export function ProfileEditContent() {
                       <Trash className="h-4 w-4 text-red-500" />
                     </Button>
                   </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                     <Input
                       placeholder="Project Title"
                       value={item.title}
@@ -810,7 +811,7 @@ export function ProfileEditContent() {
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                 <FormField
                   control={form.control}
                   name="website"

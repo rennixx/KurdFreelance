@@ -163,28 +163,28 @@ export function JobsContent({ jobs }: JobsContentProps) {
     <div className="space-y-6">
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-3xl font-bold">Browse Jobs</h1>
-          <p className="text-muted-foreground">
+        <div className="min-w-0 flex-1">
+          <h1 className="text-2xl sm:text-3xl font-bold truncate">Browse Jobs</h1>
+          <p className="text-muted-foreground text-sm sm:text-base">
             {filteredJobs.length} jobs available
           </p>
         </div>
       </div>
 
       {/* Search and Filters */}
-      <div className="flex flex-col lg:flex-row gap-4">
-        <div className="relative flex-1">
-          <MagnifyingGlass className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+      <div className="flex flex-col lg:flex-row gap-3">
+        <div className="relative flex-1 w-full lg:w-auto">
+          <MagnifyingGlass className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground shrink-0" />
           <Input
             placeholder="Search jobs by title, skill, or keyword..."
-            className="pl-10"
+            className="pl-10 text-sm"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
         </div>
         <div className="flex flex-wrap gap-2">
           <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-            <SelectTrigger className="w-[180px]">
+            <SelectTrigger className="w-full sm:w-[140px] lg:w-[180px]">
               <SelectValue placeholder="Category" />
             </SelectTrigger>
             <SelectContent>
@@ -198,9 +198,10 @@ export function JobsContent({ jobs }: JobsContentProps) {
 
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline">
+              <Button variant="outline" className="flex-1 sm:flex-auto text-xs sm:text-sm whitespace-nowrap">
                 <Funnel className="mr-2 h-4 w-4" />
-                Experience
+                <span className="hidden sm:inline">Experience</span>
+                <span className="sm:hidden">Exp</span>
                 <CaretDown className="ml-2 h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>
@@ -225,9 +226,10 @@ export function JobsContent({ jobs }: JobsContentProps) {
 
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline">
+              <Button variant="outline" className="flex-1 sm:flex-auto text-xs sm:text-sm whitespace-nowrap">
                 <CurrencyDollar className="mr-2 h-4 w-4" />
-                Budget Type
+                <span className="hidden sm:inline">Budget</span>
+                <span className="sm:hidden">$$</span>
                 <CaretDown className="ml-2 h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>
@@ -251,11 +253,11 @@ export function JobsContent({ jobs }: JobsContentProps) {
           </DropdownMenu>
 
           <Select value={sortBy} onValueChange={setSortBy}>
-            <SelectTrigger className="w-[150px]">
+            <SelectTrigger className="w-full sm:w-[120px] lg:w-[150px]">
               <SelectValue placeholder="Sort by" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="newest">Newest First</SelectItem>
+              <SelectItem value="newest">Newest</SelectItem>
               <SelectItem value="budget-high">Budget: High to Low</SelectItem>
               <SelectItem value="budget-low">Budget: Low to High</SelectItem>
             </SelectContent>
@@ -283,21 +285,21 @@ export function JobsContent({ jobs }: JobsContentProps) {
               key={job.id}
               className="hover:shadow-md transition-shadow"
             >
-              <CardContent className="p-6">
-                <div className="flex flex-col md:flex-row gap-4">
-                  <div className="flex-1 space-y-3">
-                    <div className="flex items-start justify-between">
-                      <div>
+              <CardContent className="p-4 sm:p-6">
+                <div className="flex flex-col md:flex-row gap-3 sm:gap-4">
+                  <div className="flex-1 space-y-2 sm:space-y-3 min-w-0">
+                    <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-2">
+                      <div className="min-w-0 flex-1">
                         <Link
                           href={`/jobs/${job.id}`}
-                          className="text-xl font-semibold hover:text-primary transition-colors"
+                          className="text-base sm:text-lg font-semibold hover:text-primary transition-colors line-clamp-2"
                         >
                           {job.title}
                         </Link>
-                        <div className="flex items-center gap-3 mt-1 text-sm text-muted-foreground">
-                          <Badge variant="secondary">
+                        <div className="flex flex-wrap items-center gap-2 mt-1 sm:mt-2 text-xs sm:text-sm text-muted-foreground">
+                          <Badge variant="secondary" className="text-xs">
                             {job.budget_type === "fixed"
-                              ? "Fixed Price"
+                              ? "Fixed"
                               : "Hourly"}
                           </Badge>
                           <span className="flex items-center gap-1">
@@ -305,37 +307,37 @@ export function JobsContent({ jobs }: JobsContentProps) {
                             {formatTimeAgo(job.created_at)}
                           </span>
                           {job.experience_level && (
-                            <span>• {job.experience_level} Level</span>
+                            <span>• {job.experience_level}</span>
                           )}
                         </div>
                       </div>
-                      <div className="text-right">
-                        <div className="text-lg font-semibold">
+                      <div className="text-right sm:text-left">
+                        <div className="text-base sm:text-lg font-semibold">
                           {formatBudget(job)}
                         </div>
                       </div>
                     </div>
 
-                    <p className="text-muted-foreground line-clamp-2">
+                    <p className="text-sm text-muted-foreground line-clamp-2">
                       {job.description}
                     </p>
 
-                    <div className="flex flex-wrap gap-2">
+                    <div className="flex flex-wrap gap-1.5">
                       {job.skills?.slice(0, 5).map((skill) => (
-                        <Badge key={skill} variant="outline">
+                        <Badge key={skill} variant="outline" className="text-xs">
                           {skill}
                         </Badge>
                       ))}
                       {job.skills?.length > 5 && (
-                        <Badge variant="outline">
-                          +{job.skills.length - 5} more
+                        <Badge variant="outline" className="text-xs">
+                          +{job.skills.length - 5}
                         </Badge>
                       )}
                     </div>
 
-                    <div className="flex items-center justify-between pt-2">
-                      <div className="flex items-center gap-2">
-                        <Avatar className="h-8 w-8">
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-3 pt-2">
+                      <div className="flex items-center gap-2 min-w-0">
+                        <Avatar className="h-7 w-7 sm:h-8 sm:w-8">
                           <AvatarImage src={job.client?.avatar_url} />
                           <AvatarFallback className="text-xs">
                             {job.client?.full_name
@@ -344,12 +346,12 @@ export function JobsContent({ jobs }: JobsContentProps) {
                               .join("")}
                           </AvatarFallback>
                         </Avatar>
-                        <span className="text-sm text-muted-foreground">
+                        <span className="text-xs sm:text-sm text-muted-foreground truncate">
                           {job.client?.full_name}
                         </span>
                       </div>
-                      <Button asChild>
-                        <Link href={`/jobs/${job.id}`}>View Details</Link>
+                      <Button asChild className="text-sm w-full sm:w-auto shrink-0">
+                        <Link href={`/jobs/${job.id}`} className="w-full sm:w-auto text-center">View Details</Link>
                       </Button>
                     </div>
                   </div>
