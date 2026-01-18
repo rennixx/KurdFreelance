@@ -20,6 +20,10 @@ import {
   PaymentIllustration,
 } from "@/components/landing/how-it-works-illustrations";
 import {
+  TrustShieldIllustration,
+  TrustFeatureCard,
+} from "@/components/landing/trust-shield-illustration";
+import {
   Code,
   Palette,
   PenNib,
@@ -519,10 +523,11 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Section 2: Trust Badges */}
-      <section className="py-16 md:py-24 bg-muted/30">
+      {/* Section 2: Trust & Security - Visual Showcase */}
+      <section className="py-16 md:py-24 bg-muted/30 overflow-hidden">
         <div className="container">
-          <div className="text-center mb-12">
+          {/* Header */}
+          <div className="text-center mb-8 md:mb-12">
             <Badge variant="outline" className="mb-4">
               Why Choose Us
             </Badge>
@@ -534,23 +539,85 @@ export default function HomePage() {
               protections.
             </p>
           </div>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {trustBadges.map((badge) => (
-              <div
-                key={badge.title}
-                className="flex items-start gap-4 p-6 rounded-xl border bg-card"
-              >
-                <div className="flex-shrink-0 h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center">
-                  <badge.icon className="h-6 w-6 text-primary" />
-                </div>
-                <div>
-                  <h3 className="font-semibold mb-1">{badge.title}</h3>
-                  <p className="text-sm text-muted-foreground">
-                    {badge.description}
-                  </p>
-                </div>
+
+          {/* Main content: Shield + Features */}
+          <div className="grid lg:grid-cols-3 gap-8 items-center">
+            {/* Left Features */}
+            <div className="space-y-6 order-2 lg:order-1">
+              <TrustFeatureCard
+                icon={Shield}
+                title="Secure Escrow"
+                description="Your payments are held safely until you approve the work. Full protection for every transaction."
+                color="blue"
+                delay={0}
+              />
+              <TrustFeatureCard
+                icon={LockKey}
+                title="Identity Verified"
+                description="All freelancers go through our verification process to ensure authenticity and trust."
+                color="purple"
+                delay={100}
+              />
+              <TrustFeatureCard
+                icon={CurrencyDollar}
+                title="Low Fees"
+                description="Only 10-15% fees, significantly lower than international competitors. Keep more of your earnings."
+                color="green"
+                delay={200}
+              />
+            </div>
+
+            {/* Center Shield */}
+            <div className="order-1 lg:order-2">
+              <TrustShieldIllustration />
+            </div>
+
+            {/* Right Features */}
+            <div className="space-y-6 order-3">
+              <TrustFeatureCard
+                icon={Globe}
+                title="Local Support"
+                description="24/7 support in Kurdish, Arabic, and English. We speak your language."
+                color="cyan"
+                delay={0}
+              />
+              <TrustFeatureCard
+                icon={Clock}
+                title="Fast Payments"
+                description="Get paid within 24-48 hours of approval. Quick and reliable withdrawals."
+                color="orange"
+                delay={100}
+              />
+              <TrustFeatureCard
+                icon={Trophy}
+                title="Quality Guarantee"
+                description="Not satisfied? We'll make it right. 100% satisfaction guaranteed on every project."
+                color="yellow"
+                delay={200}
+              />
+            </div>
+          </div>
+
+          {/* Bottom Stats Bar */}
+          <div className="mt-16 pt-8 border-t">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <div className="text-center p-4 rounded-2xl bg-card/50 backdrop-blur-sm border">
+                <div className="text-2xl md:text-3xl font-bold text-primary">$2M+</div>
+                <div className="text-sm text-muted-foreground">Protected Payments</div>
               </div>
-            ))}
+              <div className="text-center p-4 rounded-2xl bg-card/50 backdrop-blur-sm border">
+                <div className="text-2xl md:text-3xl font-bold text-primary">10,000+</div>
+                <div className="text-sm text-muted-foreground">Verified Users</div>
+              </div>
+              <div className="text-center p-4 rounded-2xl bg-card/50 backdrop-blur-sm border">
+                <div className="text-2xl md:text-3xl font-bold text-primary">99%</div>
+                <div className="text-sm text-muted-foreground">Satisfaction Rate</div>
+              </div>
+              <div className="text-center p-4 rounded-2xl bg-card/50 backdrop-blur-sm border">
+                <div className="text-2xl md:text-3xl font-bold text-primary">24/7</div>
+                <div className="text-sm text-muted-foreground">Customer Support</div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
