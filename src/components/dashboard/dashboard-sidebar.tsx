@@ -96,43 +96,36 @@ export function DashboardSidebar() {
 
         const pendingProposals = proposals?.filter(p => p.status === "pending" || p.status === "viewed").length || 0;
 
-        // Fetch unread messages count - fetch conversations and filter client-side
-        const { data: conversations, error: convError } = await supabase
+        // Fetch unread messages count - count actual unread messages from messages table
+        const { data: userConversations } = await supabase
           .from("conversations")
-          .select("id, participants, last_message_sender_id, last_message_read_at, last_message_created_at");
+          .select("id")
+          .or(`participant_one.eq.${user.id},participant_two.eq.${user.id}`);
 
         if (isCancelled) return;
 
-        if (!convError && conversations) {
-          // Find conversations where user is a participant
-          const userConversations = conversations.filter(conv =>
-            conv.participants && conv.participants.includes(user.id)
-          );
+        let unreadCount = 0;
+        if (userConversations && userConversations.length > 0) {
+          const conversationIds = userConversations.map(c => c.id);
 
-          // Count unread messages
-          const unreadCount = userConversations.filter(conv => {
-            // Message sent by someone else
-            const sentByOthers = conv.last_message_sender_id !== user.id;
-            // Never read OR read before the last message was sent
-            const notRead = !conv.last_message_read_at ||
-              new Date(conv.last_message_created_at) > new Date(conv.last_message_read_at);
-
-            return sentByOthers && notRead;
-          }).length;
+          // Count actual unread messages - exclude messages from current user AND null senders (invalid data)
+          const { data: unreadMessages } = await supabase
+            .from("messages")
+            .select("id, sender_id")
+            .in("conversation_id", conversationIds)
+            .eq("is_read", false);
 
           if (!isCancelled) {
-            setBadgeCounts({
-              proposals: pendingProposals,
-              messages: unreadCount,
-            });
+            // Filter out messages sent by current user or messages with null sender_id
+            unreadCount = unreadMessages?.filter(m => m.sender_id && m.sender_id !== user.id).length || 0;
           }
-        } else {
-          if (!isCancelled) {
-            setBadgeCounts({
-              proposals: pendingProposals,
-              messages: 0,
-            });
-          }
+        }
+
+        if (!isCancelled) {
+          setBadgeCounts({
+            proposals: pendingProposals,
+            messages: unreadCount,
+          });
         }
       } catch (error) {
         if (!isCancelled) {
